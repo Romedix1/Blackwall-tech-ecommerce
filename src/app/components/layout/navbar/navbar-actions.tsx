@@ -4,7 +4,7 @@ import { NavbarUserProfile } from '@/app/components/layout/navbar/navbar-user-pr
 
 export const NavbarActions = () => {
   return (
-    <div className="flex items-center gap-5">
+    <div className="flex items-center gap-3">
       <NavbarCart />
       <span className="lg:hidden">
         <NavbarHamburgerMenu />

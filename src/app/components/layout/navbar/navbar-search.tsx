@@ -30,8 +30,6 @@ export const NavbarSearch = ({ variant = 'default' }: NavbarSearchProps) => {
         variant={variant}
         containerClassName="hidden lg:block"
       />
-
-      <Search className="lg:hidden" />
     </div>
   )
 }

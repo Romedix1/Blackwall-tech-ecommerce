@@ -1,12 +1,13 @@
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { RefObject } from 'react'
+import { RefObject, useId } from 'react'
 
 type SearchInputProps = {
-  ref: RefObject<HTMLInputElement | null>
+  ref?: RefObject<HTMLInputElement | null>
   variant?: 'default' | 'navigation'
   inputClassName?: string
   containerClassName?: string
+  id?: string
 }
 
 export const SearchInput = ({
@@ -14,11 +15,16 @@ export const SearchInput = ({
   variant = 'default',
   inputClassName,
   containerClassName,
+  id: customId,
 }: SearchInputProps) => {
+  const generateId = useId()
+  const id = customId || generateId
+
   return (
-    <div className={cn('relative hidden w-100 lg:block', containerClassName)}>
-      <div className="relative">
+    <div className={cn('relative w-80 xl:w-100', containerClassName)}>
+      <form className="relative">
         <Input
+          id={id}
           ref={ref}
           type="search"
           placeholder=" "
@@ -36,7 +42,7 @@ export const SearchInput = ({
           &gt; search_database
           <span className="cursor">_</span>
         </div>
-      </div>
+      </form>
 
       {variant === 'navigation' && (
         <div className="absolute top-1/2 right-3 -translate-y-1/2 text-xs">
