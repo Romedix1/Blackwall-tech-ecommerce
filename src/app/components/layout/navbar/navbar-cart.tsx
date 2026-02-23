@@ -1,12 +1,19 @@
 import { ShoppingCart } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export const NavbarCart = () => {
   return (
-    <div className="relative">
-      <ShoppingCart />
-      <div className="bg-accent absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full font-bold">
-        2
-      </div>
-    </div>
+    <button
+      className={cn(
+        'terminal-hover group flex items-center gap-2 lg:px-2 lg:py-1.5',
+      )}
+    >
+      <ShoppingCart className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
+
+      <span className="font-mono text-[12px] font-bold sm:text-base">
+        [ 02 ]
+      </span>
+      <span className="sr-only">Cart: 2 items</span>
+    </button>
   )
 }
