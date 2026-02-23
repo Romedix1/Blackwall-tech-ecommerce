@@ -48,6 +48,9 @@
     "minimatch": "^10.2.1"
   },
   "lint-staged": {
-    "*.{ts,tsx,css,json}": "prettier --write"
+    "*.{ts,tsx,css,json}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
