@@ -1,6 +1,6 @@
-import { NavbarCart } from '@/app/components/layout/navbar/navbar-cart'
-import { NavbarHamburgerMenu } from '@/app/components/layout/navbar/navbar-hamburger-menu'
-import { NavbarUserProfile } from '@/app/components/layout/navbar/navbar-user-profile'
+import { NavbarCart } from '@/components/layout/navbar/navbar-cart'
+import { NavbarHamburgerMenu } from '@/components/layout/navbar/navbar-hamburger-menu'
+import { NavbarUserProfile } from '@/components/layout/navbar/navbar-user-profile'
 
 export const NavbarActions = () => {
   return (

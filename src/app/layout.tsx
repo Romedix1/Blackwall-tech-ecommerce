@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { Navbar } from '@/app/components/layout/navbar'
+import { Navbar } from '@/components/layout/navbar'
 import { Roboto_Mono } from 'next/font/google'
 import { cn } from '@/lib/utils'
 

@@ -8,8 +8,8 @@ import {
   within,
 } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { NavbarSearch } from '@/app/components/layout/navbar/navbar-search'
-import { Navbar } from '@/app/components/layout/navbar/navbar'
+import { NavbarSearch } from '@/components/layout/navbar/navbar-search'
+import { Navbar } from '@/components/layout/navbar/navbar'
 
 describe('Search Functionality', () => {
   it('should focus the input field when Ctrl+K is pressed', async () => {
