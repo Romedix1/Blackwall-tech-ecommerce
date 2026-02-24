@@ -1,7 +1,7 @@
 'use client'
 
-import { MobileNavLinks } from '@/components/layout/navbar/mobile-nav-links'
-import { MobileSessionInfo } from '@/components/layout/navbar/mobile-session-info'
+import { MobileNavLinks } from '@/components/layout/navbar'
+import { MobileSessionInfo } from '@/components/layout/navbar'
 import { SearchInput } from '@/components/shared'
 import { Separator } from '@/components/ui'
 import { useMobileMenu } from '@/hooks/use-mobile-menu'

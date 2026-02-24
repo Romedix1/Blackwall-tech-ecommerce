@@ -1,8 +1,8 @@
-import { NavbarSearch } from '@/components/layout/navbar/navbar-search'
+import { NavbarSearch } from '@/components/layout/navbar'
 import { NavbarLogo } from './navbar-logo'
-import { NavbarActions } from '@/components/layout/navbar/navbar-actions'
-import { MobileSearchTrigger } from '@/components/layout/navbar/mobile-search-trigger'
-import { MobileMenuShell } from '@/components/layout/navbar/mobile-menu-shell'
+import { NavbarActions } from '@/components/layout/navbar'
+import { MobileSearchTrigger } from '@/components/layout/navbar'
+import { MobileMenuShell } from '@/components/layout/navbar'
 
 export const Navbar = () => {
   return (
