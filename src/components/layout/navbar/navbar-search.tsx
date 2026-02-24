@@ -1,6 +1,6 @@
 'use client'
 
-import { SearchInput } from '@/app/components/search-input'
+import { SearchInput } from '@/components/shared/search-input'
 import { Search } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 

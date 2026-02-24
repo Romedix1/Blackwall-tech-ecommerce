@@ -1,8 +1,8 @@
 'use client'
 
-import { MobileNavLinks } from '@/app/components/mobile-nav-links'
-import { MobileSessionInfo } from '@/app/components/mobile-session-info'
-import { SearchInput } from '@/app/components/search-input'
+import { MobileNavLinks } from '@/components/layout/navbar/mobile-nav-links'
+import { MobileSessionInfo } from '@/components/layout/navbar/mobile-session-info'
+import { SearchInput } from '@/components/shared/search-input'
 import { Separator } from '@/components/ui/separator'
 import { useMobileMenu } from '@/hooks/use-mobile-menu'
 import { useEffect, useRef } from 'react'
