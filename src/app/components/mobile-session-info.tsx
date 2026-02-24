@@ -9,7 +9,11 @@ export const MobileSessionInfo = () => {
         admin@blackwall.com
       </span>
       <span>
-        <span className="text-accent uppercase">&gt; clearance:</span> [ USER ]
+        <span aria-hidden="true">
+          <span className="text-accent uppercase">&gt; clearance:</span>{' '}
+          {'[ USER ]'}
+        </span>
+        <span className="sr-only">clearance: USER</span>
       </span>
     </div>
   )
