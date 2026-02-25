@@ -1,4 +1,8 @@
-import { HeroActions, HeroContent, HeroImage } from '@/app/_components'
+import {
+  HeroActions,
+  HeroContent,
+  HeroImage,
+} from '@/app/(home)/_components/hero'
 
 export const Hero = () => {
   return (

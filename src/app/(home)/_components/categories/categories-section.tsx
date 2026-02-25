@@ -1,4 +1,4 @@
-import { CategoriesGrid } from '@/app/_components'
+import { CategoriesGrid } from '@/app/(home)/_components/categories'
 import { Eyebrow } from '@/components/shared'
 
 export const CategoriesSection = () => {
