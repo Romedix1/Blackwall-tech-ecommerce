@@ -125,7 +125,7 @@ export const BestSellersContainer = () => {
   ]
 
   return (
-    <div className="scrollbar-hide flex gap-3 overflow-x-scroll sm:gap-4">
+    <div className="scrollbar-hide relative flex gap-3 overflow-x-scroll sm:gap-4">
       {BEST_SELLERS_CARDS.map((product, index) => {
         return (
           <BestSellersCard
