@@ -1,4 +1,4 @@
-import { CategoriesGrid } from '@/app/(home)/_components/categories'
+import { CategoriesContainer } from '@/app/(home)/_components/categories'
 import { Eyebrow } from '@/components/shared'
 
 export const CategoriesSection = () => {
@@ -9,7 +9,7 @@ export const CategoriesSection = () => {
         <span className="sr-only">Categories browser</span>
       </Eyebrow>
 
-      <CategoriesGrid />
+      <CategoriesContainer />
     </section>
   )
 }
