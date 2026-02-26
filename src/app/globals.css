@@ -174,3 +174,14 @@
     @apply hover:bg-accent hover:text-background focus:bg-accent focus:text-background transition-none outline-none;
   }
 }
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
