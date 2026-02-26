@@ -3,6 +3,7 @@ import './globals.css'
 import { Navbar } from '@/components/layout/navbar'
 import { Roboto_Mono } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import { Footer } from '@/components/layout/footer'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={cn(robotoMono.variable, 'antialiased')}>
         <Navbar />
         <main className="px-4 xl:px-20">{children}</main>
+        <Footer />
       </body>
     </html>
   )

@@ -48,7 +48,7 @@ export const BuildPcImage = () => {
         rotateToLeft={true}
       />
 
-      <div className="w-full px-4 py-3 text-right text-[10px] sm:text-sm 2xl:text-base">
+      <div className="w-full px-4 py-3 text-right text-xs sm:text-sm 2xl:text-base">
         <p className="uppercase">
           <span aria-hidden="true" className="text-text-second">
             {'// '}System_status: <span className="text-accent">Nominal</span>
