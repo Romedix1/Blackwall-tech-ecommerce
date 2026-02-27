@@ -1,10 +1,25 @@
 import { TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { FaGithub } from 'react-icons/fa'
+import { SiGmail } from 'react-icons/si'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
 }
+
+const SOCIAL_PROVIDERS = [
+  {
+    id: 'github',
+    name: 'Github',
+    icon: FaGithub,
+  },
+  {
+    id: 'google',
+    name: 'Gmail',
+    icon: SiGmail,
+  },
+]
 
 export const AuthForm = ({ mode }: AuthFormProps) => {
   const isLogin = mode === 'login'
@@ -25,12 +40,14 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
               : 'Create new account'}
           </span>
         </h1>
-        <p className="text-accent text-sm md:text-base">
-          <span aria-hidden="true">
-            &gt;{' '}
-            {isLogin
-              ? 'Waiting_for_credentials'
-              : 'Generating_new_encryption_keys...'}
+        <p className="text-accent text-sm wrap-break-word md:text-base">
+          <span aria-hidden="true" className="flex items-start break-all">
+            <span className="shrink-0">&gt; </span>
+            <span>
+              {isLogin
+                ? `Waiting_for_credentials`
+                : 'Generating_new_encryption_keys...'}
+            </span>
           </span>
           <span className="sr-only">
             {isLogin
@@ -42,7 +59,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
         <div className="my-8 flex flex-col gap-4">
           {!isLogin && (
             <TerminalInput
-              placeholder="Assign_callsign (Username)"
+              placeholder="Assign_callsign"
               type="text"
               name="username"
               autoComplete="username"
@@ -97,15 +114,37 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
           </span>
         </Button>
 
+        <div className="mt-6 flex w-full gap-2">
+          {SOCIAL_PROVIDERS.map((provider) => {
+            const Icon = provider.icon
+            return (
+              <Button
+                key={provider.id}
+                variant="secondary"
+                type="button"
+                className="border-border flex h-auto flex-1 flex-col items-center gap-1 py-4"
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                <div>
+                  <span aria-hidden="true">[ </span>
+                  <span className="text-xs uppercase md:text-sm">
+                    {provider.name}{' '}
+                  </span>
+                  <span aria-hidden="true"> ]</span>
+                </div>
+              </Button>
+            )
+          })}
+        </div>
+
         <p className="text-text-second mt-6 text-sm sm:text-center md:mt-8">
           <span aria-hidden="true">
-            &gt; {isLogin ? 'No_clearance' : 'Already_have_clearance'}?
-            <span className="whitespace-nowrap">
+            &gt; {isLogin ? 'No_clearance' : 'Already_have_clearance'}?{' '}
+            <span className="inline-block whitespace-nowrap">
               <Link
                 className="hover:text-primary-hover focus:text-primary-hover outline-none"
                 href={isLogin ? '/register' : '/login'}
               >
-                {' '}
                 [ {isLogin ? 'Request_access' : 'Return_to_login'} ]
               </Link>
             </span>
