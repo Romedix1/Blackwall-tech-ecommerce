@@ -1,4 +1,4 @@
-import { AuthForm } from '@/app/(auth)/_components/auth-form'
+import { AuthForm } from '@/app/(auth)/_components'
 
 export default function RegisterPage() {
   return <AuthForm mode="register" />
