@@ -1,6 +1,6 @@
 import { AuthForm } from '@/app/(auth)/_components'
 import { LoginUser } from '@/lib/actions'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 vi.mock('@/lib/actions/auth', () => ({
@@ -13,9 +13,9 @@ describe('Login logic', () => {
   it('should submit and redirect on success', async () => {
     const user = userEvent.setup()
 
-    mockedLoginUser.mockResolvedValue({
-      success: true,
-      message: 'User logged in',
+    mockedLoginUser.mockImplementation(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      return { success: true, message: 'User logged in' }
     })
 
     render(<AuthForm mode={'login'} />)
@@ -32,14 +32,15 @@ describe('Login logic', () => {
 
     expect(mockedLoginUser).toHaveBeenCalledTimes(1)
 
-    expect(screen.getByRole('button')).toBeDisabled()
+    expect(submitButton).toBeDisabled()
+    expect(screen.getByText(/Synchronizing/i)).toBeInTheDocument()
   })
 
   it('should show error message on invalid credentials', async () => {
     const user = userEvent.setup()
 
     mockedLoginUser.mockResolvedValue({
-      error: 'ACCESS_DENIED: INVALID_CREDENTIALS',
+      error: 'Access denied: invalid credentials',
     })
 
     render(<AuthForm mode="login" />)
@@ -54,7 +55,7 @@ describe('Login logic', () => {
 
     await user.click(submitButton)
 
-    const errorMsg = await screen.findByText(/INVALID_CREDENTIALS/i)
+    const errorMsg = await screen.findByText(/invalid credentials/i)
     expect(errorMsg).toBeInTheDocument()
   })
 
@@ -62,7 +63,7 @@ describe('Login logic', () => {
     const user = userEvent.setup()
 
     mockedLoginUser.mockResolvedValue({
-      error: 'PROTOCOL_ERROR: EMAIL_NOT_VERIFIED',
+      error: 'Protocol error: email not verified',
     })
 
     render(<AuthForm mode="login" />)
@@ -77,7 +78,7 @@ describe('Login logic', () => {
 
     await user.click(submitButton)
 
-    const errorMsg = await screen.findByText(/EMAIL_NOT_VERIFIED/i)
+    const errorMsg = await screen.findByText(/email not verified/i)
     expect(errorMsg).toBeInTheDocument()
   })
 })
