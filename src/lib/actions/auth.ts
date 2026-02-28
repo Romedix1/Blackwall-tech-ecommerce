@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma/prisma'
 import { RegisterSchema } from '@/lib/zod'
 import bcrypt from 'bcryptjs'
 import { redirect } from 'next/navigation'
+import { sendVerificationEmail } from '../../../api/send-confirmation-email/route'
 
 type FormState =
   | {
@@ -56,13 +57,18 @@ export const RegisterUser = async (
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
+    const verificationToken = crypto.randomUUID()
+
     await prisma.user.create({
       data: {
         username,
         email,
         password: hashedPassword,
+        verificationToken,
       },
     })
+
+    await sendVerificationEmail(email, username, verificationToken)
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error('[ Registration error ]:', error)

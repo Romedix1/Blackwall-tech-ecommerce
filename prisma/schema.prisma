@@ -46,17 +46,18 @@ enum Role {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  username      String    @unique
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          Role      @default(user)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
+  id                String    @id @default(cuid())
+  username          String    @unique
+  email             String?   @unique
+  emailVerified     DateTime?
+  verificationToken String?   @unique
+  image             String?
+  password          String?
+  role              Role      @default(user)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  accounts          Account[]
+  sessions          Session[]
 }
 
 model VerificationRequest {
