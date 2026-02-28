@@ -1,5 +1,6 @@
 'use client'
 
+import { RegisterSuccess } from '@/app/(auth)/register/_components/register-success'
 import { ErrorText, TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { RegisterUser } from '@/lib/actions'
@@ -29,6 +30,11 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
   const isLogin = mode === 'login'
 
   const [state, formAction, isPending] = useActionState(RegisterUser, null)
+
+  if (state?.success && state?.fields?.email) {
+    return <RegisterSuccess email={state.fields.email} />
+  }
+
   return (
     <section className="flex justify-center">
       <form

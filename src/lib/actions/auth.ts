@@ -59,7 +59,7 @@ export const RegisterUser = async (
 
     const verificationToken = crypto.randomUUID()
 
-    await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         username,
         email,
@@ -68,13 +68,25 @@ export const RegisterUser = async (
       },
     })
 
-    await sendVerificationEmail(email, username, verificationToken)
+    try {
+      await sendVerificationEmail(email, username, verificationToken)
+    } catch (emailError) {
+      await prisma.user.delete({
+        where: { id: newUser.id },
+      })
+
+      return {
+        error:
+          'Protocol error: Could not send verification email. Please try again',
+        fields: rawData,
+      }
+    }
+
+    return { success: true, message: 'Uplink initiated', fields: { email } }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error('[ Registration error ]:', error)
     }
     return { error: 'Protocol error: Registration failed', fields: rawData }
   }
-
-  redirect('/confirm-email')
 }

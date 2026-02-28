@@ -2,7 +2,6 @@ import { AuthForm } from '@/app/(auth)/_components'
 import { RegisterUser } from '@/lib/actions'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mock } from 'node:test'
 
 vi.mock('@/lib/actions/auth', () => ({
   RegisterUser: vi.fn(),
@@ -16,6 +15,9 @@ describe('Register logic', () => {
     mockedRegisterUser.mockResolvedValue({
       success: true,
       message: 'Email confirmation sent',
+      fields: {
+        email: 'johny.silverhand@samurai.nc',
+      },
     })
 
     render(<AuthForm mode={'register'} />)
@@ -38,5 +40,10 @@ describe('Register logic', () => {
 
     const sentData = mockedRegisterUser.mock.calls[0]![1] as FormData
     expect(sentData.get('username')).toBe('Johny silverhand')
+
+    const successHeader = await screen.findByText(/UPLINK_INITIATED/i)
+    expect(successHeader).toBeInTheDocument()
+
+    expect(screen.getByText(/johny.silverhand@samurai.nc/i)).toBeInTheDocument()
   })
 })
