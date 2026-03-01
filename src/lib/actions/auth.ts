@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { RegisterSchema } from '@/lib/zod'
 import bcrypt from 'bcryptjs'
 import { sendVerificationEmail } from '@/app/api/send-confirmation-email'
-import { signIn } from '@/auth'
+import { signIn, signOut } from '@/auth'
 import { LoginSchema } from '@/lib/zod/login-schema'
 import { AuthError } from 'next-auth'
 
@@ -158,4 +158,8 @@ export const LoginUser = async (
 
     throw error
   }
+}
+
+export const handleLogOut = async () => {
+  await signOut({ redirectTo: '/login' })
 }
