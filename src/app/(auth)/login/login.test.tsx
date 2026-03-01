@@ -1,6 +1,6 @@
 import { AuthForm } from '@/app/(auth)/_components'
 import { LoginUser } from '@/lib/actions'
-import { act, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 vi.mock('@/lib/actions/auth', () => ({
@@ -28,7 +28,7 @@ describe('Login logic', () => {
     await user.type(emailInput, 'johny.silverhand@samurai.nc')
     await user.type(passwordInput, 'Samurai@2024')
 
-    await user.click(submitButton)
+    user.click(submitButton)
 
     expect(mockedLoginUser).toHaveBeenCalledTimes(1)
 
