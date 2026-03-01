@@ -1,8 +1,9 @@
-import { NavbarSearch } from '@/components/layout/navbar'
+import { DesktopMenuShell, NavbarSearch } from '@/components/layout/navbar'
 import { NavbarLogo } from './navbar-logo'
 import { NavbarActions } from '@/components/layout/navbar'
 import { MobileSearchTrigger } from '@/components/layout/navbar'
 import { MobileMenuShell } from '@/components/layout/navbar'
+import { SessionProvider } from 'next-auth/react'
 
 export const Navbar = () => {
   return (
@@ -24,6 +25,9 @@ export const Navbar = () => {
       </div>
 
       <MobileMenuShell />
+      <SessionProvider>
+        <DesktopMenuShell />
+      </SessionProvider>
     </nav>
   )
 }
