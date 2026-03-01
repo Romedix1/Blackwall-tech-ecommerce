@@ -18,6 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           id: profile.id.toString(),
           username: profile.name || profile.login,
+          email: profile.email,
           role: 'user',
         }
       },
@@ -27,6 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           id: profile.id.toString(),
           username: profile.name || profile.login,
+          email: profile.email,
           role: 'user',
         }
       },
