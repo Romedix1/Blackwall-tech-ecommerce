@@ -60,6 +60,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  Product       Product[]
 }
 
 model VerificationToken {
@@ -71,4 +72,27 @@ model VerificationToken {
   updatedAt  DateTime @updatedAt
 
   @@unique([identifier, token])
+}
+
+model Category {
+  id      String    @id @default(cuid())
+  name    String
+  slug    String    @unique
+  Product Product[]
+}
+
+model Product {
+  id            String   @id @default(uuid())
+  name          String
+  slug          String   @unique
+  image         String[]
+  price         Float
+  quantity      Int      @default(0)
+  specification Json
+  performance   Json
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  createdById   String?
+  creator       User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
 }
