@@ -15,3 +15,9 @@ G.Skill Trident Z5 CK Black - https://www.gskill.com/product/165/437/1730699700/
 XTREEM DDR5 DESKTOP MEMORY WHITE - https://www.teamgroupinc.com/en/product-detail/memory/desktop/xtreem-ddr5-white/xtreem-ddr5-white-FFWD596G6800HC36DDC01/
 DELTA RGB DDR4 DESKTOP MEMORY BLACK - https://www.teamgroupinc.com/en/product-detail/memory/desktop/delta-rgb-ddr4-black/delta-rgb-ddr4-black-TF3D416G4000HC20CDC01/
 G.Skill Flare X5 Black - https://www.gskill.com/product/165/396/1665021668/F5-5200J3636D32GX2-FX5
+
+Peripherals
+ROG Strix Morph 96 Wireless Gaming Keyboard - https://rog.asus.com/keyboards/keyboards/aura-rgb/rog-strix-morph-96-wireless/
+Aerox 5 - https://steelseries.com/gaming-mice/aerox-5?connectivityType=wired&color=black
+ROG Raikiri II Xbox Wireless Controller - https://rog.asus.com/controllers/rog-raikiri-ii-xbox-wireless-controller/
+ROG Strix Scope RX EVA-02 Edition Gaming Keyboard - https://rog.asus.com/keyboards/keyboards/pbt-keycaps/rog-strix-scope-rx-eva-02-edition/
