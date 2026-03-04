@@ -9,3 +9,9 @@ AMD Ryzen 9 7950X - https://amplify.amd.com/Share/6as1241al0810b43bgmj57325i701f
 Intel Core Ultra 9 285K - https://newsroom.intel.com/client-computing/core-ultra-200s-series-desktop
 Intel Core i9-13900K - https://newsroom.intel.com/press-kit/13th-gen-core
 AMD Ryzen 9 PRO 7945 - https://amplify.amd.com/Share/tbvc5cfj7k0t57280tn57v8qqk67i708
+
+Memory
+G.Skill Trident Z5 CK Black - https://www.gskill.com/product/165/437/1730699700/F5-8200C4052G24GX2-TZ5CRK
+XTREEM DDR5 DESKTOP MEMORY WHITE - https://www.teamgroupinc.com/en/product-detail/memory/desktop/xtreem-ddr5-white/xtreem-ddr5-white-FFWD596G6800HC36DDC01/
+DELTA RGB DDR4 DESKTOP MEMORY BLACK - https://www.teamgroupinc.com/en/product-detail/memory/desktop/delta-rgb-ddr4-black/delta-rgb-ddr4-black-TF3D416G4000HC20CDC01/
+G.Skill Flare X5 Black - https://www.gskill.com/product/165/396/1665021668/F5-5200J3636D32GX2-FX5
