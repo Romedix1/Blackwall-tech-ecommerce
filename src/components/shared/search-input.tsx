@@ -4,9 +4,10 @@ import { RefObject, useId } from 'react'
 
 type SearchInputProps = {
   ref?: RefObject<HTMLInputElement | null>
-  variant?: 'default' | 'navigation'
+  variant?: 'default' | 'navigation' | 'filter'
   inputClassName?: string
   containerClassName?: string
+  placeholder?: string
   id?: string
   ariaLabel: string
 }
@@ -16,6 +17,7 @@ export const SearchInput = ({
   variant = 'default',
   inputClassName,
   containerClassName,
+  placeholder,
   id: customId,
   ariaLabel,
 }: SearchInputProps) => {
@@ -41,14 +43,20 @@ export const SearchInput = ({
           aria-hidden="true"
           className="text-text-second peer-focus:[&_.cursor]:animate-blink pointer-events-none absolute top-1/2 left-4 flex -translate-y-1/2 items-center text-sm uppercase opacity-0 transition-opacity peer-placeholder-shown:opacity-100"
         >
-          &gt; search_database
+          &gt; {placeholder ? placeholder : 'search_database'}
           <span className="cursor">_</span>
         </div>
       </form>
 
-      {variant === 'navigation' && (
+      {(variant === 'navigation' || variant === 'filter') && (
         <div className="absolute top-1/2 right-3 -translate-y-1/2 text-xs">
-          <span className="text-accent uppercase">[ ctrl k ]</span>
+          <span className="text-accent uppercase">
+            [
+            {variant === 'navigation'
+              ? ' ctrl + k'
+              : variant === 'filter' && ' / '}
+            ]
+          </span>
         </div>
       )}
     </div>

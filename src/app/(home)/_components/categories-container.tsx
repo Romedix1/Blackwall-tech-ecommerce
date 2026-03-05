@@ -27,6 +27,7 @@ export const CategoriesContainer = async () => {
           <CategoriesCard
             className={uiCategory.className}
             key={`category-card-${index}`}
+            slug={category.slug}
             index={index + 1}
             category={categoryObject}
           />

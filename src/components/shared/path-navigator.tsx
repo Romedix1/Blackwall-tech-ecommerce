@@ -10,7 +10,7 @@ export const PathNavigator = ({
   productName,
 }: PathNavigatorType) => {
   return (
-    <p className="text-sm tracking-wider uppercase">
+    <p className="text-text-second text-sm tracking-wider uppercase">
       <span aria-hidden="true">{'//'}</span>
       Root
       <span aria-hidden="true">{'/'}</span>
@@ -20,19 +20,19 @@ export const PathNavigator = ({
       </Link>
       {productCategory && (
         <>
-          <Link href={'/categories/productCategory'} className="text-hover">
+          <Link href={`/products/${productCategory}`} className="text-hover">
             {productCategory}
             <span aria-hidden="true">{'/'}</span>
           </Link>
         </>
       )}
       {productName && (
-        <Link
-          href={`/categories/${productCategory}/${productName}`}
-          className="text-hover"
-        >
-          {productName}
-        </Link>
+        <>
+          <span aria-hidden="true" className="opacity-50">
+            /
+          </span>
+          <span className="">{productName}</span>
+        </>
       )}
     </p>
   )
