@@ -1,8 +1,8 @@
 import { Input } from '@/components/ui'
 import { cn } from '@/lib/utils'
-import { RefObject, useId } from 'react'
+import { ComponentPropsWithoutRef, RefObject, useId } from 'react'
 
-type SearchInputProps = {
+interface SearchInputProps extends ComponentPropsWithoutRef<'input'> {
   ref?: RefObject<HTMLInputElement | null>
   variant?: 'default' | 'navigation' | 'filter'
   inputClassName?: string
@@ -20,6 +20,7 @@ export const SearchInput = ({
   placeholder,
   id: customId,
   ariaLabel,
+  ...props
 }: SearchInputProps) => {
   const generateId = useId()
   const id = customId || generateId
@@ -33,6 +34,7 @@ export const SearchInput = ({
           type="search"
           placeholder=" "
           aria-label={ariaLabel}
+          {...props}
           className={cn(
             'peer bg-surface hover:border-primary-hover caret-accent h-10 rounded-none border py-2.5 pr-26 pl-4 text-sm transition-colors duration-200 placeholder-shown:caret-transparent focus-visible:ring-0 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none',
             inputClassName,

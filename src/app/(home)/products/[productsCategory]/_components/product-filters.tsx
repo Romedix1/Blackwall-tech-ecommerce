@@ -3,7 +3,8 @@
 import { RadioInput } from '@/app/(home)/products/[productsCategory]/_components'
 import { SearchInput } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { useState } from 'react'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type FilterEntry = {
   key: string
@@ -12,21 +13,71 @@ type FilterEntry = {
 
 type ProductFiltersProps = {
   filtersData: FilterEntry[]
+  device: string
 }
 
-export const ProductFilters = ({ filtersData }: ProductFiltersProps) => {
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>({})
+export const ProductFilters = ({
+  filtersData,
+  device,
+}: ProductFiltersProps) => {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const urlSearch = searchParams.get('search') || ''
+
   const [showAllFilters, setShowAllFilters] = useState(false)
+  const [searchValue, setSearchValue] = useState<string>(
+    searchParams.get('search') || '',
+  )
+  const [prevUrlSearch, setPrevUrlSearch] = useState(urlSearch)
+
+  if (urlSearch !== prevUrlSearch) {
+    setPrevUrlSearch(urlSearch)
+    setSearchValue(urlSearch)
+  }
+
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || ''
+
+    if (searchValue === urlSearch) return
+
+    const timeoutId = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString())
+
+      if (searchValue) {
+        params.set('search', searchValue)
+      } else {
+        params.delete('search')
+      }
+
+      router.push(`${pathname}?${params.toString()}`, { scroll: false })
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [searchValue, pathname, router, searchParams])
 
   const handleToggle = (key: string, value: string) => {
-    setActiveFilters((prev) => {
-      if (prev[key] === value) {
-        const next = { ...prev }
-        delete next[key]
-        return next
-      }
-      return { ...prev, [key]: value }
-    })
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (searchValue) {
+      params.set('search', searchValue)
+    } else {
+      params.delete('search')
+    }
+
+    if (params.get(key) === value) {
+      params.delete(key)
+    } else {
+      params.set(key, value)
+    }
+
+    router.push(`${pathname}?${params.toString()}`, { scroll: false })
+  }
+
+  const handleReset = () => {
+    setSearchValue('')
+    router.push(pathname, { scroll: false })
   }
 
   const FILTERS_LIMIT = 5
@@ -35,6 +86,9 @@ export const ProductFilters = ({ filtersData }: ProductFiltersProps) => {
     : filtersData.slice(0, FILTERS_LIMIT)
 
   const hiddenSectionsCount = filtersData.length - FILTERS_LIMIT
+  const isChecked = (key: string, value: string) => {
+    return searchParams.get(key) === value
+  }
 
   return (
     <>
@@ -51,18 +105,21 @@ export const ProductFilters = ({ filtersData }: ProductFiltersProps) => {
       <div className="hidden flex-col gap-8 lg:flex">
         <div className="flex flex-col gap-3">
           <SearchInput
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Filter products"
             ariaLabel="Filter products"
             containerClassName="w-full xl:w-full"
             variant="filter"
           />
 
-          <p className="text-text-second text-sm uppercase">
-            <span aria-hidden="true">[</span>
-            <span aria-hidden="true">Reset_all_filters</span>
+          <Button
+            onClick={() => handleReset()}
+            className="text-text-second text-sm uppercase"
+          >
+            <span aria-hidden="true">[ Reset_all_filters ]</span>
             <span className="sr-only">Reset all filters</span>
-            <span aria-hidden="true">]</span>
-          </p>
+          </Button>
         </div>
 
         {visibleSections.map((filter) => {
@@ -76,9 +133,9 @@ export const ProductFilters = ({ filtersData }: ProductFiltersProps) => {
                 {filter.values.map((value) => (
                   <RadioInput
                     key={value}
-                    name={filter.key}
+                    name={`${device}-${filter.key}`}
                     label={value}
-                    checked={activeFilters[filter.key] === value}
+                    checked={isChecked(filter.key, value)}
                     onToggle={() => handleToggle(filter.key, value)}
                   />
                 ))}
