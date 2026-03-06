@@ -1,13 +1,26 @@
-import { InputHTMLAttributes } from 'react'
+'use client'
+
+import { InputHTMLAttributes, MouseEvent } from 'react'
 
 interface RadioInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
+  onToggle: () => void
 }
 
-export const RadioInput = ({ label, ...props }: RadioInputProps) => {
+export const RadioInput = ({ label, onToggle, ...props }: RadioInputProps) => {
+  const handleRadioClick = (e: MouseEvent<HTMLInputElement>) => {
+    onToggle()
+  }
+
   return (
     <label className="group flex cursor-pointer items-center gap-x-1 font-mono uppercase">
-      <input type="radio" className="peer sr-only" {...props} />
+      <input
+        onClick={handleRadioClick}
+        type="radio"
+        onChange={() => {}}
+        className="peer sr-only"
+        {...props}
+      />
 
       <span className="peer-checked:text-accent" aria-hidden="true">
         [
