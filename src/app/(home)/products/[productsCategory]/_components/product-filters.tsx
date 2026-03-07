@@ -38,7 +38,7 @@ export const ProductFilters = ({
   }
 
   useEffect(() => {
-    const urlSearch = searchParams.get('search') || ''
+    const urlSearch = searchParams.get('sort') || ''
 
     if (searchValue === urlSearch) return
 
@@ -55,7 +55,7 @@ export const ProductFilters = ({
     }, 500)
 
     return () => clearTimeout(timeoutId)
-  }, [searchValue, pathname, router, searchParams])
+  }, [searchValue, pathname, router])
 
   const handleToggle = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -76,7 +76,6 @@ export const ProductFilters = ({
   }
 
   const handleReset = () => {
-    setSearchValue('')
     router.push(pathname, { scroll: false })
   }
 

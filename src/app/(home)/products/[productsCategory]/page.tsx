@@ -7,6 +7,7 @@ import { PathNavigator } from '@/components/shared'
 import { Separator } from '@/components/ui'
 import { prisma } from '@/lib/prisma'
 import { mapUrlParamsToPrismaFilters } from '@/lib/filters'
+import { Prisma } from '../../../../../generated/prisma'
 
 type SearchParamsType = Promise<{
   [key: string]: string | string[] | undefined
@@ -29,13 +30,20 @@ type SpecSection = {
 
 type ProductSpecification = SpecSection[]
 
+const sortMapping: Record<string, Prisma.ProductOrderByWithRelationInput> = {
+  newest: { createdAt: 'desc' },
+  price_asc: { price: 'asc' },
+  price_desc: { price: 'desc' },
+  name_asc: { name: 'asc' },
+}
+
 export default async function ProductsPage({
   params,
   searchParams,
 }: PageProps) {
   const { productsCategory } = await params
   const filterParams = await searchParams
-  const { search } = filterParams
+  const { search, sort, ...paramFilters } = filterParams
 
   const category = await prisma.category.findUnique({
     where: { slug: productsCategory },
@@ -48,7 +56,9 @@ export default async function ProductsPage({
     select: { specification: true },
   })
 
-  const filters = mapUrlParamsToPrismaFilters(filterParams)
+  const filters = mapUrlParamsToPrismaFilters(paramFilters)
+
+  const orderBy = sortMapping[sort as string] || sortMapping.newest
 
   const productsData = await prisma.product.findMany({
     where: {
@@ -63,7 +73,7 @@ export default async function ProductsPage({
           }
         : {}),
     },
-
+    orderBy,
     select: {
       id: true,
       slug: true,
@@ -128,7 +138,7 @@ export default async function ProductsPage({
 
       <div className="my-4 flex items-center justify-between lg:hidden">
         <ProductFilters device="mobile" filtersData={filtersData} />
-        <ProductSort />
+        <ProductSort device="mobile" />
       </div>
 
       <div className="flex flex-col lg:grid lg:grid-cols-[260px_1fr] lg:gap-16">
@@ -138,7 +148,7 @@ export default async function ProductsPage({
 
         <div className="flex flex-col gap-y-8">
           <div className="hidden lg:block">
-            <ProductSort />
+            <ProductSort device="desktop" />
             <Separator />
           </div>
 
