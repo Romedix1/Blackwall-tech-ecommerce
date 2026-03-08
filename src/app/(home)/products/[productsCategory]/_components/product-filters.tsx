@@ -2,10 +2,11 @@
 
 import { RadioInput } from '@/app/(home)/products/[productsCategory]/_components'
 import { PriceSlider } from '@/app/(home)/products/[productsCategory]/_components/price-slider'
+import { SearchProduct } from '@/app/(home)/products/[productsCategory]/_components/search-product'
 import { SearchInput } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type FilterEntry = {
   key: string
@@ -106,13 +107,10 @@ export const ProductFilters = ({
 
       <div className="hidden flex-col gap-8 lg:flex">
         <div className="flex flex-col gap-3">
-          <SearchInput
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Filter products"
-            ariaLabel="Filter products"
-            containerClassName="w-full xl:w-full"
-            variant="filter"
+          <SearchProduct
+            device={device}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
           />
 
           <button

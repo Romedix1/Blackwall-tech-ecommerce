@@ -43,7 +43,7 @@ export const PriceSlider = ({ maxProductsPrice }: PriceSliderProps) => {
         defaultValue={[0, maxProductsPrice]}
         min={0}
         max={maxProductsPrice}
-        step={1}
+        step={50}
         minStepsBetweenThumbs={1}
         className="relative flex h-5 w-full items-center select-none"
       >
