@@ -41,14 +41,14 @@ export const ProductFilters = ({
   }
 
   useEffect(() => {
-    const urlSearch = searchParams.get('sort') || ''
+    const urlSearch = searchParams.get('search') || ''
 
     if (searchValue === urlSearch) return
 
     const timeoutId = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString())
 
-      if (searchValue) {
+      if (searchValue.trim()) {
         params.set('search', searchValue)
       } else {
         params.delete('search')
