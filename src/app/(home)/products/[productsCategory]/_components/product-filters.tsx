@@ -1,6 +1,7 @@
 'use client'
 
 import { RadioInput } from '@/app/(home)/products/[productsCategory]/_components'
+import { PriceSlider } from '@/app/(home)/products/[productsCategory]/_components/price-slider'
 import { SearchInput } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
@@ -14,11 +15,13 @@ type FilterEntry = {
 type ProductFiltersProps = {
   filtersData: FilterEntry[]
   device: string
+  maxProductsPrice: number
 }
 
 export const ProductFilters = ({
   filtersData,
   device,
+  maxProductsPrice,
 }: ProductFiltersProps) => {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -120,6 +123,8 @@ export const ProductFilters = ({
             <span className="sr-only">Reset all filters</span>
           </button>
         </div>
+
+        <PriceSlider maxProductsPrice={maxProductsPrice} />
 
         {visibleSections.map((filter) => {
           return (

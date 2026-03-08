@@ -43,7 +43,7 @@ export default async function ProductsPage({
 }: PageProps) {
   const { productsCategory } = await params
   const filterParams = await searchParams
-  const { search, sort, ...paramFilters } = filterParams
+  const { search, sort, priceMin, priceMax, ...paramFilters } = filterParams
 
   const category = await prisma.category.findUnique({
     where: { slug: productsCategory },
@@ -60,6 +60,16 @@ export default async function ProductsPage({
 
   const orderBy = sortMapping[sort as string] || sortMapping.newest
 
+  const priceCondition: Prisma.FloatFilter = {}
+
+  if (priceMin) {
+    priceCondition.gte = Number(priceMin)
+  }
+
+  if (priceMax) {
+    priceCondition.lte = Number(priceMax)
+  }
+
   const productsData = await prisma.product.findMany({
     where: {
       categoryId: category.id,
@@ -72,6 +82,7 @@ export default async function ProductsPage({
             },
           }
         : {}),
+      ...(priceMin && priceMax && { price: priceCondition }),
     },
     orderBy,
     select: {
@@ -106,6 +117,13 @@ export default async function ProductsPage({
     }),
   )
 
+  const priceAggregate = await prisma.product.aggregate({
+    where: { categoryId: category.id },
+    _max: { price: true },
+  })
+
+  const maxProductsPrice = priceAggregate._max?.price || 1000
+
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="flex flex-col gap-y-2 sm:flex-row sm:justify-between lg:mb-16">
@@ -137,13 +155,21 @@ export default async function ProductsPage({
       </div>
 
       <div className="my-4 flex items-center justify-between lg:hidden">
-        <ProductFilters device="mobile" filtersData={filtersData} />
+        <ProductFilters
+          maxProductsPrice={maxProductsPrice}
+          device="mobile"
+          filtersData={filtersData}
+        />
         <ProductSort device="mobile" />
       </div>
 
       <div className="flex flex-col lg:grid lg:grid-cols-[260px_1fr] lg:gap-16">
         <aside className="hidden lg:block">
-          <ProductFilters device="desktop" filtersData={filtersData} />
+          <ProductFilters
+            maxProductsPrice={maxProductsPrice}
+            device="desktop"
+            filtersData={filtersData}
+          />
         </aside>
 
         <div className="flex flex-col gap-y-8">
