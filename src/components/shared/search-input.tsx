@@ -51,7 +51,7 @@ export const SearchInput = ({
       </form>
 
       {(variant === 'navigation' || variant === 'filter') && (
-        <div className="absolute top-1/2 right-3 -translate-y-1/2 text-xs">
+        <div className="absolute top-1/2 right-3 hidden -translate-y-1/2 text-xs lg:block">
           <span className="text-accent uppercase">
             [
             {variant === 'navigation'

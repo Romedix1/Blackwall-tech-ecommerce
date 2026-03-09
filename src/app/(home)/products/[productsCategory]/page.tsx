@@ -126,7 +126,7 @@ export default async function ProductsPage({
 
   return (
     <div className="container mx-auto px-4 py-16">
-      <div className="flex flex-col gap-y-2 sm:flex-row sm:justify-between lg:mb-16">
+      <div className="flex flex-col gap-y-2 sm:justify-between md:flex-row lg:mb-16">
         <header className="w-full">
           <h1 className="flex flex-col uppercase">
             <span
@@ -154,7 +154,7 @@ export default async function ProductsPage({
         <PathNavigator productCategory={productsCategory} />
       </div>
 
-      <div className="my-4 flex items-center justify-between lg:hidden">
+      <div className="my-4 flex items-center justify-between gap-4 lg:hidden">
         <ProductFilters
           maxProductsPrice={maxProductsPrice}
           device="mobile"

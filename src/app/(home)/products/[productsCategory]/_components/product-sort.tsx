@@ -32,7 +32,7 @@ export const ProductSort = ({ device }: ProductSortProps) => {
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger className="text-text-second hover:text-text-main focus:text-text-main terminal-hover border-border relative z-30 w-60 cursor-pointer px-4 py-2 text-left uppercase">
+      <DropdownMenu.Trigger className="text-text-second hover:text-text-main focus:text-text-main terminal-hover border-border relative z-30 w-60 w-fit cursor-pointer truncate px-4 py-2 text-left text-right text-sm uppercase">
         <span className="truncate">
           <span aria-hidden="true">&gt;</span>
           <span className="ml-2">
@@ -40,7 +40,7 @@ export const ProductSort = ({ device }: ProductSortProps) => {
           </span>
         </span>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content className="bg-surface relative z-30 ml-7 border px-4">
+      <DropdownMenu.Content className="bg-surface relative z-30 w-screen border px-4 sm:w-fit lg:ml-7">
         <DropdownMenu.RadioGroup
           value={currentOption.value}
           onValueChange={handleSortChange}

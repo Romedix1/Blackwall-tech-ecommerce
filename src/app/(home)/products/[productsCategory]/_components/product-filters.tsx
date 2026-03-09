@@ -5,6 +5,7 @@ import { PriceSlider } from '@/app/(home)/products/[productsCategory]/_component
 import { SearchProduct } from '@/app/(home)/products/[productsCategory]/_components/search-product'
 import { SearchInput } from '@/components/shared'
 import { Button } from '@/components/ui'
+import { cn } from '@/lib/utils'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
@@ -35,6 +36,7 @@ export const ProductFilters = ({
     searchParams.get('search') || '',
   )
   const [prevUrlSearch, setPrevUrlSearch] = useState(urlSearch)
+  const [isMobileOverlayOpen, setIsMobileOverlayOpen] = useState(false)
 
   if (urlSearch !== prevUrlSearch) {
     setPrevUrlSearch(urlSearch)
@@ -96,16 +98,35 @@ export const ProductFilters = ({
   return (
     <>
       <Button
+        onClick={() => setIsMobileOverlayOpen((prev) => !prev)}
         className="text-accent w-fit px-4 py-3 text-xs uppercase sm:px-6 sm:text-sm lg:hidden"
         variant="secondary"
       >
         <span aria-hidden="true">[</span>
-        <span>+</span>
+        <span>{!isMobileOverlayOpen ? '+' : '-'}</span>
         <span aria-hidden="true">]</span>
         <span className="ml-2">Filters</span>
       </Button>
 
-      <div className="hidden flex-col gap-8 lg:flex">
+      <div
+        className={cn(
+          'flex-col gap-8 lg:flex',
+          isMobileOverlayOpen
+            ? 'bg-background fixed top-70 bottom-0 left-0 z-40 flex w-screen overflow-y-auto border-t-4 px-6 pt-6 pb-16'
+            : 'hidden',
+        )}
+      >
+        <div className="flex justify-end lg:hidden">
+          <button
+            onClick={() => setIsMobileOverlayOpen(false)}
+            className="terminal-hover w-fit text-right uppercase"
+          >
+            <span aria-hidden="true">[</span>
+            <span>x</span>
+            <span aria-hidden="true">]</span>
+          </button>
+        </div>
+
         <div className="flex flex-col gap-3">
           <SearchProduct
             device={device}
@@ -148,7 +169,7 @@ export const ProductFilters = ({
 
         {filtersData.length > FILTERS_LIMIT && (
           <Button
-            className="text-xs"
+            className="w-full py-4 text-xs"
             onClick={() => setShowAllFilters(!showAllFilters)}
           >
             {showAllFilters ? (
