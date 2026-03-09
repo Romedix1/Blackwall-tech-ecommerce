@@ -1,12 +1,13 @@
 import { Input } from '@/components/ui'
 import { cn } from '@/lib/utils'
-import { RefObject, useId } from 'react'
+import { ComponentPropsWithoutRef, RefObject, useId } from 'react'
 
-type SearchInputProps = {
+interface SearchInputProps extends ComponentPropsWithoutRef<'input'> {
   ref?: RefObject<HTMLInputElement | null>
-  variant?: 'default' | 'navigation'
+  variant?: 'default' | 'navigation' | 'filter'
   inputClassName?: string
   containerClassName?: string
+  placeholder?: string
   id?: string
   ariaLabel: string
 }
@@ -16,8 +17,10 @@ export const SearchInput = ({
   variant = 'default',
   inputClassName,
   containerClassName,
+  placeholder,
   id: customId,
   ariaLabel,
+  ...props
 }: SearchInputProps) => {
   const generateId = useId()
   const id = customId || generateId
@@ -31,6 +34,7 @@ export const SearchInput = ({
           type="search"
           placeholder=" "
           aria-label={ariaLabel}
+          {...props}
           className={cn(
             'peer bg-surface hover:border-primary-hover caret-accent h-10 rounded-none border py-2.5 pr-26 pl-4 text-sm transition-colors duration-200 placeholder-shown:caret-transparent focus-visible:ring-0 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none',
             inputClassName,
@@ -41,14 +45,20 @@ export const SearchInput = ({
           aria-hidden="true"
           className="text-text-second peer-focus:[&_.cursor]:animate-blink pointer-events-none absolute top-1/2 left-4 flex -translate-y-1/2 items-center text-sm uppercase opacity-0 transition-opacity peer-placeholder-shown:opacity-100"
         >
-          &gt; search_database
+          &gt; {placeholder ? placeholder : 'search_database'}
           <span className="cursor">_</span>
         </div>
       </form>
 
-      {variant === 'navigation' && (
-        <div className="absolute top-1/2 right-3 -translate-y-1/2 text-xs">
-          <span className="text-accent uppercase">[ ctrl k ]</span>
+      {(variant === 'navigation' || variant === 'filter') && (
+        <div className="absolute top-1/2 right-3 hidden -translate-y-1/2 text-xs lg:block">
+          <span className="text-accent uppercase">
+            [
+            {variant === 'navigation'
+              ? ' ctrl + k'
+              : variant === 'filter' && ' / '}
+            ]
+          </span>
         </div>
       )}
     </div>
