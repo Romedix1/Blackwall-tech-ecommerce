@@ -97,7 +97,7 @@ export const CartOverlay = () => {
                 )
               })
             ) : (
-              <p className="text-text-second text-xs tracking-widest uppercase">
+              <p className="text-text-second text-center text-xs tracking-widest uppercase 2xl:text-lg">
                 Inventory is empty
               </p>
             )}

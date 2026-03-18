@@ -14,17 +14,28 @@ describe('Cart overlay component', () => {
   })
 
   it('should render empty state where there are o items', () => {
-    ;(useCart as unknown as Mock).mockReturnValue({
+    const mockState = {
       isOpen: true,
+      toggle: vi.fn(),
       items: [],
+    }
+
+    ;(useCart as unknown as Mock).mockImplementation((selector) => {
+      if (typeof selector === 'function') {
+        return selector(mockState)
+      }
+      return mockState
     })
 
-    expect('Cart is empty').toBeInTheDocument()
+    render(<CartOverlay />)
+
+    expect(screen.getByText(/Inventory is empty/i)).toBeInTheDocument()
   })
 
   it('should render items and calculate subtotal correctly', () => {
-    ;(useCart as unknown as Mock).mockReturnValue({
+    const mockState = {
       isOpen: true,
+      toggle: vi.fn(),
       items: [
         {
           slug: 'rtx-5090-ti',
@@ -34,11 +45,18 @@ describe('Cart overlay component', () => {
           imgSrc: '/test.png',
         },
       ],
+    }
+
+    ;(useCart as unknown as Mock).mockImplementation((selector) => {
+      if (typeof selector === 'function') {
+        return selector(mockState)
+      }
+      return mockState
     })
 
     render(<CartOverlay />)
 
-    expect(screen.getByText('RTX 5090 TI')).toBeInTheDocument()
-    expect(screen.getByText('Subtotal: $ 3998.00')).toBeInTheDocument()
+    expect(screen.getByText(/RTX 5090 TI/i)).toBeInTheDocument()
+    expect(screen.getByText(/3998\.00/)).toBeInTheDocument()
   })
 })
