@@ -1,9 +1,15 @@
+'use client'
+
 import { ShoppingCart } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useCart } from '@/hooks/use-cart'
 
 export const NavbarCart = () => {
+  const { toggle } = useCart()
+
   return (
     <button
+      onClick={toggle}
       className={cn(
         'terminal-hover group active:bg-primary-active flex cursor-pointer items-center gap-2 lg:px-2 lg:py-1.5',
       )}

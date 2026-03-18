@@ -34,7 +34,7 @@ export const BestSellersContainer = async () => {
             key={product.slug}
             product={{
               name: product.name,
-              price: product.price.toString(),
+              price: product.price,
               badge: product.badge,
               slug: product.slug,
               specs: product.specification as SpecSection[],
