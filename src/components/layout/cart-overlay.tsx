@@ -1,0 +1,125 @@
+'use client'
+
+import { AmountButton } from '@/components/shared'
+import { Button, Separator } from '@/components/ui'
+import { useCart } from '@/hooks/use-cart'
+import { cn } from '@/lib/utils'
+import Image from 'next/image'
+
+export const CartOverlay = () => {
+  const { isOpen, toggle, updateQuantity, removeItem } = useCart()
+
+  const items = useCart((state) => state.items)
+  const total =
+    items?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0
+
+  return (
+    <>
+      <div
+        className={cn(
+          `fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity duration-200 ease-in-out`,
+          isOpen
+            ? 'pointer-events-auto opacity-100'
+            : 'pointer-events-none opacity-0',
+        )}
+        onClick={toggle}
+      />
+
+      <div
+        className={cn(
+          `bg-surface fixed top-0 right-0 z-50 flex h-screen w-screen flex-col transition-transform duration-200 ease-in-out lg:w-5/12`,
+          isOpen ? 'translate-x-0' : 'translate-x-full',
+        )}
+      >
+        <div className="p-6 pb-0">
+          <div className="flex items-start justify-between">
+            <h4 className="text-accent text-sm font-bold uppercase 2xl:text-base">
+              <span aria-hidden="true">{'//'} Active_inventory</span>
+              <span className="sr-only">Active inventory</span>
+            </h4>
+
+            <button
+              onClick={toggle}
+              className="text-text-second hover:text-error-text focus:text-error-text cursor-pointer text-xs uppercase outline-none 2xl:text-sm"
+            >
+              <span aria-hidden="true">[ X_close ]</span>
+              <span className="sr-only">Close</span>
+            </button>
+          </div>
+          <Separator className="my-6" />
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-6">
+          <div className="flex flex-col gap-8">
+            {items && items.length > 0 ? (
+              items.map((item) => {
+                return (
+                  <div
+                    key={item.slug}
+                    className="flex flex-col gap-4 border-b pb-8 last:border-0 last:pb-4"
+                  >
+                    <h5 className="text-text-main text-sm font-bold tracking-widest uppercase 2xl:text-base">
+                      {item.name}
+                    </h5>
+
+                    <div className="flex items-center gap-6">
+                      <div className="relative flex h-20 w-24 shrink-0 items-center justify-center 2xl:h-32 2xl:w-36">
+                        <Image
+                          src={item.imgSrc}
+                          width={144}
+                          height={144}
+                          alt={item.name}
+                          className="object-contain"
+                        />
+                      </div>
+                      <p className="text-accent text-xl font-bold">
+                        $ {item.price.toFixed(2)}
+                      </p>
+                    </div>
+
+                    <div className="mt-2 flex items-center justify-between">
+                      <AmountButton
+                        quantity={item.quantity}
+                        slug={item.slug}
+                        handleUpdate={updateQuantity}
+                        className="w-fit justify-start border-none bg-transparent p-0 text-sm 2xl:text-base"
+                      />
+
+                      <button
+                        onClick={() => removeItem(item.slug)}
+                        className="text-error-text hover:text-error-text/60 focus:text-error-text/60 cursor-pointer text-xs font-bold tracking-widest uppercase outline-none 2xl:text-sm"
+                      >
+                        <span aria-hidden="true">[ Remove ]</span>
+                        <span className="sr-only">Remove</span>
+                      </button>
+                    </div>
+                  </div>
+                )
+              })
+            ) : (
+              <p className="text-text-second text-xs tracking-widest uppercase">
+                Inventory is empty
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="border border-t p-6">
+          <div className="mb-6 flex items-center justify-between">
+            <p className="text-text-second text-sm font-bold uppercase 2xl:text-base">
+              Subtotal:
+            </p>
+            <p className="text-accent text-2xl font-bold">
+              $ {total.toFixed(2)}
+            </p>
+          </div>
+
+          <Button className="w-full py-4">
+            <span aria-hidden="true">[ Initialize_checkout ]</span>
+            <span className="sr-only">Initialize checkout</span>
+          </Button>
+        </div>
+      </div>
+    </>
+  )
+}
