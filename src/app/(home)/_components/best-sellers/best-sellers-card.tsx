@@ -2,12 +2,11 @@
 
 import { AddToCartButton } from '@/components/shared/add-to-cart-button'
 import { BackgroundGlow } from '@/components/ui'
-import { useCart } from '@/hooks/use-cart'
 import { cn } from '@/lib/utils'
 import { AttributeType, SpecSection } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MouseEvent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 
 type ProductType = {
   name: string
@@ -23,7 +22,12 @@ type BestSellersCardType = {
 }
 
 export const BestSellersCard = ({ product }: BestSellersCardType) => {
-  const { addItem } = useCart()
+  const cartProduct = {
+    slug: product.slug,
+    name: product.name,
+    price: product.price,
+    image: product.image,
+  }
 
   const flatSpecs = product.specs.flatMap(
     (section: SpecSection) =>
@@ -88,7 +92,7 @@ export const BestSellersCard = ({ product }: BestSellersCardType) => {
             $ {Number(product.price).toFixed(2)}
           </p>
 
-          <AddToCartButton onClick={handleAddToCart} />
+          <AddToCartButton product={cartProduct} />
         </div>
       </Link>
     </article>
