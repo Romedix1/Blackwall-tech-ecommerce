@@ -11,6 +11,8 @@ import { NavbarSearch } from '@/components/layout/navbar/navbar-search'
 import { MobileSearchTrigger } from '@/components/layout/navbar/mobile-search-trigger'
 import { MobileMenuShell } from '@/components/layout/navbar/mobile-menu-shell'
 import { SearchProduct } from '@/app/(home)/products/[productsCategory]/_components/search-product'
+import { SearchInput } from '@/components/shared/search-input'
+import { SearchInDb } from '@/lib/actions/search'
 
 vi.mock('@/auth', () => ({
   auth: vi.fn(),
@@ -28,7 +30,15 @@ vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
 }))
 
+vi.mock('@/lib/actions/search', () => ({
+  SearchInDb: vi.fn(),
+}))
+
 describe('Search Functionality', () => {
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('should focus the navigation input field when Ctrl+K is pressed', async () => {
     render(<NavbarSearch variant="navigation" />)
 
@@ -78,5 +88,88 @@ describe('Search Functionality', () => {
     fireEvent.keyDown(window, { key: '/' })
 
     expect(searchInput).toHaveFocus()
+  })
+
+  it('should fetch products from db', async () => {
+    vi.mocked(SearchInDb).mockResolvedValue({
+      products: [
+        { name: 'RTX 5090 Blackwall Edition', slug: 'rtx-5090-blackwall' },
+      ],
+      categories: [],
+    })
+
+    render(<SearchInput ariaLabel="Search database" />)
+
+    const searchInput = screen.getByLabelText('Search database')
+
+    fireEvent.focus(searchInput)
+    fireEvent.change(searchInput, { target: { value: 'rtx' } })
+
+    const fetchedProduct = await screen.findByText(
+      'RTX 5090 Blackwall Edition',
+      {},
+      { timeout: 1500 },
+    )
+
+    expect(fetchedProduct).toBeInTheDocument()
+    expect(SearchInDb).toHaveBeenCalledWith('rtx')
+    expect(SearchInDb).toHaveBeenCalledTimes(1)
+  })
+
+  it('should fetch categories from db', async () => {
+    vi.mocked(SearchInDb).mockResolvedValue({
+      products: [],
+      categories: [{ name: 'processors', slug: 'cpu' }],
+    })
+
+    render(<SearchInput ariaLabel="Search database" />)
+
+    const searchInput = screen.getByLabelText('Search database')
+
+    fireEvent.focus(searchInput)
+    fireEvent.change(searchInput, { target: { value: 'proc' } })
+
+    const fetchedProduct = await screen.findByText(
+      'processors',
+      {},
+      { timeout: 1500 },
+    )
+
+    expect(fetchedProduct).toBeInTheDocument()
+    expect(SearchInDb).toHaveBeenCalledWith('proc')
+    expect(SearchInDb).toHaveBeenCalledTimes(1)
+  })
+
+  it('should fetch categories and products from db', async () => {
+    vi.mocked(SearchInDb).mockResolvedValue({
+      products: [
+        { name: 'RTX 5090 Blackwall G Edition', slug: 'rtx-5090-blackwall' },
+      ],
+      categories: [{ name: 'Graphics Cards', slug: 'gpu' }],
+    })
+
+    render(<SearchInput ariaLabel="Search database" />)
+
+    const searchInput = screen.getByLabelText('Search database')
+
+    fireEvent.focus(searchInput)
+    fireEvent.change(searchInput, { target: { value: 'g' } })
+
+    const fetchedProduct = await screen.findByText(
+      'RTX 5090 Blackwall G Edition',
+      {},
+      { timeout: 2000 },
+    )
+
+    const fetchedCategory = await screen.findByText(
+      'Graphics Cards',
+      {},
+      { timeout: 2000 },
+    )
+
+    expect(fetchedProduct).toBeInTheDocument()
+    expect(fetchedCategory).toBeInTheDocument()
+    expect(SearchInDb).toHaveBeenCalledWith('g')
+    expect(SearchInDb).toHaveBeenCalledTimes(1)
   })
 })
