@@ -28,6 +28,7 @@ type CartStore = {
     isLoggedIn?: boolean,
   ) => Promise<void>
   removeItem: (slug: string, isLoggedIn?: boolean) => Promise<void>
+  setCart: (items: CartItem[]) => void
 }
 
 let timeoutId: ReturnType<typeof setTimeout>
@@ -59,6 +60,7 @@ export const useCart = create<CartStore>()(
         set((state) => ({
           isOpen: !state.isOpen,
         })),
+      setCart: (items) => set({ items }),
       addItem: async (
         slug,
         name,
