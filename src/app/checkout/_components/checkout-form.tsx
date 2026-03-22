@@ -62,22 +62,32 @@ export const CheckoutForm = () => {
       </div>
 
       <form className="flex flex-col gap-6">
-        <TerminalInput placeholder="Full_name" ariaLabel="Full name" />
-        <TerminalInput placeholder="Shipping_address" ariaLabel="address" />
         <TerminalInput
-          placeholder="Credit_card_number"
-          ariaLabel="Credit card number"
+          placeholder="Full_name"
+          name="fullName"
+          ariaLabel="Full name"
+        />
+        <TerminalInput
+          placeholder="Shipping_address"
+          ariaLabel="address"
+          name="address"
         />
 
-        <div className="grid w-full grid-cols-[2fr_1fr] gap-3 sm:grid-cols-[3fr_1fr]">
-          <TerminalInput placeholder="Exp_date" ariaLabel="Expiration date" />
+        <div className="grid w-full grid-cols-[2fr_1fr] gap-3 sm:grid-cols-[3fr_2fr]">
+          <TerminalInput placeholder="City" name="city" ariaLabel="City" />
           <TerminalInput
-            placeholder="Cvv"
-            name="cvv"
-            ariaLabel="Cvv"
-            className="pr-4"
+            placeholder="Zip_code"
+            name="zipCode"
+            ariaLabel="Zip code"
           />
         </div>
+
+        <TerminalInput
+          type="tel"
+          placeholder="Phone_number"
+          name="phone"
+          ariaLabel="Phone number"
+        />
 
         <Button>
           <span aria-hidden="true">[ Confirm_order ]</span>
