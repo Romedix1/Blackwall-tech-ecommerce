@@ -3,7 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import { RegisterSchema } from '@/lib/zod'
 import bcrypt from 'bcryptjs'
-import { sendVerificationEmail } from '@/app/api/send-confirmation-email'
+import { sendVerificationEmail } from '@/lib/send-confirmation-email'
 import { signIn, signOut } from '@/auth'
 import { LoginSchema } from '@/lib/zod'
 import { AuthError } from 'next-auth'

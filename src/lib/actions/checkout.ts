@@ -7,6 +7,8 @@ import { prisma } from '@/lib/prisma'
 import { stripe } from '@/lib/stripe'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
+import { auth } from '@/auth'
+import Stripe from 'stripe'
 
 export async function checkout(
   items: CartItem[],
@@ -44,7 +46,7 @@ export async function checkout(
       where: { slug: { in: productSlugs } },
     })
 
-    const stripeLineitems = []
+    const stripeLineitems: Stripe.Checkout.SessionCreateParams.LineItem[] = []
 
     for (const item of items) {
       const realProduct = dbProducts.find(
@@ -62,10 +64,10 @@ export async function checkout(
       stripeLineitems.push({
         price_data: {
           currency: 'usd',
+          unit_amount: Math.round(realProduct.price * 100),
           product_data: {
             name: realProduct.name,
           },
-          unit_amount: Math.round(realProduct.price * 100),
         },
         quantity: item.quantity,
       })
@@ -74,6 +76,54 @@ export async function checkout(
     if (inventoryError) {
       return { error: [inventoryError], fields: rawData }
     }
+
+    const userSession = await auth()
+    const userId = userSession?.user.id
+
+    const totalAmount = items.reduce((sum, item) => {
+      const product = dbProducts.find((p) => p.slug === item.productSlug)!
+      return sum + product.price * item.quantity
+    }, 0)
+
+    const newOrder = await prisma.$transaction(async (trans) => {
+      const createdOrder = await trans.order.create({
+        data: {
+          userId: userId || 'guest',
+          email: validatedData.data.email,
+          fullName: validatedData.data.fullName,
+          phoneNumber: validatedData.data.phone,
+          totalAmount: totalAmount,
+          status: 'pending',
+          address: validatedData.data.shippingAddress,
+          city: validatedData.data.city,
+          zipCode: validatedData.data.zipCode,
+          items: {
+            create: items.map((item) => {
+              const product = dbProducts.find(
+                (p) => p.slug === item.productSlug,
+              )!
+              return {
+                productId: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: item.quantity,
+              }
+            }),
+          },
+        },
+      })
+
+      for (const item of items) {
+        const product = dbProducts.find((p) => p.slug === item.productSlug)!
+
+        await trans.product.update({
+          where: { id: product.id },
+          data: { quantity: { decrement: item.quantity } },
+        })
+      }
+
+      return createdOrder
+    })
 
     // [ ARCHITECTURE NOTE FOR REVIEWERS ]
     // Stripe Tax (automatic_tax) is intentionally disabled in this portfolio project.
@@ -86,10 +136,12 @@ export async function checkout(
       line_items: stripeLineitems,
       customer_email: validatedData.data.email,
       metadata: {
-        customerName: validatedData.data.fullName,
-        address: validatedData.data.shippingAddress,
+        userId: userId || 'Guest',
+        orderId: newOrder.id,
+        email: validatedData.data.email,
+        fullName: validatedData.data.fullName,
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout?canceled=true`,
     })
 

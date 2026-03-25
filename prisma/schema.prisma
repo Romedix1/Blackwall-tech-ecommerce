@@ -142,10 +142,14 @@ model OrderItem {
 
 model Order {
   id              String      @id @default(cuid())
-  name            String
   userId          String?
+  email           String
+  fullName        String
+  phoneNumber     String
   totalAmount     Float
   address         String
+  city            String
+  zipCode         String
   stripeSessionId String?
   status          OrderStatus
   items           OrderItem[]

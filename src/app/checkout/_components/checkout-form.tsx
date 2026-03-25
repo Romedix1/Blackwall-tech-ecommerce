@@ -97,14 +97,16 @@ export const CheckoutForm = ({
             [ ! ] // WARNING: SANDBOX_ENVIRONMENT. DO_NOT_ENTER_REAL_DATA
           </span>
           <span className="sr-only">
-            ! Warning: sandbox environment. Do not enter real data
+            Warning: sandbox environment. Do not enter real data
           </span>
         </p>
       </div>
 
       <form action={formAction} className="flex flex-col gap-6">
         <TerminalInput
-          defaultValue={state?.fields?.fullName || draftData?.fullName || ''}
+          defaultValue={
+            state?.fields?.fullName || draftData?.fullName || userEmail || ''
+          }
           placeholder="Full_name"
           name="fullName"
           ariaLabel="Full name"
