@@ -110,6 +110,7 @@ export const CheckoutForm = ({
           placeholder="Full_name"
           name="fullName"
           ariaLabel="Full name"
+          className="pr-4"
         />
         <TerminalInput
           defaultValue={
@@ -118,6 +119,7 @@ export const CheckoutForm = ({
           placeholder="Shipping_address"
           ariaLabel="Shipping address"
           name="shippingAddress"
+          className="pr-4"
         />
 
         <TerminalInput
@@ -125,20 +127,23 @@ export const CheckoutForm = ({
           placeholder="Email"
           ariaLabel="Email"
           name="email"
+          className="pr-4"
         />
 
-        <div className="grid w-full grid-cols-[2fr_1fr] gap-3 sm:grid-cols-[3fr_2fr]">
+        <div className="grid w-full grid-cols-[3fr_2fr] gap-3">
           <TerminalInput
             placeholder="City"
             defaultValue={state?.fields.city || draftData?.city || ''}
             name="city"
             ariaLabel="City"
+            className="pr-4"
           />
           <TerminalInput
             defaultValue={state?.fields.zipCode || draftData?.zipCode || ''}
             placeholder="Zip_code"
             name="zipCode"
             ariaLabel="Zip code"
+            className="pr-4"
           />
         </div>
 
@@ -148,6 +153,7 @@ export const CheckoutForm = ({
           placeholder="Phone_number"
           name="phone"
           ariaLabel="Phone number"
+          className="pr-4"
         />
 
         <Button disabled={isPending}>

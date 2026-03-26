@@ -131,8 +131,9 @@ export async function checkout(
     // In a production environment, this would be handled via Stripe Tax API based on customer location.
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'us_bank_account'],
       mode: 'payment',
+      currency: 'usd',
       line_items: stripeLineitems,
       customer_email: validatedData.data.email,
       metadata: {

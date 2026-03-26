@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const body = await req.text()
   const signature = (await headers()).get('stripe-signature') as string
 
-  let event
+  let event: Stripe.Event
 
   try {
     event = stripe.webhooks.constructEvent(
@@ -28,15 +28,47 @@ export async function POST(req: Request) {
 
   const session = event.data.object as Stripe.Checkout.Session
 
+  const handledEvents = [
+    'checkout.session.completed',
+    'checkout.session.async_payment_succeeded',
+    'checkout.session.async_payment_failed',
+    'checkout.session.expired',
+    'charge.failed',
+    'payment_intent.payment_failed',
+  ]
+
+  if (!handledEvents.includes(event.type)) {
+    return new NextResponse('Event ignored by Blackwall Tech', { status: 200 })
+  }
+
+  const { orderId, userId } = session.metadata || {}
+
+  if (!orderId || !userId) {
+    return new NextResponse('Missing metadata', { status: 400 })
+  }
+
   try {
+    if (event.type.startsWith('checkout.session.')) {
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { stripeSessionId: session.id },
+      })
+    }
+
     switch (event.type) {
       case 'checkout.session.completed':
+        if (session.payment_status === 'paid') {
+          await handleOrderUpdate(session, 'paid')
+        }
+        break
+
       case 'checkout.session.async_payment_succeeded':
         await handleOrderUpdate(session, 'paid')
         break
 
       case 'payment_intent.payment_failed':
       case 'checkout.session.expired':
+      case 'charge.failed':
       case 'checkout.session.async_payment_failed':
         await handleOrderUpdate(session, 'failed')
         break
@@ -70,7 +102,6 @@ async function handleOrderUpdate(
       where: { id: orderId },
       data: {
         status: 'paid',
-        stripeSessionId: session.id,
       },
       include: {
         items: true,
@@ -83,7 +114,6 @@ async function handleOrderUpdate(
     if (customerEmail && customerName) {
       try {
         await sendOrderSuccessEmail(customerEmail, customerName, orderWithItems)
-        console.log(`[MAIL_SENT]: To ${customerEmail}`)
       } catch (emailError) {
         if (process.env.NODE_ENV === 'development') {
           console.error('[MAIL_ERROR]:', emailError)
@@ -115,7 +145,7 @@ async function handleOrderUpdate(
 
     return await trans.order.update({
       where: { id: orderId },
-      data: { status: 'failed' },
+      data: { status: 'failed', stripeSessionId: session.id },
     })
   })
 }
