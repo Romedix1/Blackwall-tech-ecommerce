@@ -3,24 +3,11 @@
 import { prisma } from '@/lib/prisma'
 import { RegisterSchema } from '@/lib/zod'
 import bcrypt from 'bcryptjs'
-import { sendVerificationEmail } from '@/app/api/send-confirmation-email'
+import { sendVerificationEmail } from '@/lib/send-confirmation-email'
 import { signIn, signOut } from '@/auth'
-import { LoginSchema } from '@/lib/zod/login-schema'
+import { LoginSchema } from '@/lib/zod'
 import { AuthError } from 'next-auth'
-
-type FormState =
-  | {
-      error: string[] | string
-      fields?: Record<string, string>
-      success?: never
-    }
-  | {
-      success: true
-      fields?: Record<string, string>
-      message: string
-      error?: never
-    }
-  | null
+import { FormState } from '@/types'
 
 export const RegisterUser = async (
   prevState: FormState,
