@@ -6,6 +6,7 @@ import { useCart } from '@/hooks'
 import { checkout } from '@/lib/actions'
 import { useActionState } from 'react'
 import { CartItem } from '../../../../generated/prisma'
+import { cn } from '@/lib'
 
 type draftDataType = {
   fullName: string
@@ -45,6 +46,12 @@ export const CheckoutForm = ({
   const checkoutWithItems = checkout.bind(null, payloadItems as CartItem[])
 
   const [state, formAction, isPending] = useActionState(checkoutWithItems, null)
+
+  const isEmpty = items.length === 0
+  const canSubmit = !isEmpty && !isPending
+
+  const hasError = !!state?.error
+  const showErrorMessage = hasError || (isEmpty && !isPending)
 
   return (
     <div className="bg-surface p-4 lg:w-115 lg:p-8 2xl:w-140">
@@ -158,18 +165,29 @@ export const CheckoutForm = ({
 
         <Button
           type="submit"
-          disabled={isPending}
-          aria-label={isPending ? 'Confirming' : 'Confirm order'}
+          disabled={!canSubmit}
+          className={cn(
+            isPending ? 'cursor-wait!' : isEmpty && 'cursor-not-allowed!',
+          )}
+          aria-label={
+            isPending ? 'Confirming' : isEmpty ? 'Empty cart' : 'Confirm order'
+          }
         >
           <span aria-hidden="true">
-            [ {isPending ? 'Confirming' : 'Confirm_order'} ]
+            [{' '}
+            {isPending
+              ? 'Confirming'
+              : isEmpty
+                ? 'Cart_empty'
+                : 'Confirm_order'}{' '}
+            ]
           </span>
           <span className="sr-only">
             {isPending ? 'Confirming' : 'Confirm order'}
           </span>
         </Button>
 
-        {state?.error && (
+        {showErrorMessage && (
           <div className="border-error-text text-error-text mt-6 border p-4 text-sm uppercase">
             <p className="mb-2 font-bold">
               <span aria-hidden="true">
@@ -177,15 +195,25 @@ export const CheckoutForm = ({
               </span>
               <span className="sr-only">Uplink rejected: Data corrupted</span>
             </p>
+
             <ul className="list-none">
-              {state.error.map((err: string, index: number) => (
-                <li key={index}>
+              {state?.error &&
+                state.error.map((err: string, index: number) => (
+                  <li key={index}>
+                    <span aria-hidden="true" className="mr-3">
+                      &gt;
+                    </span>
+                    {err}
+                  </li>
+                ))}
+              {isEmpty && (
+                <li>
                   <span aria-hidden="true" className="mr-3">
                     &gt;
                   </span>
-                  {err}
+                  No items detected in cart
                 </li>
-              ))}
+              )}
             </ul>
           </div>
         )}

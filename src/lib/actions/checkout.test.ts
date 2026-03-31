@@ -38,9 +38,32 @@ vi.mock('next/navigation', () => ({
 }))
 
 describe('Checkout backend', () => {
-  it('Should return error when validation is fails', async () => {
+  it('Should return error when items are empty', async () => {
     const formData = new FormData()
+
+    formData.append('fullName', 'Johnny Silverhand')
+    formData.append('email', 'johnny@samurai.nc')
+    formData.append('shippingAddress', 'Afterlife')
+    formData.append('city', 'Night City')
+    formData.append('zipCode', 'NC-77')
+    formData.append('phone', '555-000-000')
+
     const result = await checkout([], { error: [], fields: {} }, formData)
+
+    expect(result.error).toContain('No items detected in cart')
+  })
+
+  it('Should return error when validation is failed', async () => {
+    const formData = new FormData()
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mockItems = [{ productSlug: 'cyber-deck', quantity: 1 } as any]
+
+    const result = await checkout(
+      mockItems,
+      { error: [], fields: {} },
+      formData,
+    )
 
     const emailError = result.error.find((err) =>
       err.toLowerCase().includes('email'),

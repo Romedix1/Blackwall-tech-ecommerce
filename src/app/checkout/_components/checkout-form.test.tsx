@@ -10,8 +10,35 @@ vi.mock('@/lib/actions', () => ({
 }))
 
 vi.mock('@/hooks', () => ({
-  useCart: vi.fn((selector) => selector({ items: [] })),
+  useCart: vi.fn((selector) =>
+    selector({
+      isOpen: false,
+      toggle: vi.fn(),
+      addItem: vi.fn(),
+      updateQuantity: vi.fn(),
+      removeItem: vi.fn(),
+      setCart: vi.fn(),
+      items: mockCartItems,
+    }),
+  ),
 }))
+
+const mockCartItems: MockState[] = [
+  {
+    slug: 'neuro-processor',
+    price: 100.5,
+    quantity: 2,
+    name: 'Neuro Processor',
+    imgSrc: '/neuro.jpg',
+  },
+  {
+    slug: 'optic-cable',
+    price: 250,
+    quantity: 1,
+    name: 'Optic Cable',
+    imgSrc: '/optic.jpg',
+  },
+]
 
 describe('Checkout form', () => {
   it('Should load user email', () => {

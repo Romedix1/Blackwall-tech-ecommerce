@@ -20,6 +20,10 @@ export async function checkout(
     string
   >
 
+  if (!items || items.length < 1) {
+    return { error: ['No items detected in cart'], fields: rawData }
+  }
+
   const validatedData = checkoutSchema.safeParse(rawData)
 
   if (!validatedData.success) {
