@@ -49,6 +49,8 @@ export const CartOverlay = () => {
     removeItem(slug, isAuth)
   }
 
+  const canCheckout = items.length > 0
+
   return (
     <>
       <div
@@ -157,11 +159,25 @@ export const CartOverlay = () => {
             </p>
           </div>
 
-          <Button className="block w-full py-4 text-center" asChild>
-            <Link href={'/checkout'}>
-              <span aria-hidden="true">[ Initialize_checkout ]</span>
-              <span className="sr-only">Initialize checkout</span>
-            </Link>
+          <Button
+            asChild
+            disabled={!canCheckout}
+            className={cn(
+              'disabled:bg-primary-active/60! block w-full py-4 text-center',
+              !canCheckout && 'cursor-not-allowed!',
+            )}
+          >
+            {canCheckout ? (
+              <Link href="/checkout" onClick={toggle}>
+                <span aria-hidden="true">[ Initialize_checkout ]</span>
+                <span className="sr-only">Initialize checkout</span>
+              </Link>
+            ) : (
+              <button>
+                <span aria-hidden="true">[ System_locked: No_items ]</span>
+                <span className="sr-only">Locked: no items</span>
+              </button>
+            )}
           </Button>
         </div>
       </div>
