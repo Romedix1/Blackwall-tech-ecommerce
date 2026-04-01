@@ -4,7 +4,7 @@ import { TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { useCart } from '@/hooks'
 import { checkout } from '@/lib/actions'
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { CartItem } from '../../../../generated/prisma'
 import { cn } from '@/lib'
 
@@ -46,6 +46,7 @@ export const CheckoutForm = ({
   const checkoutWithItems = checkout.bind(null, payloadItems as CartItem[])
 
   const [state, formAction, isPending] = useActionState(checkoutWithItems, null)
+  const [orderToken] = useState(() => crypto.randomUUID())
 
   const isEmpty = items.length === 0
   const canSubmit = !isEmpty && !isPending
@@ -110,6 +111,13 @@ export const CheckoutForm = ({
       </div>
 
       <form action={formAction} className="flex flex-col gap-6">
+        <input
+          className="hidden"
+          name="orderToken"
+          value={orderToken}
+          readOnly
+        />
+
         <TerminalInput
           defaultValue={state?.fields?.fullName || draftData?.fullName || ''}
           placeholder="Full_name"

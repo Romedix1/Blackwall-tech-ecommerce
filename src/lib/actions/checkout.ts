@@ -21,7 +21,10 @@ export async function checkout(
   >
 
   if (!items || items.length < 1) {
-    return { error: ['No items detected in cart'], fields: rawData }
+    return {
+      error: ['Uplink rejected: No items detected in cart'],
+      fields: rawData,
+    }
   }
 
   const validatedData = checkoutSchema.safeParse(rawData)
@@ -38,6 +41,19 @@ export async function checkout(
       value: JSON.stringify(validatedData.data),
       maxAge: 60 * 10,
     })
+  }
+
+  const token = validatedData.data.orderToken
+
+  const existingOrder = await prisma.order.findUnique({
+    where: { orderToken: token },
+  })
+
+  if (existingOrder) {
+    return {
+      error: ['Uplink rejected: Duplicate transaction detected. Please wait'],
+      fields: rawData,
+    }
   }
 
   let sessionUrl = ''
@@ -93,6 +109,7 @@ export async function checkout(
       const createdOrder = await trans.order.create({
         data: {
           userId: userId || 'guest',
+          orderToken: token,
           email: validatedData.data.email,
           fullName: validatedData.data.fullName,
           phoneNumber: validatedData.data.phone,
