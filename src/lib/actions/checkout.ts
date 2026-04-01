@@ -6,9 +6,21 @@ import { CartItem } from '../../../generated/prisma'
 import { prisma } from '@/lib/prisma'
 import { stripe } from '@/lib/stripe'
 import { redirect } from 'next/navigation'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { auth } from '@/auth'
 import Stripe from 'stripe'
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+})
+
+const ratelimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(5, '1 m'),
+})
 
 export async function checkout(
   items: CartItem[],
@@ -19,6 +31,21 @@ export async function checkout(
     string,
     string
   >
+
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0] ??
+    headersList.get('x-real-ip') ??
+    '127.0.0.1'
+
+  const { success } = await ratelimit.limit(ip)
+
+  if (!success) {
+    return {
+      error: ['Uplink rejected: Rate limit exceeded. Try again in 60 seconds.'],
+      fields: rawData,
+    }
+  }
 
   if (!items || items.length < 1) {
     return {

@@ -4,7 +4,7 @@ import { TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { useCart } from '@/hooks'
 import { checkout } from '@/lib/actions'
-import { useActionState, useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { CartItem } from '../../../../generated/prisma'
 import { cn } from '@/lib'
 
@@ -28,6 +28,13 @@ export const CheckoutForm = ({
   canceled,
   draftData,
 }: CheckoutFormProps) => {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMounted(true), 0)
+    return () => clearTimeout(timer)
+  }, [])
+
   const items = useCart((state) => state.items)
 
   const total = items.reduce(
@@ -52,7 +59,21 @@ export const CheckoutForm = ({
   const canSubmit = !isEmpty && !isPending
 
   const hasError = !!state?.error
-  const showErrorMessage = hasError || (isEmpty && !isPending)
+  const showErrorMessage = hasError || (isEmpty && !isPending && isMounted)
+
+  if (!isMounted) {
+    return (
+      <div className="bg-surface flex h-96 animate-pulse items-center justify-center p-4 text-center uppercase lg:w-115 lg:p-8 2xl:w-140">
+        <span
+          aria-hidden="true"
+          className="text-accent font-bold tracking-wider break-all"
+        >
+          [ Establishing_secure_uplink... ]
+        </span>
+        <span className="sr-only">Loading secure checkout...</span>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-surface p-4 lg:w-115 lg:p-8 2xl:w-140">
