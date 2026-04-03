@@ -56,7 +56,11 @@ export const CheckoutForm = ({
   const [orderToken] = useState(() => crypto.randomUUID())
 
   const isEmpty = items.length === 0
-  const canSubmit = !isEmpty && !isPending
+  const hasStockError = items.some((item) => {
+    return item.stock !== undefined && item.quantity > item.stock
+  })
+
+  const canSubmit = !isEmpty && !isPending && !hasStockError
 
   const hasError = !!state?.error
   const showErrorMessage = hasError || (isEmpty && !isPending && isMounted)
@@ -196,17 +200,23 @@ export const CheckoutForm = ({
           type="submit"
           disabled={!canSubmit}
           className={cn(
-            isPending ? 'cursor-wait!' : isEmpty && 'cursor-not-allowed!',
+            isPending
+              ? 'cursor-wait!'
+              : (isEmpty || hasStockError) && 'cursor-not-allowed!',
           )}
           aria-label={
-            isPending ? 'Confirming' : isEmpty ? 'Empty cart' : 'Confirm order'
+            isPending
+              ? 'Confirming'
+              : isEmpty || hasStockError
+                ? 'Empty cart'
+                : 'Confirm order'
           }
         >
           <span aria-hidden="true">
             [{' '}
             {isPending
               ? 'Confirming'
-              : isEmpty
+              : isEmpty || hasStockError
                 ? 'Cart_empty'
                 : 'Confirm_order'}{' '}
             ]

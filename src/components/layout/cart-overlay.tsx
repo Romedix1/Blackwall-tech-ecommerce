@@ -2,6 +2,7 @@
 
 import { AmountButton } from '@/components/shared'
 import { Button, Separator } from '@/components/ui'
+import { QuantityError } from '@/components/ui/quantity-error'
 import { useCart } from '@/hooks'
 import { fetchCartFromDb } from '@/lib/actions'
 import { cn } from '@/lib/utils'
@@ -141,23 +142,7 @@ export const CartOverlay = () => {
                     </div>
 
                     {item.stock !== undefined && item.quantity > item.stock && (
-                      <div className="my-6 flex flex-col gap-1">
-                        <p className="text-error-text text-xs font-bold tracking-widest uppercase">
-                          <span aria-hidden="true">
-                            [ ! ] UPLINK_ERROR: STOCK_MISMATCH
-                          </span>
-                          <span className="sr-only">
-                            ! Uplink error: stock mismatch
-                          </span>
-                        </p>
-                        <p className="text-error-text/80 mt-2 text-xs leading-tight">
-                          Only{' '}
-                          <span className="text-accent font-bold">
-                            {item.stock}
-                          </span>{' '}
-                          units available. Please adjust your request
-                        </p>
-                      </div>
+                      <QuantityError stock={item.stock} />
                     )}
                   </div>
                 )
