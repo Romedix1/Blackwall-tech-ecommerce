@@ -106,6 +106,9 @@ export async function checkout(
       } else if (item.quantity > realProduct.quantity) {
         inventoryError = `Uplink rejected: Insufficient stock for ${realProduct.name}`
         break
+      } else if (item.quantity < 1) {
+        inventoryError = `Uplink rejected: Invalid quantity detected (minimum 1)`
+        break
       }
 
       stripeLineitems.push({
