@@ -1,7 +1,7 @@
 'use client'
 
-import { DeleteModal } from '@/app/dashboard/(dashboard)/_components/delete-modal'
-import { ShareModal } from '@/app/dashboard/(dashboard)/_components/share-modal'
+import { DeleteModal } from '@/app/dashboard/(dashboard)/_components/modals/delete-modal'
+import { ShareModal } from '@/app/dashboard/(dashboard)/_components/modals/share-modal'
 import { Button } from '@/components/ui'
 import { cn, getStatusTextColor } from '@/lib'
 import { getStatusData } from '@/lib/dashboard'

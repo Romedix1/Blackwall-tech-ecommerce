@@ -24,6 +24,11 @@ vi.mock('@/app/dashboard/(dashboard)/_components', () => ({
   ),
   UserActivity: () => <div>User Activity</div>,
   RecordBlock: () => <div>Record</div>,
+  RenderRecords: ({ records }: { records: unknown[] }) => (
+    <div>
+      {records.length === 0 ? 'No_orders_found_in_history' : 'Orders_List'}
+    </div>
+  ),
 }))
 
 const mockedAuth = vi.mocked(auth as unknown as () => Promise<Session | null>)

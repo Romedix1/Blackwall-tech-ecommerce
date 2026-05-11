@@ -1,4 +1,4 @@
-import { RecordBlock } from '@/app/dashboard/(dashboard)/_components'
+import { RecordBlock } from '@/app/dashboard/(dashboard)/_components/user/record-block'
 import { BaseRecordType, BuildRecordType } from '@/types'
 
 type RenderRecordsProps =

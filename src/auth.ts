@@ -9,6 +9,7 @@ import Google from 'next-auth/providers/google'
 import { Session, User } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 import { UAParser } from 'ua-parser-js'
+import { updateLastActive } from '@/lib/user/update-last-active'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -80,6 +81,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = user.role ?? 'user'
         token.passwordChangedAt = user.passwordChangedAt
         token.tokenVersion = user.tokenVersion
+
+        if (token?.id) {
+          updateLastActive(token.id as string)
+        }
 
         const connectionId = crypto.randomUUID()
         token.connectionId = connectionId

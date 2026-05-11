@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RecordBlock } from '@/app/dashboard/(dashboard)/_components/record-block'
+import { RecordBlock } from '@/app/dashboard/(dashboard)/_components/user/record-block'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
