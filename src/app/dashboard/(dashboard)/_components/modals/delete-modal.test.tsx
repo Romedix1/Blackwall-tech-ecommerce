@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { DeleteModal } from './delete-modal'
 import { deleteBuild } from '@/lib/actions'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { DeleteModal } from '@/app/dashboard/(dashboard)/_components/modals/delete-modal'
 
 vi.mock('@/lib/actions', () => ({
   deleteBuild: vi.fn(),

@@ -41,6 +41,7 @@ export default async function SettingsPage() {
 
         <ActiveSessions />
 
+        {/* TODO: ADD DELETE ACCOUNT OPTION */}
         <section className="border-error-text/40 bg-error-bg/15 mt-10 border p-6 lg:col-span-2">
           <div className="flex flex-col gap-4">
             <div>

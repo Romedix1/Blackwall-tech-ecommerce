@@ -13,7 +13,7 @@ export const DashboardNav = async () => {
   const headerSr = isAdmin ? 'Admin override controls' : 'Terminal access'
 
   const ADMIN_LINKS = [
-    { href: '/dashboard', label: 'System_metrics', sr: 'System metrics' },
+    { href: '/dashboard', label: '[ System_metrics ]', sr: 'System metrics' },
     {
       href: '/dashboard/inventory',
       label: '[ Inventory_db ]',
@@ -58,6 +58,7 @@ export const DashboardNav = async () => {
         <h2
           className={cn(
             'text-text-second mb-6 text-sm font-bold uppercase lg:text-base 2xl:text-xl',
+            userRole === 'admin' && 'text-warning',
           )}
         >
           <span aria-hidden="true">{header}</span>

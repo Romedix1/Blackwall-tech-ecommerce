@@ -1,4 +1,4 @@
-import { RenderRecords } from '@/app/dashboard/(dashboard)/_components/render-records'
+import { RenderRecords } from '@/app/dashboard/(dashboard)/_components/user/render-records'
 import { render, screen } from '@testing-library/react'
 
 vi.mock('next/navigation', () => ({

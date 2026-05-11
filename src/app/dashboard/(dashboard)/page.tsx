@@ -1,6 +1,8 @@
 import { UserActivity } from '@/app/dashboard/(dashboard)/_components'
 import { DashboardHeader } from '@/app/dashboard/(dashboard)/_components'
-import { RenderRecords } from '@/app/dashboard/(dashboard)/_components/render-records'
+import { RenderMetrics } from '@/app/dashboard/(dashboard)/_components'
+import { RenderRecords } from '@/app/dashboard/(dashboard)/_components'
+import { OrdersChart } from '@/app/dashboard/(dashboard)/_components/admin/orders-chart'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
@@ -29,16 +31,78 @@ export default async function UserDashboardPage() {
   //  This is a deterministic simulation using the Order ID as a seed to
   //  ensure UI consistency across sessions without random "jumps" on refresh.
 
+  const thirtyDaysAgo = new Date()
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
+  let chartData: { label: string; amount: number }[] = []
+
+  if (user.user.role === 'admin') {
+    const allOrders = await prisma.order.findMany({
+      where: { createdAt: { gte: thirtyDaysAgo } },
+      select: {
+        createdAt: true,
+      },
+    })
+
+    const chartMap: Record<string, number> = {}
+
+    for (let i = 30; i >= 0; i--) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+
+      const label = date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      })
+
+      chartMap[label] = 0
+    }
+
+    allOrders.forEach((order) => {
+      const label = order.createdAt.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      })
+
+      if (chartMap[label] !== undefined) {
+        chartMap[label] += 1
+      }
+    })
+
+    chartData = Object.entries(chartMap).map(([label, amount]) => ({
+      label,
+      amount,
+    }))
+  }
+
   return (
     <>
-      <DashboardHeader>
-        <span aria-hidden="true">{'//'} Welcome_back, </span>
-        <span className="sr-only">Welcome back, </span>
-        {user.user.name}
-      </DashboardHeader>
+      {user.user.role === 'user' ? (
+        <>
+          <DashboardHeader>
+            <span aria-hidden="true">{'//'} Welcome_back, </span>
+            <span className="sr-only">Welcome back, </span>
+            {user.user.name}
+          </DashboardHeader>
 
-      <RenderRecords type="order" records={userOrders} />
-      <UserActivity />
+          <RenderRecords type="order" records={userOrders} />
+          <UserActivity />
+        </>
+      ) : (
+        <>
+          <DashboardHeader>
+            <span className="sr-only">core metrics: system overview</span>
+            <span aria-hidden="true">{'//'} Core_metrics: sytem_overview</span>
+          </DashboardHeader>
+
+          <div className="w-full max-w-full overflow-hidden">
+            <div className="relative w-full min-w-0">
+              <RenderMetrics />
+            </div>
+          </div>
+          <OrdersChart data={chartData} />
+        </>
+      )}
     </>
   )
 }
