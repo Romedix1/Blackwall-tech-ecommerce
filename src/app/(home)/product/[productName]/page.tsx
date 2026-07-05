@@ -4,6 +4,7 @@ import { ProductActions } from '@/app/(home)/product/[productName]/_components/p
 import { PathNavigator } from '@/components/shared'
 import { ImageNotFound, Separator } from '@/components/ui'
 import { ImageCorner } from '@/components/ui/image-corner'
+import { ProductNotFound } from '@/components/ui/product-not-found'
 import { getImageUrl } from '@/lib'
 import { prisma } from '@/lib/prisma'
 import { BenchmarkType, SpecSection } from '@/types'
@@ -33,7 +34,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
     },
   })
 
-  if (!product) return null
+  if (!product) {
+    return (
+      <ProductNotFound href="/" buttonText={['Return to home', 'Return']} />
+    )
+  }
 
   const imageUrl = await getImageUrl(product.category.slug, product.slug)
 

@@ -9,11 +9,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-accent disabled:cursor-not-allowed disabled:bg-primary-active/60 text-background active:bg-primary-active/60 hover:bg-primary-hover/70 hover:text-text-main focus:bg-primary-hover/70 focus:text-text-main ',
+          'bg-accent text-background hover:bg-accent/80 hover:text-text-main focus:bg-accent/80 focus:text-text-main active:bg-accent/60 disabled:cursor-not-allowed disabled:bg-accent/50 disabled:text-background/50 disabled:hover:bg-accent/50 disabled:hover:text-background/50',
         secondary:
-          'border disabled:cursor-not-allowed disabled:text-text-disabled border-accent bg-transparent text-accent active:bg-primary-active hover:bg-accent hover:text-background focus:bg-accent focus:text-background ',
+          'border border-accent bg-transparent text-accent hover:bg-accent hover:text-background focus:bg-accent focus:text-background active:bg-accent/80 disabled:cursor-not-allowed disabled:border-accent/50 disabled:text-accent/50 disabled:hover:bg-transparent disabled:hover:text-accent/50',
         delete:
-          'bg-transparent disabled:cursor-not-allowed disabled:border-error-text/60 disabled:text-error-text/60 border text-error-text border-error-text hover:bg-error-text/60 focus:bg-error-text/60 active:bg-error-bg hover:text-text-main focus:text-text-main active:text-text-main',
+          'border border-error-text bg-transparent text-error-text hover:bg-error-text/60 hover:text-text-main focus:bg-error-text/60 focus:text-text-main active:bg-error-bg active:text-text-main disabled:cursor-not-allowed disabled:border-error-text/50 disabled:text-error-text/50 disabled:hover:bg-transparent disabled:hover:text-error-text/50',
       },
     },
     defaultVariants: {

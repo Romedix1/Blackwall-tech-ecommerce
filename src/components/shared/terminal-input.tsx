@@ -17,7 +17,7 @@ type ReadOnlyInputProps = BaseProps & {
 }
 
 type TerminalInputProps = EditableInputProps | ReadOnlyInputProps
-
+// TODO: ADD MISSING REQUIRED OPTION
 const TerminalInput = ({
   className,
   type,
@@ -33,7 +33,7 @@ const TerminalInput = ({
         type={type}
         placeholder=" "
         className={cn(
-          'peer bg-background hover:border-primary-hover caret-accent h-12 w-full rounded-none border pr-4 pl-4 text-sm transition-colors duration-200 focus-visible:ring-0 sm:pr-26',
+          'peer bg-background hover:border-primary-hover caret-accent h-12 w-full rounded-none border pr-4 pl-4 text-sm transition-colors duration-200 focus-visible:ring-0',
           className,
         )}
       />

@@ -75,7 +75,7 @@ export async function changeUsername(newUsername: string) {
     }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('[ CHANGE_USERNAME_ERROR ]:', error)
+      console.error('[ CHANGE_USERNAME_ERROR ]:', error)
     }
 
     return {
@@ -221,7 +221,7 @@ export const isOAuthUser = async (): Promise<boolean> => {
     return !!account
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('[ OAUTH_CHECK_FAILED ]: ', error)
+      console.error('[ OAUTH_CHECK_FAILED ]: ', error)
     }
 
     return false
