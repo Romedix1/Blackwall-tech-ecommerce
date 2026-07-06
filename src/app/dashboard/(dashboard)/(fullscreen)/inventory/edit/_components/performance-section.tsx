@@ -55,6 +55,7 @@ export const PerformanceSection = ({
                   type="text"
                   placeholder="Game name"
                   name={`performance-gameName-${index}`}
+                  value={perf.gameName}
                   onChange={(event) =>
                     handleUpdatePerformance(
                       index,
@@ -98,7 +99,7 @@ export const PerformanceSection = ({
 
                   <div className="min-w-0 flex-1">
                     <TerminalInput
-                      type="number"
+                      type="text"
                       placeholder="Settings"
                       value={perf.settings}
                       name={`performance-settings-${index}`}
