@@ -3,22 +3,35 @@
 import { InformationModal } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { deleteBuild } from '@/lib/actions'
+import { DeleteProduct } from '@/lib/actions/dashboard-admin'
 import { useEffect, useRef, useState } from 'react'
 
-type DeleteModalProps = {
-  buildId: string
-  buildName: string
+type BaseDeleteModalProps = {
   onClose: () => void
 }
 
-export const DeleteModal = ({
-  buildId,
-  buildName,
-  onClose,
-}: DeleteModalProps) => {
+type BuildDeleteProps = BaseDeleteModalProps & {
+  mode: 'build'
+  buildId: string
+  buildName: string
+}
+
+type ProductDeleteProps = BaseDeleteModalProps & {
+  mode: 'item'
+  productId: string
+  productName: string
+}
+
+type DeleteModalProps = BuildDeleteProps | ProductDeleteProps
+
+export const DeleteModal = (props: DeleteModalProps) => {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null)
+
+  const { mode, onClose } = props
+
+  const displayName = mode === 'build' ? props.buildName : props.productName
 
   useEffect(() => {
     cancelBtnRef.current?.focus()
@@ -27,9 +40,15 @@ export const DeleteModal = ({
   const handleDelete = async () => {
     setIsDeleting(true)
 
-    await deleteBuild(buildId)
+    if (mode === 'build') {
+      await deleteBuild(props.buildId)
+    } else if (mode === 'item') {
+      await DeleteProduct(props.productId)
+    }
 
     setIsDeleting(false)
+
+    onClose()
   }
 
   return (
@@ -57,7 +76,7 @@ export const DeleteModal = ({
             You are about to permanently deconstruct the following
             configuration:
             <span className="text-accent bg-accent/5 border-accent/20 mt-2 block border p-2">
-              &gt; {buildName || 'UNNAMED_UNIT_SEGMENT'}
+              &gt; {displayName || 'UNNAMED_UNIT_SEGMENT'}
             </span>
           </p>
 

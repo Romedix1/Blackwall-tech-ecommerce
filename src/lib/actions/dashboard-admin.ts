@@ -1,10 +1,11 @@
 'use server'
 
-import { z } from 'zod'
+import { success, z } from 'zod'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { EditProductSchema } from '@/lib/zod/edit-product-schema'
 import { Prisma } from '../../../generated/prisma'
+import { revalidatePath } from 'next/cache'
 
 type UpdateProductDTO = z.infer<typeof EditProductSchema>
 
@@ -51,5 +52,36 @@ export const UpdateProduct = async (
       console.error('[ DATABASE_ERROR ]: Failed to update product', error)
     }
     return { success: false, error: 'Failed to update product' }
+  }
+}
+
+export const DeleteProduct = async (productId: string) => {
+  const session = await auth()
+
+  const userId = session?.user.id
+
+  const isAdmin = session?.user.role === 'admin'
+
+  if (!userId || !isAdmin) {
+    return { success: false, error: 'Unauthorized' }
+  }
+
+  if (!productId) {
+    return { success: false, error: 'Missing productId' }
+  }
+
+  try {
+    await prisma.product.delete({
+      where: { id: productId },
+    })
+
+    revalidatePath('/dashboard/inventory')
+
+    return { success: true }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ DATABASE_ERROR ]: Failed to delete product', error)
+    }
+    return { success: false, error: 'Failed to delete product' }
   }
 }

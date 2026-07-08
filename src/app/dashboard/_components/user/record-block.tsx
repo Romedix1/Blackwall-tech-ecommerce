@@ -42,6 +42,7 @@ export const RecordBlock = ({ record, type }: OrderBlockProps) => {
 
       {isDeleting && type === 'build' && (
         <DeleteModal
+          mode="build"
           buildId={record.id}
           buildName={record.name}
           onClose={() => setIsDeleting(false)}

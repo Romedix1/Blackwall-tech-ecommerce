@@ -16,7 +16,8 @@ vi.mock('@/components/shared', () => ({
 }))
 
 describe('DeleteModal', () => {
-  const defaultProps = {
+  const buildProps = {
+    mode: 'build' as const,
     buildId: 'build-123',
     buildName: 'Netrunner Setup',
     onClose: vi.fn(),
@@ -27,14 +28,14 @@ describe('DeleteModal', () => {
   })
 
   it('Should render build name correctly', () => {
-    render(<DeleteModal {...defaultProps} />)
+    render(<DeleteModal {...buildProps} />)
 
     expect(screen.getByText(/> Netrunner Setup/i)).toBeInTheDocument()
     expect(screen.getByText(/System_purge_initiated/i)).toBeInTheDocument()
   })
 
   it('Should focus the Abort button on mount', () => {
-    render(<DeleteModal {...defaultProps} />)
+    render(<DeleteModal {...buildProps} />)
 
     const abortBtn = screen.getByRole('button', { name: /cancel deletion/i })
     expect(abortBtn).toHaveFocus()
@@ -42,12 +43,12 @@ describe('DeleteModal', () => {
 
   it('Should call onClose when Abort is clicked', async () => {
     const user = userEvent.setup()
-    render(<DeleteModal {...defaultProps} />)
+    render(<DeleteModal {...buildProps} />)
 
     const abortBtn = screen.getByRole('button', { name: /cancel deletion/i })
     await user.click(abortBtn)
 
-    expect(defaultProps.onClose).toHaveBeenCalledTimes(1)
+    expect(buildProps.onClose).toHaveBeenCalledTimes(1)
   })
 
   it('Should trigger delete action and show loading state', async () => {
@@ -57,7 +58,7 @@ describe('DeleteModal', () => {
       }>,
     )
 
-    render(<DeleteModal {...defaultProps} />)
+    render(<DeleteModal {...buildProps} />)
 
     const confirmBtn = screen.getByRole('button', { name: /confirm delete/i })
     const abortBtn = screen.getByRole('button', { name: /cancel deletion/i })
