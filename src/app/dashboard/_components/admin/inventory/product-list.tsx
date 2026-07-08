@@ -1,12 +1,10 @@
 import {
+  InventoryProduct,
   PaginationButtons,
   TableSortableHeader,
 } from '@/app/dashboard/_components/admin/inventory'
-import { Button } from '@/components/ui'
-import { cn } from '@/lib'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '../../../../../../generated/prisma'
-import Link from 'next/link'
 
 type ProductListProps = {
   page: number
@@ -114,50 +112,7 @@ export const ProductList = async ({
           </thead>
           <tbody>
             {products.map((product) => (
-              <tr key={product.id} className="hover:bg-accent/10 border-b">
-                <td className="text-text-second w-1/6 truncate p-4">
-                  {product.id}
-                </td>
-                <td className="w-1/6 truncate p-4 font-bold">{product.name}</td>
-                <td className="text-text-second w-1/6 truncate p-4 uppercase">
-                  [ {product.category?.slug} ]
-                </td>
-                <td
-                  className={cn(
-                    'w-1/6 truncate p-4 font-bold',
-                    product.quantity < 10
-                      ? 'text-error-text'
-                      : product.quantity >= 10 && product.quantity <= 50
-                        ? 'text-warning'
-                        : 'text-accent',
-                  )}
-                >
-                  {product.quantity}
-                </td>
-                <td className="w-1/6 truncate p-4">
-                  $ {product.price.toFixed(2)}
-                </td>
-
-                <td className="w-1/6 p-4">
-                  <div className="flex flex-col items-center justify-end gap-4">
-                    <Button
-                      asChild
-                      variant="secondary"
-                      className="flex items-center justify-center"
-                    >
-                      <Link href={`/dashboard/inventory/edit/${product.id}`}>
-                        <span className="sr-only">Edit product</span>
-                        <span aria-hidden="true">[ EDIT ]</span>
-                      </Link>
-                    </Button>
-
-                    <Button variant="delete">
-                      <span className="sr-only">Delete product</span>
-                      <span aria-hidden="true">[ PURGE ]</span>
-                    </Button>
-                  </div>
-                </td>
-              </tr>
+              <InventoryProduct key={product.id} product={product} />
             ))}
           </tbody>
         </table>
