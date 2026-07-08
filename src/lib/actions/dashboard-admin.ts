@@ -4,7 +4,6 @@ import { z } from 'zod'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { EditProductSchema } from '@/lib/zod/edit-product-schema'
-import { nextImageLoaderRegex } from 'next/dist/build/webpack-config'
 import { Prisma } from '../../../generated/prisma'
 
 type UpdateProductDTO = z.infer<typeof EditProductSchema>
