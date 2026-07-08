@@ -4,17 +4,17 @@ import { FormHeader } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/e
 import { PerformanceType } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/types'
 import { TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 
 type PerformanceSectionProps = {
-  initialData: PerformanceType[]
+  performance: PerformanceType[]
+  setPerformance: Dispatch<SetStateAction<PerformanceType[]>>
 }
 
 export const PerformanceSection = ({
-  initialData,
+  performance,
+  setPerformance,
 }: PerformanceSectionProps) => {
-  const [performance, setPerformance] = useState<PerformanceType[]>(initialData)
-
   const handleAddPerformance = () => {
     setPerformance((prev) => [...prev, { fps: '', gameName: '', settings: '' }])
   }

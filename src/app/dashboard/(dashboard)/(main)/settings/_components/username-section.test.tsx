@@ -4,9 +4,9 @@ import { UsernameSection } from './username-section'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
-import { changeUsername } from '@/lib/actions/dashboard'
+import { changeUsername } from '@/lib/actions/dashboard-user'
 
-vi.mock('@/lib/actions/dashboard', () => ({
+vi.mock('@/lib/actions/dashboard-user', () => ({
   changeUsername: vi.fn(),
 }))
 

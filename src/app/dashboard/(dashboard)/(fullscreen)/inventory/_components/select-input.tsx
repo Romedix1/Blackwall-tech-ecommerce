@@ -84,10 +84,10 @@ export const SelectInput = ({
         <span className="min-w-0 flex-1 truncate text-left">
           {Array.isArray(currentSelected)
             ? currentSelected.length === 0
-              ? '___'
+              ? '...'
               : currentSelected.join(', ')
             : !currentSelected
-              ? '___'
+              ? '...'
               : currentSelected}
         </span>
         <div className={cn(isOpen && 'rotate-180', 'ml-2')}>

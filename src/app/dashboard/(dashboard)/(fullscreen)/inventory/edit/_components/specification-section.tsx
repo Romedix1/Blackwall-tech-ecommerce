@@ -5,23 +5,23 @@ import { FormHeader } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/e
 import { RemoveButton } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/remove-button'
 import { Button } from '@/components/ui'
 import { SpecSection } from '@/types'
-import { useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 
 type SpecificatioSectionProps = {
-  initialData: SpecSection[]
+  specification: SpecSection[]
+  setSpecification: Dispatch<SetStateAction<SpecSection[]>>
   specLabelOptions: string[]
   specKeyOptions: string[]
   specValueOptions: string[]
 }
 
 export const SpecificationSection = ({
-  initialData,
+  specification,
+  setSpecification,
   specLabelOptions,
   specKeyOptions,
   specValueOptions,
 }: SpecificatioSectionProps) => {
-  const [specification, setSpecification] = useState<SpecSection[]>(initialData)
-
   const handleAddAttribute = (sectionId: string) => {
     setSpecification((prev) => {
       const temporaryKey = `new_attribute_${Date.now()}`

@@ -7,7 +7,7 @@ import {
 import { ActiveSessions } from '@/app/dashboard/(dashboard)/(main)/settings/_components/active-sessions'
 import { auth } from '@/auth'
 import { Button } from '@/components/ui'
-import { isOAuthUser } from '@/lib/actions/dashboard'
+import { isOAuthUser } from '@/lib/actions/dashboard-user'
 import { prisma } from '@/lib/prisma'
 
 export default async function SettingsPage() {

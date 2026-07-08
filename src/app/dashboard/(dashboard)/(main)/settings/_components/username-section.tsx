@@ -6,7 +6,7 @@ import {
 } from '@/app/dashboard/(dashboard)/(main)/settings/_components'
 import { StatusAlert, TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { changeUsername } from '@/lib/actions/dashboard'
+import { changeUsername } from '@/lib/actions/dashboard-user'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'

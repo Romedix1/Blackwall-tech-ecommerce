@@ -3,7 +3,7 @@
 import { InformationModal } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { useDesktopMenu } from '@/hooks'
-import { LogoutAllSessions } from '@/lib/actions/dashboard'
+import { LogoutAllSessions } from '@/lib/actions/dashboard-user'
 import { useTransition } from 'react'
 
 type TerminateModalProps = {

@@ -2,7 +2,7 @@
 
 import { InformationModal, StatusAlert } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { TerminateSession } from '@/lib/actions/dashboard'
+import { TerminateSession } from '@/lib/actions/dashboard-user'
 import { SessionType } from '@/types'
 import { useActionState, useEffect, useRef } from 'react'
 

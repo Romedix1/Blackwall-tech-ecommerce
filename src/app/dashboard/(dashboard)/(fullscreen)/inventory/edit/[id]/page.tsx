@@ -57,17 +57,16 @@ export default async function EditProductPage({
       !Array.isArray(product.technical)
     ) {
       Object.entries(product.technical).forEach(([key, value]) => {
-        if (key && key.trim() !== '')
-          uniqueKeyOptions.add(key.trim().toLowerCase())
+        if (key && key.trim() !== '') uniqueKeyOptions.add(key.trim())
 
         if (typeof value === 'string' && value.trim() !== '') {
-          uniqueValueOptions.add(value.trim().toLowerCase())
+          uniqueValueOptions.add(value.trim())
         }
 
         if (Array.isArray(value)) {
           value.forEach((arrayItem) => {
             if (typeof arrayItem === 'string' && arrayItem.trim() !== '') {
-              uniqueValueOptions.add(arrayItem.trim().toLowerCase())
+              uniqueValueOptions.add(arrayItem.trim())
             }
           })
         }
@@ -79,16 +78,16 @@ export default async function EditProductPage({
     if (Array.isArray(specs)) {
       specs.forEach((section) => {
         if (typeof section.label === 'string' && section.label.trim() !== '') {
-          uniqueSpecLabels.add(section.label.trim().toLowerCase())
+          uniqueSpecLabels.add(section.label.trim())
         }
 
         if (Array.isArray(section.attributes)) {
           section.attributes.forEach((attr: { key: string; value: string }) => {
             if (typeof attr.key === 'string' && attr.key.trim() !== '') {
-              uniqueSpecKeys.add(attr.key.trim().toLowerCase())
+              uniqueSpecKeys.add(attr.key.trim())
             }
             if (typeof attr.value === 'string' && attr.value.trim() !== '') {
-              uniqueSpecValues.add(attr.value.trim().toLowerCase())
+              uniqueSpecValues.add(attr.value.trim())
             }
           })
         }
@@ -113,7 +112,7 @@ export default async function EditProductPage({
   const isGpuOrCpu = ['gpu', 'cpu'].includes(product.category.slug)
 
   return (
-    <form className="container mx-auto mt-8">
+    <div className="container mx-auto mt-8">
       <ProductForm
         initialData={product}
         techKeyOptions={techKeyOptions}
@@ -123,6 +122,6 @@ export default async function EditProductPage({
         specKeyOptions={specKeyOptions}
         specValueOptions={specValueOptions}
       />
-    </form>
+    </div>
   )
 }

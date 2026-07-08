@@ -6,7 +6,7 @@ import {
   TerminalInput,
 } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { ResetPassword } from '@/lib/actions/dashboard'
+import { ResetPassword } from '@/lib/actions/dashboard-user'
 import { useSession } from 'next-auth/react'
 import { useActionState, useEffect, useRef } from 'react'
 

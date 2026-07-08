@@ -1,6 +1,6 @@
 'use client'
 
-import { TerminalInput } from '@/components/shared'
+import { StatusAlert, TerminalInput } from '@/components/shared'
 import { Product } from '../../../../../../../../generated/prisma'
 import { Button } from '@/components/ui'
 import {
@@ -13,6 +13,10 @@ import {
 } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/'
 import { SpecSection } from '@/types'
 import { PerformanceSection } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/'
+import { SubmitEvent, useState, useTransition } from 'react'
+import { UpdateProduct } from '@/lib/actions/dashboard-admin'
+import { useRouter } from 'next/navigation'
+import { EditProductSchema } from '@/lib/zod/edit-product-schema'
 
 type ProductFormProps = {
   initialData: Product
@@ -72,8 +76,61 @@ export const ProductForm = ({
     },
   ]
 
+  const [isPending, startTransition] = useTransition()
+  const [errorMessage, setErrorMessage] = useState<string | string[]>('')
+
+  const [technical, setTechnical] = useState<TechnicalType>(
+    initialData.technical as TechnicalType,
+  )
+  const [performance, setPerformance] = useState<PerformanceType[]>(
+    initialData.performance as PerformanceType[],
+  )
+  const [specification, setSpecification] = useState<SpecSection[]>(
+    initialData.specification as SpecSection[],
+  )
+
+  const router = useRouter()
+
+  const handleProductUpdate = (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setErrorMessage('')
+
+    const formData = new FormData(e.currentTarget)
+
+    const data = {
+      name: formData.get('name') as string,
+      slug: formData.get('slug') as string,
+      price: Number(formData.get('price')),
+      quantity: Number(formData.get('quantity')),
+      badge: (formData.get('badge') as string) || null,
+      technical: technical,
+      performance: performance,
+      specification: specification,
+    }
+
+    const validatedData = EditProductSchema.safeParse(data)
+
+    if (!validatedData.success) {
+      const error = validatedData.error.issues.map((issue) => issue.message)
+
+      setErrorMessage(error)
+
+      return
+    }
+
+    startTransition(async () => {
+      const response = await UpdateProduct(initialData.id, validatedData.data)
+
+      if (response.success) {
+        router.push('/dashboard/inventory')
+      } else {
+        setErrorMessage(response.error || 'Unknown error')
+      }
+    })
+  }
+
   return (
-    <>
+    <form onSubmit={handleProductUpdate}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {BASE_FIELDS.map((field) => (
           <div
@@ -101,19 +158,22 @@ export const ProductForm = ({
       </div>
 
       <TechnicalSection
-        initialData={(initialData.technical as TechnicalType) || {}}
+        technical={technical}
+        setTechnical={setTechnical}
         techKeyOptions={techKeyOptions}
         techValueOptions={techValueOptions}
       />
 
       {isGpuOrCpu && (
         <PerformanceSection
-          initialData={(initialData?.performance as PerformanceType[]) || []}
+          performance={performance}
+          setPerformance={setPerformance}
         />
       )}
 
       <SpecificationSection
-        initialData={(initialData.specification as SpecSection[]) || []}
+        specification={specification}
+        setSpecification={setSpecification}
         specLabelOptions={specLabelOptions}
         specKeyOptions={specKeyOptions}
         specValueOptions={specValueOptions}
@@ -121,10 +181,17 @@ export const ProductForm = ({
 
       <div className="border-accent/40 my-12 border-t"></div>
 
-      <Button onClick={() => console.log('')} type="button" variant="primary">
+      {errorMessage && <StatusAlert text={errorMessage} variant="error" />}
+
+      <Button
+        disabled={isPending}
+        type="submit"
+        variant="primary"
+        className="mt-8"
+      >
         <span className="sr-only">Update data</span>
         <span aria-hidden="true">[ Update data ]</span>
       </Button>
-    </>
+    </form>
   )
 }

@@ -2,24 +2,24 @@
 
 import { FormHeader } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/form-header'
 import { Button } from '@/components/ui'
-import { useState } from 'react'
 import { SelectInput } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/_components/select-input'
 import { RemoveButton } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/remove-button'
 import { TechnicalType } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/types'
+import { Dispatch, SetStateAction } from 'react'
 
 type TechnicalSectionProps = {
-  initialData: TechnicalType
+  technical: TechnicalType
+  setTechnical: Dispatch<SetStateAction<TechnicalType>>
   techKeyOptions: string[]
   techValueOptions: string[]
 }
 
 export const TechnicalSection = ({
-  initialData,
+  technical,
+  setTechnical,
   techKeyOptions,
   techValueOptions,
 }: TechnicalSectionProps) => {
-  const [technical, setTechnical] = useState<TechnicalType>(initialData)
-
   const handleAddTechnical = () => {
     setTechnical((prev) => {
       const temporaryKey = `new_technical_${Date.now()}`
@@ -59,10 +59,10 @@ export const TechnicalSection = ({
 
   const handleUpdateTechnicalValue = (
     key: string,
-    newValue: string | string[],
+    newValue: string | string[] | boolean,
   ) => {
     setTechnical((prev) => {
-      let finalValue: string | string[] = newValue
+      let finalValue: string | string[] | boolean = newValue
 
       if (Array.isArray(newValue)) {
         if (newValue.length === 0) {
@@ -71,7 +71,10 @@ export const TechnicalSection = ({
           finalValue = newValue[0]
         }
       }
-      console.log(finalValue)
+
+      if (finalValue === 'true') finalValue = true
+      if (finalValue === 'false') finalValue = false
+
       return Object.keys(prev).reduce((newObject, currentKey) => {
         if (currentKey === key) {
           newObject[key] = finalValue
@@ -106,7 +109,11 @@ export const TechnicalSection = ({
             ? (value as string[])
             : typeof value === 'string' && value.trim() !== ''
               ? [value]
-              : []
+              : typeof value === 'boolean'
+                ? [String(value)]
+                : []
+
+          const isValueBoolean = typeof value === 'boolean'
 
           return (
             <div key={key} className="gap-4 md:flex">
@@ -127,12 +134,14 @@ export const TechnicalSection = ({
                   <SelectInput
                     section="technical"
                     mode="value"
-                    type="checkbox"
+                    type={isValueBoolean ? 'radio' : 'checkbox'}
                     onChange={(newValue) =>
                       handleUpdateTechnicalValue(key, newValue)
                     }
                     selected={safeValueForCheckbox as string | string[]}
-                    options={techValueOptions}
+                    options={
+                      isValueBoolean ? ['true', 'false'] : techValueOptions
+                    }
                   />
                 </div>
               </div>

@@ -1,6 +1,10 @@
 import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/product-form'
 import { render, screen } from '@testing-library/react'
 
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(),
+}))
+
 describe('Product form', () => {
   it('Should render all base inputs with initial data', () => {
     const productMock = {

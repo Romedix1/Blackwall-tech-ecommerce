@@ -4,7 +4,7 @@ import { SettingsHeader } from '@/app/dashboard/(dashboard)/(main)/settings/_com
 import { SettingsSection } from '@/app/dashboard/(dashboard)/(main)/settings/_components/settings-section'
 import { StatusAlert, TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { ChangeAddress } from '@/lib/actions/dashboard'
+import { ChangeAddress } from '@/lib/actions/dashboard-user'
 import { useActionState } from 'react'
 
 type address = {

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { TerminateSessionsModal } from './terminate-sessions-modal'
-import { LogoutAllSessions } from '@/lib/actions/dashboard'
+import { LogoutAllSessions } from '@/lib/actions/dashboard-user'
 import { useDesktopMenu } from '@/hooks'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 
-vi.mock('@/lib/actions/dashboard', () => ({
+vi.mock('@/lib/actions/dashboard-user', () => ({
   LogoutAllSessions: vi.fn(),
 }))
 
