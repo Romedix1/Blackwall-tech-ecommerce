@@ -1,6 +1,6 @@
 'use server'
 
-import { success, z } from 'zod'
+import { z } from 'zod'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { EditProductSchema } from '@/lib/zod/edit-product-schema'
@@ -8,7 +8,7 @@ import { Prisma } from '../../../generated/prisma'
 import { revalidatePath } from 'next/cache'
 
 type UpdateProductDTO = z.infer<typeof EditProductSchema>
-
+// TODO: ADD chage category option
 export const UpdateProduct = async (
   productId: string,
   data: UpdateProductDTO,

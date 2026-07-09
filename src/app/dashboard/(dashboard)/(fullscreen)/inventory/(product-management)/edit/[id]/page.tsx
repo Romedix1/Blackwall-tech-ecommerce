@@ -1,4 +1,4 @@
-import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/product-form'
+import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/product-form'
 import { auth } from '@/auth'
 import { ProductNotFound } from '@/components/ui/product-not-found'
 import { prisma } from '@/lib/prisma'
@@ -42,6 +42,14 @@ export default async function EditProductPage({
     where: { categoryId: product.categoryId },
     select: { technical: true, specification: true },
   })
+
+  const categories = await prisma.category.findMany({
+    select: {
+      slug: true,
+    },
+  })
+
+  const categoriesNames = categories.map((category) => category.slug)
 
   const uniqueKeyOptions = new Set<string>()
   const uniqueValueOptions = new Set<string>()
@@ -109,18 +117,18 @@ export default async function EditProductPage({
   specKeyOptions.push('Other')
   specValueOptions.push('Other')
 
-  const isGpuOrCpu = ['gpu', 'cpu'].includes(product.category.slug)
-
   return (
     <div className="container mx-auto mt-8">
       <ProductForm
+        mode="edit"
         initialData={product}
         techKeyOptions={techKeyOptions}
         techValueOptions={techValueOptions}
-        isGpuOrCpu={isGpuOrCpu}
         specLabelOptions={specLabelOptions}
         specKeyOptions={specKeyOptions}
         specValueOptions={specValueOptions}
+        productCategory={product.category.slug}
+        categories={categoriesNames}
       />
     </div>
   )

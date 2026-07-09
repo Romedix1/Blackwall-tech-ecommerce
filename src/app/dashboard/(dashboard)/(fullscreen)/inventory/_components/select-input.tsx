@@ -9,8 +9,9 @@ type SelectInputType = {
   selected: string | string[]
   type?: 'radio' | 'checkbox'
   mode: 'key' | 'value' | 'label'
-  section: 'technical' | 'specification'
+  section: 'technical' | 'specification' | 'category'
   onChange?: (newValue: string | string[]) => void
+  className?: string
 }
 
 export const SelectInput = ({
@@ -20,6 +21,7 @@ export const SelectInput = ({
   mode,
   section,
   onChange,
+  className,
 }: SelectInputType) => {
   const [isOpen, setIsOpen] = useState(false)
   const [currentSelected, setCurrentSelected] = useState<string | string[]>(
@@ -75,7 +77,7 @@ export const SelectInput = ({
   const combinedOptions = [...options, ...customOptions]
 
   return (
-    <div ref={inputRef} className="relative flex flex-col">
+    <div ref={inputRef} className={cn('relative flex flex-col', className)}>
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}

@@ -1,11 +1,12 @@
 'use client'
 
-import { FormHeader } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/form-header'
+import { FormHeader } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/form-header'
 import { Button } from '@/components/ui'
 import { SelectInput } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/_components/select-input'
-import { RemoveButton } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/remove-button'
-import { TechnicalType } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/types'
+import { RemoveButton } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/remove-button'
+import { TechnicalType } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/types'
 import { Dispatch, SetStateAction } from 'react'
+import { EmptySection } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/empty-section'
 
 type TechnicalSectionProps = {
   technical: TechnicalType
@@ -151,15 +152,7 @@ export const TechnicalSection = ({
           )
         })
       ) : (
-        <div className="border-accent/30 bg-warning/10 text-accent flex w-full flex-col gap-4 px-3 py-6 text-center">
-          <span className="tracking-widest">
-            <span aria-hidden="true">[ AWAITING_INPUT ]</span>
-            <span className="sr-only">Empty section</span>
-          </span>
-          <p className="text-sm opacity-80">
-            No technical specifications found
-          </p>
-        </div>
+        <EmptySection section="technical" />
       )}
 
       <Button

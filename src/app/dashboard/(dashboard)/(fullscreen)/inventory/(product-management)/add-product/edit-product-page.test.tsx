@@ -1,5 +1,5 @@
 import { auth } from '@/auth'
-import EditProductPage from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/[id]/page'
+import EditProductPage from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/edit/[id]/page'
 import { redirect } from 'next/navigation'
 import { Session } from 'next-auth'
 import { prisma } from '@/lib/prisma'

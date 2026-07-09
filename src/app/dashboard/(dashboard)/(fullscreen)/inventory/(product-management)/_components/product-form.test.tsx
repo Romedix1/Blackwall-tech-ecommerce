@@ -1,4 +1,4 @@
-import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/product-form'
+import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/product-form'
 import { render, screen } from '@testing-library/react'
 
 vi.mock('next/navigation', () => ({
@@ -24,13 +24,15 @@ describe('Product form', () => {
 
     render(
       <ProductForm
+        mode="edit"
+        productCategory="motheboards"
         initialData={productMock}
         techKeyOptions={[]}
         techValueOptions={[]}
-        isGpuOrCpu={false}
         specLabelOptions={[]}
         specKeyOptions={[]}
         specValueOptions={[]}
+        categories={['gpu', 'motherboards']}
       />,
     )
 
@@ -64,13 +66,15 @@ describe('Product form', () => {
 
     render(
       <ProductForm
+        mode="edit"
         initialData={productMock}
+        productCategory={productMock.category.slug}
         techKeyOptions={[]}
         techValueOptions={[]}
-        isGpuOrCpu={true}
         specLabelOptions={[]}
         specKeyOptions={[]}
         specValueOptions={[]}
+        categories={['cpu', 'gpu']}
       />,
     )
 

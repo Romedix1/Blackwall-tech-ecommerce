@@ -6,37 +6,53 @@ import { Button } from '@/components/ui'
 import {
   PerformanceType,
   TechnicalType,
-} from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/types'
+} from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/types'
 import {
   SpecificationSection,
   TechnicalSection,
-} from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/'
+} from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components'
 import { SpecSection } from '@/types'
-import { PerformanceSection } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/edit/_components/'
+import { PerformanceSection } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components'
 import { SubmitEvent, useState, useTransition } from 'react'
 import { UpdateProduct } from '@/lib/actions/dashboard-admin'
 import { useRouter } from 'next/navigation'
 import { EditProductSchema } from '@/lib/zod/edit-product-schema'
+import { SelectInput } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/_components/select-input'
 
-type ProductFormProps = {
+type BaseProductType = {
+  categories: string[]
+}
+
+type EditProductType = BaseProductType & {
+  mode: 'edit'
   initialData: Product
   techKeyOptions: string[]
   techValueOptions: string[]
-  isGpuOrCpu: boolean
   specLabelOptions: string[]
   specKeyOptions: string[]
   specValueOptions: string[]
+  productCategory: string
 }
 
-export const ProductForm = ({
-  initialData,
-  techKeyOptions,
-  techValueOptions,
-  isGpuOrCpu,
-  specLabelOptions,
-  specKeyOptions,
-  specValueOptions,
-}: ProductFormProps) => {
+type AddProductType = BaseProductType & {
+  mode: 'add'
+}
+
+type ProductFormProps = EditProductType | AddProductType
+
+export const ProductForm = (props: ProductFormProps) => {
+  const { mode } = props
+
+  const initialData = mode === 'edit' ? props.initialData : null
+  const techKeyOptions = mode === 'edit' ? props.techKeyOptions : []
+  const techValueOptions = mode === 'edit' ? props.techValueOptions : []
+  const specLabelOptions = mode === 'edit' ? props.specLabelOptions : []
+  const specKeyOptions = mode === 'edit' ? props.specKeyOptions : []
+  const specValueOptions = mode === 'edit' ? props.specValueOptions : []
+  const productCategory = mode === 'edit' ? props.productCategory : ''
+
+  const categories = props.categories
+
   const BASE_FIELDS = [
     {
       name: 'name',
@@ -80,18 +96,28 @@ export const ProductForm = ({
   const [errorMessage, setErrorMessage] = useState<string | string[]>('')
 
   const [technical, setTechnical] = useState<TechnicalType>(
-    initialData.technical as TechnicalType,
+    initialData ? (initialData.technical as TechnicalType) : {},
   )
+
   const [performance, setPerformance] = useState<PerformanceType[]>(
-    initialData.performance as PerformanceType[],
+    initialData?.performance
+      ? (initialData.performance as PerformanceType[])
+      : [],
   )
+
   const [specification, setSpecification] = useState<SpecSection[]>(
-    initialData.specification as SpecSection[],
+    initialData?.specification
+      ? (initialData.specification as SpecSection[])
+      : [],
+  )
+
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    productCategory || categories[0],
   )
 
   const router = useRouter()
 
-  const handleProductUpdate = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     setErrorMessage('')
 
@@ -119,7 +145,16 @@ export const ProductForm = ({
     }
 
     startTransition(async () => {
-      const response = await UpdateProduct(initialData.id, validatedData.data)
+      let response: { success: boolean; error?: string | string[] }
+
+      if (mode === 'edit' && initialData) {
+        response = await UpdateProduct(initialData.id, validatedData.data)
+      } else if (mode === 'add') {
+        // response = await AddProduct(validatedData.data, selectedCategory)
+        response = { success: true }
+      } else {
+        response = { success: false, error: 'Invalid mode' }
+      }
 
       if (response.success) {
         router.push('/dashboard/inventory')
@@ -130,7 +165,7 @@ export const ProductForm = ({
   }
 
   return (
-    <form onSubmit={handleProductUpdate}>
+    <form onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {BASE_FIELDS.map((field) => (
           <div
@@ -145,9 +180,11 @@ export const ProductForm = ({
               type={field.type}
               required={field.required}
               defaultValue={
-                (initialData[field.name as keyof typeof initialData] as
-                  | string
-                  | number) || ''
+                initialData
+                  ? (initialData[field.name as keyof typeof initialData] as
+                      | string
+                      | number)
+                  : ''
               }
               placeholder={field.label}
               aria-label={field.ariaLabel}
@@ -155,6 +192,19 @@ export const ProductForm = ({
             />
           </div>
         ))}
+
+        <SelectInput
+          options={categories}
+          selected={selectedCategory}
+          mode="value"
+          section="category"
+          className="sm:col-span-2"
+          onChange={(newValue) => {
+            const valueToSet = Array.isArray(newValue) ? newValue[0] : newValue
+
+            setSelectedCategory(valueToSet)
+          }}
+        />
       </div>
 
       <TechnicalSection
@@ -164,7 +214,7 @@ export const ProductForm = ({
         techValueOptions={techValueOptions}
       />
 
-      {isGpuOrCpu && (
+      {(selectedCategory === 'gpu' || selectedCategory === 'cpu') && (
         <PerformanceSection
           performance={performance}
           setPerformance={setPerformance}

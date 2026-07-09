@@ -60,7 +60,7 @@ export const InventoryActionBar = () => {
         asChild
         className="flex items-center justify-center lg:h-10 lg:w-6/12 lg:text-sm xl:w-4/12"
       >
-        <Link href={'/inventory/add-product'}>
+        <Link href={'inventory/add-product'}>
           <span aria-hidden="true">[ add_new_hardware ]</span>
           <span className="sr-only">Add new product</span>
         </Link>
