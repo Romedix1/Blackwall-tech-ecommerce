@@ -1,10 +1,8 @@
 import { auth } from '@/auth'
-import EditProductPage from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/edit/[id]/page'
 import { redirect } from 'next/navigation'
 import { Session } from 'next-auth'
+import AddProductPage from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/add-product/page'
 import { prisma } from '@/lib/prisma'
-import { screen } from '@testing-library/dom'
-import { render } from '@testing-library/react'
 
 vi.mock('@/auth', () => ({
   auth: vi.fn(),
@@ -19,17 +17,28 @@ vi.mock('@/lib/prisma', () => ({
     product: {
       findFirst: vi.fn(),
       findMany: vi.fn(),
+      update: vi.fn(),
+      create: vi.fn(),
+      delete: vi.fn(),
+    },
+    category: {
+      findMany: vi.fn(),
     },
   },
 }))
 
 const mockedAuth = vi.mocked(auth as unknown as () => Promise<Session | null>)
 
-describe('Edit product page', () => {
+describe('Add product page', () => {
+  vi.mocked(prisma.category.findMany).mockResolvedValue([
+    { name: 'Graphic cards', id: '1', slug: 'gpu' },
+    { name: 'Processors', id: '2', slug: 'cpu' },
+  ])
+
   it('Should redirect when user is not logged', async () => {
     vi.mocked(mockedAuth).mockResolvedValue(null)
 
-    await EditProductPage({ params: Promise.resolve({ id: 'test-id' }) })
+    await AddProductPage()
 
     expect(redirect).toHaveBeenCalledWith('/')
   })
@@ -47,26 +56,8 @@ describe('Edit product page', () => {
 
     mockedAuth.mockResolvedValue(mockUserSession)
 
-    await EditProductPage({ params: Promise.resolve({ id: 'test-id' }) })
+    await AddProductPage()
 
     expect(redirect).toHaveBeenCalledWith('/')
-  })
-
-  it("Should render ProductNotFound if product doesn't exists", async () => {
-    const mockAdminSession: Session = {
-      user: { id: '1', name: 'Admin', email: 'admin@test.pl', role: 'admin' },
-      expires: '9999',
-    }
-    mockedAuth.mockResolvedValue(mockAdminSession)
-
-    vi.mocked(prisma.product.findFirst).mockResolvedValue(null)
-
-    const jsx = await EditProductPage({
-      params: Promise.resolve({ id: 'test-id' }),
-    })
-
-    render(jsx)
-
-    expect(screen.getByText(/Return_to_list/i)).toBeInTheDocument()
   })
 })
