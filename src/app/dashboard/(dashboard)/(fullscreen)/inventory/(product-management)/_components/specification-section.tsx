@@ -168,7 +168,7 @@ export const SpecificationSection = ({
           (() => {
             const usedSpecLabel = specification.map((spec) => spec.label)
 
-            return specification.map((spec) => {
+            return specification.map((spec, index) => {
               const availableSpecLabelOptions = specLabelOptions.filter(
                 (option) =>
                   option === 'Other' ||
@@ -177,7 +177,7 @@ export const SpecificationSection = ({
               )
 
               return (
-                <div key={spec.id}>
+                <div key={spec.id || `spec-${index}`}>
                   <div className="mb-6 flex items-center gap-4">
                     <div className="min-w-0 flex-1">
                       <SelectInput

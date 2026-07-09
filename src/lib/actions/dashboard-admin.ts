@@ -32,6 +32,17 @@ export const UpdateProduct = async (
   }
 
   try {
+    const category = await prisma.category.findFirst({
+      where: { slug: validatedData.data.category },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!category) {
+      return { success: false, error: 'Invalid category' }
+    }
+
     await prisma.product.update({
       where: { id: productId },
       data: {
@@ -43,6 +54,11 @@ export const UpdateProduct = async (
         technical: validatedData.data.technical,
         performance: validatedData.data.performance ?? Prisma.DbNull,
         specification: validatedData.data.specification,
+        category: {
+          connect: {
+            id: category.id,
+          },
+        },
       },
     })
 
