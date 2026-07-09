@@ -1,6 +1,5 @@
 import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/product-form'
 import { auth } from '@/auth'
-import { ProductNotFound } from '@/components/ui/product-not-found'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 

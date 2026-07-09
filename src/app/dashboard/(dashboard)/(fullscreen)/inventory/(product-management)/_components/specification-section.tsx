@@ -175,6 +175,7 @@ export const SpecificationSection = ({
                   option === spec.label ||
                   !usedSpecLabel.includes(option),
               )
+
               return (
                 <div key={spec.id}>
                   <div className="mb-6 flex items-center gap-4">

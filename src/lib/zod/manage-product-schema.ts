@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const EditProductSchema = z.object({
+export const ManageProductSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
   slug: z.string().min(1, 'Slug is required'),
   price: z.coerce
@@ -34,6 +34,7 @@ export const EditProductSchema = z.object({
   specification: z
     .array(
       z.object({
+        id: z.string(),
         label: z.string().min(1, 'Group label is required'),
         attributes: z
           .array(
@@ -47,4 +48,8 @@ export const EditProductSchema = z.object({
     )
     .optional()
     .default([]),
+  category: z.enum(
+    ['gpu', 'peripherals', 'cpu', 'memory', 'motherboards', 'psu', 'storage'],
+    'Invalid category',
+  ),
 })

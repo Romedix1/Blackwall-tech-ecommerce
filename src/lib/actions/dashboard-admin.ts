@@ -3,15 +3,15 @@
 import { z } from 'zod'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { EditProductSchema } from '@/lib/zod/edit-product-schema'
+import { ManageProductSchema } from '@/lib/zod/manage-product-schema'
 import { Prisma } from '../../../generated/prisma'
 import { revalidatePath } from 'next/cache'
 
-type UpdateProductDTO = z.infer<typeof EditProductSchema>
+type ProductDTO = z.infer<typeof ManageProductSchema>
 // TODO: ADD chage category option
 export const UpdateProduct = async (
   productId: string,
-  data: UpdateProductDTO,
+  data: ProductDTO,
 ): Promise<{ success: boolean; error?: string | string[] }> => {
   const session = await auth()
 
@@ -23,7 +23,7 @@ export const UpdateProduct = async (
     return { success: false, error: 'Unauthorized' }
   }
 
-  const validatedData = EditProductSchema.safeParse(data)
+  const validatedData = ManageProductSchema.safeParse(data)
 
   if (!validatedData.success) {
     const errors = validatedData.error.issues.map((issue) => issue.message)
@@ -55,7 +55,9 @@ export const UpdateProduct = async (
   }
 }
 
-export const DeleteProduct = async (productId: string) => {
+export const DeleteProduct = async (
+  productId: string,
+): Promise<{ success: boolean; error?: string | string[] }> => {
   const session = await auth()
 
   const userId = session?.user.id
@@ -83,5 +85,70 @@ export const DeleteProduct = async (productId: string) => {
       console.error('[ DATABASE_ERROR ]: Failed to delete product', error)
     }
     return { success: false, error: 'Failed to delete product' }
+  }
+}
+
+export const AddProduct = async (
+  data: ProductDTO,
+): Promise<{
+  success: boolean
+  error?: string | string[]
+}> => {
+  const session = await auth()
+
+  const userId = session?.user.id
+
+  const isAdmin = session?.user.role === 'admin'
+
+  if (!userId || !isAdmin) {
+    return { success: false, error: 'Unauthorized' }
+  }
+
+  const validatedData = ManageProductSchema.safeParse(data)
+
+  if (!validatedData.success) {
+    const errors = validatedData.error.issues.map((issue) => issue.message)
+
+    return { success: false, error: errors }
+  }
+
+  try {
+    const category = await prisma.category.findFirst({
+      where: { slug: validatedData.data.category },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!category) {
+      return { success: false, error: 'Invalid category' }
+    }
+
+    await prisma.product.create({
+      data: {
+        name: validatedData.data.name,
+        slug: validatedData.data.slug,
+        price: validatedData.data.price,
+        quantity: validatedData.data.quantity,
+        badge: validatedData.data.badge || null,
+        technical: validatedData.data.technical,
+        performance: validatedData.data.performance ?? Prisma.DbNull,
+        specification: validatedData.data.specification,
+        category: {
+          connect: {
+            id: category.id,
+          },
+        },
+      },
+    })
+
+    revalidatePath('/dashboard/inventory')
+
+    return { success: true }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ DATABASE_ERROR ]: Failed to add product', error)
+    }
+    return { success: false, error: 'Failed to add product' }
   }
 }

@@ -47,6 +47,7 @@ describe('Admin dashboard backend', () => {
       performance: null,
       specification: [
         {
+          id: '01',
           label: 'performance',
           attributes: [
             { key: 'total power', value: '1000 W' },
@@ -54,6 +55,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
         {
+          id: '02',
           label: 'acoustics',
           attributes: [
             { key: 'fan', value: 'Silent Wings 135mm' },
@@ -61,6 +63,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
         {
+          id: '03',
           label: 'features',
           attributes: [
             { key: 'topology', value: 'Full Bridge + LLC' },
@@ -68,6 +71,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
       ],
+      category: 'psu' as const,
     }
 
     const result = await UpdateProduct('1', mockProductData)
@@ -110,6 +114,7 @@ describe('Admin dashboard backend', () => {
       performance: null,
       specification: [
         {
+          id: '01',
           label: 'performance',
           attributes: [
             { key: 'total power', value: '' },
@@ -117,6 +122,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
         {
+          id: '02',
           label: 'acoustics',
           attributes: [
             { key: 'fan', value: 'Silent Wings 135mm' },
@@ -124,6 +130,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
         {
+          id: '03',
           label: 'features',
           attributes: [
             { key: 'topology', value: 'Full Bridge + LLC' },
@@ -131,6 +138,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
       ],
+      category: 'psu' as const,
     }
 
     const result = await UpdateProduct('1', mockProductData)
@@ -178,6 +186,7 @@ describe('Admin dashboard backend', () => {
       performance: null,
       specification: [
         {
+          id: '01',
           label: 'performance',
           attributes: [
             { key: 'total power', value: '1000 W' },
@@ -185,6 +194,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
         {
+          id: '02',
           label: 'acoustics',
           attributes: [
             { key: 'fan', value: 'Silent Wings 135mm' },
@@ -192,6 +202,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
         {
+          id: '03',
           label: 'features',
           attributes: [
             { key: 'topology', value: 'Full Bridge + LLC' },
@@ -199,6 +210,7 @@ describe('Admin dashboard backend', () => {
           ],
         },
       ],
+      category: 'psu' as const,
     }
 
     const result = await UpdateProduct('1', mockProductData)

@@ -14,9 +14,9 @@ import {
 import { SpecSection } from '@/types'
 import { PerformanceSection } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components'
 import { SubmitEvent, useState, useTransition } from 'react'
-import { UpdateProduct } from '@/lib/actions/dashboard-admin'
+import { AddProduct, UpdateProduct } from '@/lib/actions/dashboard-admin'
 import { useRouter } from 'next/navigation'
-import { EditProductSchema } from '@/lib/zod/edit-product-schema'
+import { ManageProductSchema } from '@/lib/zod/manage-product-schema'
 import { SelectInput } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/_components/select-input'
 
 type BaseProductType = {
@@ -44,11 +44,11 @@ export const ProductForm = (props: ProductFormProps) => {
   const { mode } = props
 
   const initialData = mode === 'edit' ? props.initialData : null
-  const techKeyOptions = mode === 'edit' ? props.techKeyOptions : []
-  const techValueOptions = mode === 'edit' ? props.techValueOptions : []
-  const specLabelOptions = mode === 'edit' ? props.specLabelOptions : []
-  const specKeyOptions = mode === 'edit' ? props.specKeyOptions : []
-  const specValueOptions = mode === 'edit' ? props.specValueOptions : []
+  const techKeyOptions = mode === 'edit' ? props.techKeyOptions : ['Other']
+  const techValueOptions = mode === 'edit' ? props.techValueOptions : ['Other']
+  const specLabelOptions = mode === 'edit' ? props.specLabelOptions : ['Other']
+  const specKeyOptions = mode === 'edit' ? props.specKeyOptions : ['Other']
+  const specValueOptions = mode === 'edit' ? props.specValueOptions : ['Other']
   const productCategory = mode === 'edit' ? props.productCategory : ''
 
   const categories = props.categories
@@ -132,9 +132,10 @@ export const ProductForm = (props: ProductFormProps) => {
       technical: technical,
       performance: performance,
       specification: specification,
+      category: selectedCategory,
     }
 
-    const validatedData = EditProductSchema.safeParse(data)
+    const validatedData = ManageProductSchema.safeParse(data)
 
     if (!validatedData.success) {
       const error = validatedData.error.issues.map((issue) => issue.message)
@@ -150,8 +151,7 @@ export const ProductForm = (props: ProductFormProps) => {
       if (mode === 'edit' && initialData) {
         response = await UpdateProduct(initialData.id, validatedData.data)
       } else if (mode === 'add') {
-        // response = await AddProduct(validatedData.data, selectedCategory)
-        response = { success: true }
+        response = await AddProduct(validatedData.data)
       } else {
         response = { success: false, error: 'Invalid mode' }
       }
@@ -239,8 +239,12 @@ export const ProductForm = (props: ProductFormProps) => {
         variant="primary"
         className="mt-8"
       >
-        <span className="sr-only">Update data</span>
-        <span aria-hidden="true">[ Update data ]</span>
+        <span className="sr-only">
+          {mode === 'edit' ? 'Update data' : 'Add product'}
+        </span>
+        <span aria-hidden="true">
+          {mode === 'edit' ? '[ Update data ]' : '[ Add product ]'}
+        </span>
       </Button>
     </form>
   )
