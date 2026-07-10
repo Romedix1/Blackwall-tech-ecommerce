@@ -129,25 +129,6 @@ export const DashboardList = async ({
     ]
   }
 
-  const orderWhereClause: Prisma.ProductWhereInput = searchValue
-    ? {
-        OR: [
-          {
-            id: {
-              contains: searchValue,
-              mode: 'insensitive',
-            },
-          },
-          {
-            name: {
-              contains: searchValue,
-              mode: 'insensitive',
-            },
-          },
-        ],
-      }
-    : {}
-
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
 
   return (

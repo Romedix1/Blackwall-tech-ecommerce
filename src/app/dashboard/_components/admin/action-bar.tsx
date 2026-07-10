@@ -58,10 +58,10 @@ export const DashoardctionBar = ({ mode }: DashboardActionBar) => {
           mode === 'inventory' ? 'xl:w-9/12' : 'xl:w-full',
           'w-full',
         )}
-        placeholder="search_by_id_or_name"
+        placeholder={`search_by_id_or_${mode === 'inventory' ? 'name' : 'city'}`}
         ref={filterRef}
         variant="filter"
-        aria-label="Search by id or product name"
+        aria-label={`Search by id or ${mode === 'inventory' ? 'product name' : 'city'}`}
       />
 
       {mode === 'inventory' && (

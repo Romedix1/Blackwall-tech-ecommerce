@@ -28,6 +28,7 @@ export default async function OrderDetailsPage({
 
   if (!user || user.role !== 'admin') {
     redirect('/')
+    return
   }
 
   const order = await prisma.order.findFirst({
