@@ -1,3 +1,4 @@
+import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/back-button'
 import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/product-form'
 import { auth } from '@/auth'
 import { ProductNotFound } from '@/components/ui/product-not-found'
@@ -119,6 +120,8 @@ export default async function EditProductPage({
 
   return (
     <div className="container mx-auto mt-8">
+      <BackButton link="/dashboard/inventory" />
+
       <ProductForm
         mode="edit"
         initialData={product}

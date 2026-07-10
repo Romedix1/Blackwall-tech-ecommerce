@@ -165,7 +165,7 @@ export const ProductForm = (props: ProductFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="mt-8">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {BASE_FIELDS.map((field) => (
           <div

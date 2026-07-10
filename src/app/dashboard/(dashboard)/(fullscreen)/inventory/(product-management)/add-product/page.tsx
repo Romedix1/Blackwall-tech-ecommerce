@@ -1,3 +1,4 @@
+import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/back-button'
 import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/product-form'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
@@ -21,17 +22,9 @@ export default async function AddProductPage() {
 
   return (
     <div className="container mx-auto mt-8">
-      <ProductForm
-        mode="add"
-        categories={categoriesNames}
-        // initialData={product}
-        // techKeyOptions={techKeyOptions}
-        // techValueOptions={techValueOptions}
-        // isGpuOrCpu={isGpuOrCpu}
-        // specLabelOptions={specLabelOptions}
-        // specKeyOptions={specKeyOptions}
-        // specValueOptions={specValueOptions}
-      />
+      <BackButton link="/dashboard/inventory" />
+
+      <ProductForm mode="add" categories={categoriesNames} />
     </div>
   )
 }
