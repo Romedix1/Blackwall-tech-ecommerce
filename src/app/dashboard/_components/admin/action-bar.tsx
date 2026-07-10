@@ -3,11 +3,16 @@
 import { SearchInput } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { useDebounce } from '@/hooks'
+import { cn } from '@/lib'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
-export const InventoryActionBar = () => {
+type DashboardActionBar = {
+  mode: 'inventory' | 'directives'
+}
+
+export const DashoardctionBar = ({ mode }: DashboardActionBar) => {
   const filterRef = useRef<HTMLInputElement>(null)
 
   const router = useRouter()
@@ -49,22 +54,27 @@ export const InventoryActionBar = () => {
       <SearchInput
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
-        containerClassName="w-full xl:w-9/12"
+        containerClassName={cn(
+          mode === 'inventory' ? 'xl:w-9/12' : 'xl:w-full',
+          'w-full',
+        )}
         placeholder="search_by_id_or_name"
         ref={filterRef}
         variant="filter"
         aria-label="Search by id or product name"
       />
 
-      <Button
-        asChild
-        className="flex items-center justify-center lg:h-10 lg:w-6/12 lg:text-sm xl:w-4/12"
-      >
-        <Link href={'inventory/add-product'}>
-          <span aria-hidden="true">[ add_new_hardware ]</span>
-          <span className="sr-only">Add new product</span>
-        </Link>
-      </Button>
+      {mode === 'inventory' && (
+        <Button
+          asChild
+          className="flex items-center justify-center lg:h-10 lg:w-6/12 lg:text-sm xl:w-4/12"
+        >
+          <Link href={'inventory/add-product'}>
+            <span aria-hidden="true">[ add_new_hardware ]</span>
+            <span className="sr-only">Add new product</span>
+          </Link>
+        </Button>
+      )}
     </div>
   )
 }

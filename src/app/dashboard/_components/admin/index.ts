@@ -1,3 +1,6 @@
 export * from './metric-block'
 export * from './orders-chart'
 export * from './render-metrics'
+export * from './action-bar'
+export * from './dashboard-list'
+export * from './table-sortable-header'

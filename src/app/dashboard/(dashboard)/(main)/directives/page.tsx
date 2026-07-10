@@ -15,7 +15,7 @@ type ProductListProps = {
   }>
 }
 
-export default async function DashboardInventoryPage({
+export default async function DashboardDirectivesPage({
   searchParams,
 }: ProductListProps) {
   const session = await auth()
@@ -36,17 +36,17 @@ export default async function DashboardInventoryPage({
   return (
     <div className="flex flex-col gap-6">
       <DashboardHeader>
-        <span className="sr-only">Database access: products managment</span>
+        <span className="sr-only">Operational queue: Directive managment</span>
         <span aria-hidden="true">
-          {'//'} Database_access: inventory_managment
+          {'//'} Operational_queue: directive_management
         </span>
       </DashboardHeader>
 
       <div className="flex flex-col gap-8">
-        <DashoardctionBar mode="inventory" />
+        <DashoardctionBar mode="directives" />
 
         <DashboardList
-          mode="inventory"
+          mode="directives"
           page={currentPage}
           order={currentOrder}
           filter={currentFilter}

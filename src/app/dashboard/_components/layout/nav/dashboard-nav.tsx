@@ -20,7 +20,7 @@ export const DashboardNav = async () => {
       sr: 'Database inventory',
     },
     {
-      href: '/dashboard/queue',
+      href: '/dashboard/directives',
       label: '[ Directive_queue ]',
       sr: 'Directive queue',
     },
