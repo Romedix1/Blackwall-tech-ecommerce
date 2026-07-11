@@ -7,25 +7,13 @@ type TableHeader = {
 export const TableHeader = ({ filters }: TableHeader) => {
   return (
     <tr className="uppercase">
-      <TableSortableHeader filter={filters[0].filter}>
-        {filters[0].text}
-      </TableSortableHeader>
-
-      <TableSortableHeader filter={filters[1].filter}>
-        {filters[1].text}
-      </TableSortableHeader>
-
-      <TableSortableHeader filter={filters[2].filter}>
-        {filters[2].text}
-      </TableSortableHeader>
-
-      <TableSortableHeader filter={filters[3].filter}>
-        {filters[3].text}
-      </TableSortableHeader>
-
-      <TableSortableHeader filter={filters[4].filter}>
-        {filters[4].text}
-      </TableSortableHeader>
+      {filters.map((filter) => {
+        return (
+          <TableSortableHeader key={filter.filter} filter={filter.filter}>
+            {filter.text}
+          </TableSortableHeader>
+        )
+      })}
 
       <th className="w-1/6 p-4">
         <span className="sr-only">Action buttons</span>

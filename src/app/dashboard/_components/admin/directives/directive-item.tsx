@@ -1,11 +1,7 @@
-'use client'
-
 import { OrderType } from '@/app/dashboard/_components/admin/types'
-import { DeleteModal } from '@/app/dashboard/_components/modals/delete-modal'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib'
 import Link from 'next/link'
-import { useState } from 'react'
 
 type InventoryProductProps = {
   order: OrderType

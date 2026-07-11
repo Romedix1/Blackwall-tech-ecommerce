@@ -6,11 +6,13 @@ import { PaginationButtons } from '@/app/dashboard/_components/pagination-button
 import {
   InventoryProductType,
   OrderType,
+  UsersType,
 } from '@/app/dashboard/_components/admin/types'
 import { DirectiveItem } from '@/app/dashboard/_components/admin/directives/directive-item'
+import { OperativeItem } from '@/app/dashboard/_components/admin/operatives/operative-item'
 
 type ProductListProps = {
-  mode: 'inventory' | 'directives'
+  mode: 'inventory' | 'directives' | 'operatives'
   page: number
   order?: 'asc' | 'desc'
   filter?: string
@@ -32,6 +34,7 @@ export const DashboardList = async ({
 
   let products: InventoryProductType[] = []
   let orders: OrderType[] = []
+  let users: UsersType[] = []
   let totalItems = 0
   let filters: { filter: string; text: string }[] = []
 
@@ -127,6 +130,48 @@ export const DashboardList = async ({
       { filter: 'city', text: 'City' },
       { filter: 'status', text: 'Status' },
     ]
+  } else if (mode === 'operatives') {
+    const allowedFilters = ['id', 'username', 'email', 'city']
+
+    const safeFilter = allowedFilters.includes(filter as string) ? filter : 'id'
+
+    const userByClause: Prisma.UserOrderByWithRelationInput = {
+      [safeFilter as string]: safeOrder,
+    }
+
+    const userWhereClause: Prisma.UserWhereInput = searchValue
+      ? {
+          OR: [
+            { id: { contains: searchValue, mode: 'insensitive' } },
+            { username: { contains: searchValue, mode: 'insensitive' } },
+          ],
+        }
+      : {}
+
+    const [fetchedUsers, userCount] = await Promise.all([
+      prisma.user.findMany({
+        take: ITEMS_PER_PAGE,
+        skip: skipItems,
+        where: userWhereClause,
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          city: true,
+        },
+        orderBy: userByClause,
+      }),
+      prisma.user.count({ where: userWhereClause }),
+    ])
+
+    users = fetchedUsers
+    totalItems = userCount
+    filters = [
+      { filter: 'id', text: 'Id' },
+      { filter: 'userName', text: 'Username' },
+      { filter: 'email', text: 'Email' },
+      { filter: 'city', text: 'City' },
+    ]
   }
 
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
@@ -143,9 +188,13 @@ export const DashboardList = async ({
               ? products.map((product) => (
                   <InventoryProduct key={product.id} product={product} />
                 ))
-              : orders.map((order) => (
-                  <DirectiveItem key={order.id} order={order} />
-                ))}
+              : mode === 'directives'
+                ? orders.map((order) => (
+                    <DirectiveItem key={order.id} order={order} />
+                  ))
+                : users.map((user) => (
+                    <OperativeItem key={user.id} user={user} />
+                  ))}
           </tbody>
         </table>
       </div>

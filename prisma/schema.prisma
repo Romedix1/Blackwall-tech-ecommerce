@@ -52,7 +52,7 @@ model User {
   id                String             @id @default(cuid())
   username          String             @unique
   usernameUpdatedAt DateTime?
-  email             String?            @unique
+  email             String             @unique
   emailVerified     DateTime?
   shippingAddress   String?
   city              String?

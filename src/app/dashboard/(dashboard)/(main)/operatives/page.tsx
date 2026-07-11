@@ -6,7 +6,7 @@ import {
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 
-type DashboardDirectivesProps = {
+type DashboardOperativesProps = {
   searchParams: Promise<{
     page?: string
     filter?: string
@@ -15,9 +15,9 @@ type DashboardDirectivesProps = {
   }>
 }
 
-export default async function DashboardDirectivesPage({
+export default async function DashboardOperativesPage({
   searchParams,
-}: DashboardDirectivesProps) {
+}: DashboardOperativesProps) {
   const session = await auth()
 
   const resolvedParams = await searchParams
@@ -36,17 +36,15 @@ export default async function DashboardDirectivesPage({
   return (
     <div className="flex flex-col gap-6">
       <DashboardHeader>
-        <span className="sr-only">Operational queue: Directive managment</span>
-        <span aria-hidden="true">
-          {'//'} Operational_queue: directive_management
-        </span>
+        <span className="sr-only">Core database: Operative records</span>
+        <span aria-hidden="true">{'//'} Core_database: Operative_records</span>
       </DashboardHeader>
 
       <div className="flex flex-col gap-8">
-        <DashoardctionBar mode="directives" />
+        <DashoardctionBar mode="operatives" />
 
         <DashboardList
-          mode="directives"
+          mode="operatives"
           page={currentPage}
           order={currentOrder}
           filter={currentFilter}

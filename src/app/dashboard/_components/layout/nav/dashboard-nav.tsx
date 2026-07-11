@@ -25,7 +25,7 @@ export const DashboardNav = async () => {
       sr: 'Directive queue',
     },
     {
-      href: '/dashboard/records',
+      href: '/dashboard/operatives',
       label: '[ Operative_records ]',
       sr: 'Operative records',
     },

@@ -13,3 +13,10 @@ export type OrderType = {
   city: string
   status: string
 }
+
+export type UsersType = {
+  id: string
+  username: string
+  email: string
+  city: string | null
+}

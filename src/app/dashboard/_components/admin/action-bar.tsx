@@ -9,7 +9,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 type DashboardActionBar = {
-  mode: 'inventory' | 'directives'
+  mode: 'inventory' | 'directives' | 'operatives'
 }
 
 export const DashoardctionBar = ({ mode }: DashboardActionBar) => {
@@ -58,10 +58,10 @@ export const DashoardctionBar = ({ mode }: DashboardActionBar) => {
           mode === 'inventory' ? 'xl:w-9/12' : 'xl:w-full',
           'w-full',
         )}
-        placeholder={`search_by_id_or_${mode === 'inventory' ? 'name' : 'city'}`}
+        placeholder={`search_by_id_or_${mode === 'inventory' ? 'name' : mode === 'operatives' ? 'username' : 'city'}`}
         ref={filterRef}
         variant="filter"
-        aria-label={`Search by id or ${mode === 'inventory' ? 'product name' : 'city'}`}
+        aria-label={`Search by id or ${mode === 'inventory' ? 'product name' : mode === 'operatives' ? 'username' : 'city'}`}
       />
 
       {mode === 'inventory' && (
