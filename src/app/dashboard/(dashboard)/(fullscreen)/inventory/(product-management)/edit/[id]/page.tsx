@@ -21,6 +21,7 @@ export default async function EditProductPage({
 
   if (!user || user.role !== 'admin') {
     redirect('/')
+    return
   }
 
   const product = await prisma.product.findFirst({

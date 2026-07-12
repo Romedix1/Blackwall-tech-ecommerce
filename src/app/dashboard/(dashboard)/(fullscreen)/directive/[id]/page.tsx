@@ -2,19 +2,12 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { DirectiveInformationBlock } from '@/app/dashboard/(dashboard)/(fullscreen)/directive/[id]/_components/directive-information-block'
 import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/back-button'
+import { DashboardInformationBlock } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/dashboard-information-block'
+import { OrderStatusColorMap } from '@/app/dashboard/(dashboard)/(fullscreen)/_constants/order-status-color'
 
 type OrderDetailsPageProps = {
   params: Promise<{ id: string }>
-}
-
-const statusColorMap: Record<string, string> = {
-  failed: 'bg-error-text/10 text-error-text',
-  pending: 'bg-warning/10 text-warning',
-  paid: 'bg-accent/10 text-accent',
-  shipped: 'bg-accent/10 text-accent',
-  complete: 'bg-accent/10 text-accent',
 }
 
 export default async function OrderDetailsPage({
@@ -55,7 +48,7 @@ export default async function OrderDetailsPage({
     timeStyle: 'short',
   }).format(new Date(order.createdAt))
 
-  const directiveInformationBlockParagraphStyles = 'text-text-second'
+  const dashboardInformationBlockParagraphStyles = 'text-text-second'
 
   return (
     <div className="text-text-main container mx-auto mt-8 flex flex-col gap-8">
@@ -69,7 +62,7 @@ export default async function OrderDetailsPage({
         <div
           className={cn(
             'w-fit px-4 py-2 font-bold tracking-wider uppercase',
-            statusColorMap[order.status] ||
+            OrderStatusColorMap[order.status] ||
               'bg-text-disabled/20 text-text-disabled',
           )}
         >
@@ -78,21 +71,21 @@ export default async function OrderDetailsPage({
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <DirectiveInformationBlock header="Customer Info">
+        <DashboardInformationBlock header="Customer Info">
           <p>
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               Name:
             </span>{' '}
             {order.fullName}
           </p>
           <p>
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               Email:
             </span>{' '}
             {order.email}
           </p>
           <p>
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               Phone:
             </span>{' '}
             {order.phoneNumber}
@@ -102,44 +95,44 @@ export default async function OrderDetailsPage({
               Registered User ID: <br /> {order.userId}
             </p>
           )}
-        </DirectiveInformationBlock>
+        </DashboardInformationBlock>
 
-        <DirectiveInformationBlock header="Shipping Address">
+        <DashboardInformationBlock header="Shipping Address">
           <p>
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               Address:
             </span>{' '}
             {order.address}
           </p>
           <p>
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               City:
             </span>{' '}
             {order.city}
           </p>
           <p>
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               Zip Code:
             </span>{' '}
             {order.zipCode}
           </p>
-        </DirectiveInformationBlock>
+        </DashboardInformationBlock>
 
-        <DirectiveInformationBlock header="Payment & System">
+        <DashboardInformationBlock header="Payment & System">
           <p>
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               Total Amount:{' '}
             </span>
             $ {order.totalAmount.toFixed(2)}
           </p>
           <p>
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               Created at:
             </span>{' '}
             {formattedDate}
           </p>
           <p className="truncate">
-            <span className={cn(directiveInformationBlockParagraphStyles)}>
+            <span className={cn(dashboardInformationBlockParagraphStyles)}>
               Token:
             </span>{' '}
             {order.orderToken}
@@ -153,7 +146,7 @@ export default async function OrderDetailsPage({
               No Stripe session attached
             </p>
           )}
-        </DirectiveInformationBlock>
+        </DashboardInformationBlock>
       </div>
 
       <div className="mt-4 flex flex-col gap-4">

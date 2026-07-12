@@ -1,14 +1,14 @@
 import { ReactNode } from 'react'
 
-type DirectiveInformationBlockProps = {
+type DashboardInformationBlockProps = {
   children: ReactNode
   header: string
 }
 
-export const DirectiveInformationBlock = ({
+export const DashboardInformationBlock = ({
   children,
   header,
-}: DirectiveInformationBlockProps) => {
+}: DashboardInformationBlockProps) => {
   return (
     <div className="border-border bg-surface/50 flex flex-col gap-4 border p-6">
       <h2 className="text-accent text-lg font-bold uppercase">{header}</h2>
