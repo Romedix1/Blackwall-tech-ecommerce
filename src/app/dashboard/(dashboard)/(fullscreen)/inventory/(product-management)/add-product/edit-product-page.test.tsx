@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Session } from 'next-auth'
 import AddProductPage from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/add-product/page'
 import { prisma } from '@/lib/prisma'
+import { userSession } from '@tests/mocks'
 
 vi.mock('@/auth', () => ({
   auth: vi.fn(),
@@ -44,17 +45,7 @@ describe('Add product page', () => {
   })
 
   it('Should redirect when user is not admin', async () => {
-    const mockUserSession: Session = {
-      user: {
-        id: '2',
-        name: 'John',
-        email: 'John@test.pl',
-        role: 'user',
-      },
-      expires: '9999',
-    }
-
-    mockedAuth.mockResolvedValue(mockUserSession)
+    mockedAuth.mockResolvedValue(userSession)
 
     await AddProductPage()
 

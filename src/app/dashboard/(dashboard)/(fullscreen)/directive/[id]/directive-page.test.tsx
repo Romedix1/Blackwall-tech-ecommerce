@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation'
 import { Order } from '../../../../../../../generated/prisma'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
+import { adminSession, userSession } from '@tests/mocks'
 
 vi.mock('next/navigation', () => ({
   redirect: vi.fn(),
@@ -20,16 +21,6 @@ vi.mock('@/lib/prisma', () => ({
 }))
 
 const mockedAuth = vi.mocked(auth as unknown as () => Promise<Session | null>)
-
-const adminSession: Session = {
-  user: { id: '2', name: 'John', email: 'John@test.pl', role: 'admin' },
-  expires: '9999',
-}
-
-const userSession: Session = {
-  ...adminSession,
-  user: { ...adminSession.user, role: 'user' },
-}
 
 type OrderWithItems = Order & {
   items: {
@@ -70,7 +61,7 @@ const mockedOrder: OrderWithItems = {
   ],
 }
 
-describe('Directives page', () => {
+describe('Directive page', () => {
   it('Should redirect when user is not logged', async () => {
     mockedAuth.mockResolvedValue(null)
 

@@ -1,6 +1,7 @@
 import { auth } from '@/auth'
 import { AddProduct, UpdateProduct } from '@/lib/actions/dashboard-admin'
 import { prisma } from '@/lib/prisma'
+import { adminSession, userSession } from '@tests/mocks'
 import { Session } from 'next-auth'
 import { vi, describe, it, expect } from 'vitest'
 
@@ -52,16 +53,6 @@ const validProductData = {
     },
   ],
   category: 'psu' as const,
-}
-
-const adminSession: Session = {
-  user: { id: '2', name: 'John', email: 'John@test.pl', role: 'admin' },
-  expires: '9999',
-}
-
-const userSession: Session = {
-  ...adminSession,
-  user: { ...adminSession.user, role: 'user' },
 }
 
 describe('Admin dashboard backend', () => {

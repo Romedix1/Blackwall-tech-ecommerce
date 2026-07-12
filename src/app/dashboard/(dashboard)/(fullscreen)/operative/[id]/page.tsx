@@ -10,15 +10,7 @@ type OrderDetailsPageProps = {
   params: Promise<{ id: string }>
 }
 
-const statusColorMap: Record<string, string> = {
-  failed: 'bg-error-text/10 text-error-text',
-  pending: 'bg-warning/10 text-warning',
-  paid: 'bg-accent/10 text-accent',
-  shipped: 'bg-accent/10 text-accent',
-  complete: 'bg-accent/10 text-accent',
-}
-
-export default async function OrderDetailsPage({
+export default async function OperativeDetailsPage({
   params,
 }: OrderDetailsPageProps) {
   const resolvedParams = await params
@@ -44,7 +36,15 @@ export default async function OrderDetailsPage({
       zipCode: true,
       createdAt: true,
       lastActiveAt: true,
-      orders: true,
+      orders: {
+        select: {
+          id: true,
+          orderToken: true,
+          fullName: true,
+          totalAmount: true,
+          status: true,
+        },
+      },
     },
   })
 
@@ -147,7 +147,7 @@ export default async function OrderDetailsPage({
             <table className="w-225 table-fixed overflow-y-auto text-left lg:w-full">
               <thead className="text-text-second">
                 <tr>
-                  <th className="w-3/12 p-4">Order ID</th>
+                  <th className="w-3/12 p-4">Order Token</th>
                   <th className="w-4/12 p-4">Full Name</th>
                   <th className="w-2/12 p-4">Amount</th>
                   <th className="w-3/12 p-4">Status</th>
@@ -179,7 +179,7 @@ export default async function OrderDetailsPage({
             </table>
           ) : (
             <div className="text-text-second p-6 text-center">
-              No directives found for this operative.
+              No directives found for this operative
             </div>
           )}
         </div>

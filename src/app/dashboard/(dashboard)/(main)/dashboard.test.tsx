@@ -3,6 +3,7 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { screen } from '@testing-library/dom'
 import { render } from '@testing-library/react'
+import { userSession } from '@tests/mocks'
 import { Session } from 'next-auth'
 import { redirect } from 'next/navigation'
 
@@ -38,17 +39,6 @@ vi.mock('@/app/dashboard/_components', () => ({
 
 const mockedAuth = vi.mocked(auth as unknown as () => Promise<Session | null>)
 
-const mockSession: Session = {
-  user: {
-    id: '1',
-    name: 'romedix',
-    username: 'Romedix1',
-    role: 'user',
-    email: 'test@test.pl',
-  },
-  expires: new Date().toISOString(),
-}
-
 describe('Main dashboard view', () => {
   it('Should redirect if session is null', async () => {
     mockedAuth.mockResolvedValue(null)
@@ -60,7 +50,7 @@ describe('Main dashboard view', () => {
   })
 
   it('Should render dashboard and fetch orders if session is valid', async () => {
-    mockedAuth.mockResolvedValue(mockSession)
+    mockedAuth.mockResolvedValue(userSession)
 
     const mockOrders = [
       { id: 'ord_1', status: 'delivered', createdAt: new Date() },
@@ -74,15 +64,15 @@ describe('Main dashboard view', () => {
 
     expect(prisma.order.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { userId: '1' },
+        where: { userId: userSession?.user?.id },
         take: 3,
       }),
     )
-    expect(screen.getByText(/romedix/i)).toBeInTheDocument()
+    expect(screen.getByText(/John/i)).toBeInTheDocument()
   })
 
   it('Should display no orders text if there are zero orders in database', async () => {
-    mockedAuth.mockResolvedValue(mockSession)
+    mockedAuth.mockResolvedValue(userSession)
 
     vi.mocked(prisma.order.findMany).mockResolvedValue([])
 
