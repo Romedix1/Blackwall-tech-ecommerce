@@ -73,6 +73,7 @@ model User {
   Build             Build[]
   ActiveConnection  ActiveConnection[]
   orders            Order[]
+  systemLogs        SystemLog[]
 }
 
 model ActiveConnection {
@@ -210,4 +211,13 @@ model Order {
   status          OrderStatus
   items           OrderItem[]
   createdAt       DateTime    @default(now())
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
