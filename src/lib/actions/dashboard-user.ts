@@ -2,6 +2,7 @@
 
 import { auth, signOut } from '@/auth'
 import { checkUpdateCooldown } from '@/lib/check-update-cooldown'
+import { createLog } from '@/lib/logger'
 import { prisma } from '@/lib/prisma'
 import { addressSchema, UsernameField } from '@/lib/zod'
 import { ResetPasswordSchema } from '@/lib/zod/reset-password-schema'
@@ -46,6 +47,7 @@ export async function changeUsername(newUsername: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
+        username: true,
         usernameUpdatedAt: true,
       },
     })
@@ -56,6 +58,12 @@ export async function changeUsername(newUsername: string) {
       const canUpdate = checkUpdateCooldown(lastUpdated, UPDATE_COOLDOWN)
 
       if (!canUpdate.success) {
+        await createLog(
+          'Rate limit triggered',
+          `User ${user.username} triggered system lock during username update`,
+          userId,
+        )
+
         return {
           message: `System lock: Wait ${canUpdate.remainingMin}m for next calibration`,
           success: false,
@@ -67,6 +75,12 @@ export async function changeUsername(newUsername: string) {
       where: { id: userId },
       data: { username: validatedUsername, usernameUpdatedAt: new Date() },
     })
+
+    await createLog(
+      'Username updated',
+      `Username updated from ${user?.username} to ${validatedUsername}`,
+      session.user.id,
+    )
 
     return {
       message: 'Identity recalibrated',
@@ -128,6 +142,7 @@ export async function ResetPassword(
     const dbUser = await prisma.user.findUnique({
       where: { id: userId },
       select: {
+        username: true,
         password: true,
         passwordChangedAt: true,
       },
@@ -139,6 +154,12 @@ export async function ResetPassword(
       const canUpdate = checkUpdateCooldown(lastUpdated, UPDATE_COOLDOWN)
 
       if (!canUpdate.success) {
+        await createLog(
+          'Rate limit triggered',
+          `User ${dbUser.username} triggered system lock during password reset`,
+          userId,
+        )
+
         return {
           error: `System lock: Wait ${canUpdate.remainingMin}m for next calibration`,
         }
@@ -162,6 +183,12 @@ export async function ResetPassword(
     )
 
     if (!passwordIsCorrect) {
+      await createLog(
+        'Password reset failed',
+        `Failed password change attempt for user ${dbUser.username} - invalid current password`,
+        userId,
+      )
+
       return {
         error: 'Invalid current password',
         fields: {
@@ -178,6 +205,12 @@ export async function ResetPassword(
       where: { id: userId },
       data: { password: hashedNewPassword, passwordChangedAt: new Date() },
     })
+
+    await createLog(
+      'Password updated',
+      `Password successfully updated for user ${dbUser.username}`,
+      session.user.id,
+    )
 
     return {
       success: true,
@@ -243,9 +276,20 @@ export async function LogoutAllSessions() {
       data: { tokenVersion: { increment: 1 } },
     })
 
+    const user = await prisma.user.findFirst({
+      where: { id: userId },
+      select: { username: true },
+    })
+
     await prisma.activeConnection.deleteMany({
       where: { userId: userId },
     })
+
+    await createLog(
+      'Logged out all sessions',
+      `Successfully logged out all sessions for user ${user?.username}`,
+      session.user.id,
+    )
 
     if (result) {
       await signOut({ redirectTo: '/login' })
@@ -295,6 +339,7 @@ export async function ChangeAddress(
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
+        username: true,
         addressUpdatedAt: true,
       },
     })
@@ -305,6 +350,12 @@ export async function ChangeAddress(
       const canUpdate = checkUpdateCooldown(lastUpdated, UPDATE_COOLDOWN)
 
       if (!canUpdate.success) {
+        await createLog(
+          'Rate limit triggered',
+          `User ${user.username} triggered system lock during address update`,
+          userId,
+        )
+
         return {
           error: `System lock: Wait ${canUpdate.remainingMin}m for next calibration`,
         }
@@ -320,6 +371,12 @@ export async function ChangeAddress(
         addressUpdatedAt: new Date(),
       },
     })
+
+    await createLog(
+      'Address changed',
+      `Successfully changed address to ${validatedData.data.shippingAddress}, ${validatedData.data.city}, ${validatedData.data.zipCode} for user ${user?.username}`,
+      session.user.id,
+    )
 
     revalidatePath('/', 'page')
 
@@ -378,9 +435,20 @@ export async function TerminateSession(
       },
     })
 
+    const user = await prisma.user.findFirst({
+      where: { id: userId },
+      select: { username: true },
+    })
+
     if (deletion.count === 0) {
       return { error: 'Uplink not found or already terminated' }
     }
+
+    await createLog(
+      'Terminated session',
+      `Successfully terminated session for user ${user?.username}`,
+      userId,
+    )
 
     revalidatePath('/dashboard/settings')
 

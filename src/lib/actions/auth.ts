@@ -101,7 +101,7 @@ export const RegisterUser = async (
 
     await createLog(
       'User sign up',
-      `Succesfully signed up user: ${email}`,
+      `Successfully signed up user: ${email}`,
       newUser.id,
     )
 

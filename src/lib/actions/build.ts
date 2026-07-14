@@ -173,16 +173,18 @@ export async function toggleBuildVisibility(buildId: string) {
     )
   }
 
-  await createLog(
-    'Switched build visibility',
-    `Succesfully switched build ${build.name} visibility to ${!build.public ? 'public' : 'private'} by user: ${build.createdBy.username}`,
-    build.userId,
-  )
-
-  return await prisma.build.update({
+  const updatedBuild = await prisma.build.update({
     where: { id: buildId },
     data: { public: !build.public },
   })
+
+  await createLog(
+    'Switched build visibility',
+    `Successfully switched build ${build.name} visibility to ${!build.public ? 'public' : 'private'} by user: ${build.createdBy.username}`,
+    build.userId,
+  )
+
+  return updatedBuild
 }
 
 export async function deleteBuild(buildId: string) {
@@ -204,7 +206,7 @@ export async function deleteBuild(buildId: string) {
       where: { id: buildId, AND: { userId } },
     })
 
-    createLog(
+    await createLog(
       'Build deleted',
       `Build ${build?.name} was deleted by user ${session.user.username}`,
       userId,
@@ -228,14 +230,20 @@ export async function updateBuildName(
 ) {
   const session = await auth()
 
-  createLog(
-    'Build name updated',
-    `Build name was updated to ${name} by user ${session?.user.username}`,
-    userId,
-  )
+  if (!session?.user?.id) {
+    return { error: 'Unauthorized' }
+  }
 
-  return await prisma.build.update({
+  const updatedBuild = await prisma.build.update({
     where: { id: buildId, userId: userId },
     data: { name },
   })
+
+  await createLog(
+    'Build name updated',
+    `Build name was updated to ${name} by user ${session.user.username}`,
+    userId,
+  )
+
+  return updatedBuild
 }
