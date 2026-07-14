@@ -43,6 +43,11 @@ export const RegisterUser = async (
     })
 
     if (userExists) {
+      await createLog(
+        'Register duplicate attempt',
+        `Attempted to register with existing email or username: ${email}`,
+      )
+
       return {
         error: 'User with this email or username already exists',
         fields: rawData,
@@ -82,6 +87,11 @@ export const RegisterUser = async (
         console.error('[ SMTP error ]:', emailError)
       }
 
+      await createLog(
+        'Register SMTP error',
+        `Failed to send verification email to: ${email}`,
+      )
+
       return {
         error:
           'Protocol error: Could not send verification email. Please try again',
@@ -89,11 +99,23 @@ export const RegisterUser = async (
       }
     }
 
+    await createLog(
+      'User sign up',
+      `Succesfully signed up user: ${email}`,
+      newUser.id,
+    )
+
     return { success: true, message: 'Uplink initiated', fields: { email } }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error('[ Registration error ]:', error)
     }
+
+    await createLog(
+      'Register system error',
+      `System failure during registration for: ${email}`,
+    )
+
     return { error: 'Protocol error: Registration failed', fields: rawData }
   }
 }
