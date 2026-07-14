@@ -226,6 +226,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           await prisma.activeConnection.delete({
             where: { sessionToken: message.token.connectionId as string },
           })
+
+          const userId = message.token.id as string | undefined
+          const userEmail = message.token.email || 'Unknown email'
+
+          await createLog(
+            'User logged out',
+            `User logged out: ${userEmail}`,
+            userId,
+          )
         } catch (error) {
           console.error(
             '[ LOGOUT_ERROR ]: Failed to remove database log',
