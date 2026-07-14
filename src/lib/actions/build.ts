@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth'
 import { generateBuildName } from '@/lib/builder'
+import { createLog } from '@/lib/logger'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
@@ -134,6 +135,12 @@ export async function initiateBuildConfig() {
     select: { id: true },
   })
 
+  await createLog(
+    'Created build',
+    `Successfully created build by user: ${session.user.username}`,
+    session.user.id,
+  )
+
   redirect(`/pc-builder/cpu/${newBuild.id}`)
 }
 
@@ -142,7 +149,17 @@ export async function toggleBuildVisibility(buildId: string) {
 
   const build = await prisma.build.findUnique({
     where: { id: buildId },
-    select: { updatedAt: true, public: true },
+    select: {
+      updatedAt: true,
+      name: true,
+      public: true,
+      userId: true,
+      createdBy: {
+        select: {
+          username: true,
+        },
+      },
+    },
   })
 
   if (!build) throw new Error('Build not found')
@@ -155,6 +172,12 @@ export async function toggleBuildVisibility(buildId: string) {
       'RECALIBRATING_SYSTEM: Please wait before next broadcast change',
     )
   }
+
+  await createLog(
+    'Switched build visibility',
+    `Succesfully switched build ${build.name} visibility to ${!build.public ? 'public' : 'private'} by user: ${build.createdBy.username}`,
+    build.userId,
+  )
 
   return await prisma.build.update({
     where: { id: buildId },
@@ -172,9 +195,20 @@ export async function deleteBuild(buildId: string) {
   const userId = session.user.id
 
   try {
+    const build = await prisma.build.findUnique({
+      where: { id: buildId },
+      select: { name: true },
+    })
+
     await prisma.build.delete({
       where: { id: buildId, AND: { userId } },
     })
+
+    createLog(
+      'Build deleted',
+      `Build ${build?.name} was deleted by user ${session.user.username}`,
+      userId,
+    )
 
     revalidatePath('/dashboard/builds')
     return { success: true }
@@ -192,6 +226,14 @@ export async function updateBuildName(
   userId: string,
   name: string,
 ) {
+  const session = await auth()
+
+  createLog(
+    'Build name updated',
+    `Build name was updated to ${name} by user ${session?.user.username}`,
+    userId,
+  )
+
   return await prisma.build.update({
     where: { id: buildId, userId: userId },
     data: { name },

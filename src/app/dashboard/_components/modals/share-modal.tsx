@@ -163,6 +163,7 @@ export const ShareModal = ({
               ref={copyBtnRef}
               disabled={!isPublic}
             >
+              {/* TODO: ADD  COPPIED INFORMATION */}
               <span className="sr-only">Copy link</span>
               <span aria-hidden="true">[ Copy ]</span>
             </Button>

@@ -21,9 +21,6 @@ export default async function DashboardLayout({
   const session = await auth()
   const userId = session?.user.id
 
-  if (!userId) {
-  }
-
   const build = await prisma.build.findUnique({
     where: { id: buildId, AND: { userId } },
     select: {
