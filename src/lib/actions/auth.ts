@@ -8,6 +8,7 @@ import { signIn, signOut } from '@/auth'
 import { LoginSchema } from '@/lib/zod'
 import { AuthError } from 'next-auth'
 import { FormState } from '@/types'
+import { createLog } from '@/lib/logger'
 
 export const RegisterUser = async (
   prevState: FormState,
@@ -96,7 +97,7 @@ export const RegisterUser = async (
     return { error: 'Protocol error: Registration failed', fields: rawData }
   }
 }
-
+// TODO: ADD LOGIN COOLDOWN
 export const LoginUser = async (
   prevState: FormState,
   formData: FormData,
@@ -125,6 +126,17 @@ export const LoginUser = async (
       redirect: false,
     })
 
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    })
+
+    await createLog(
+      'User logged in',
+      `Successfully logged in user: ${email}`,
+      user?.id,
+    )
+
     return { success: true, message: 'User logged in' }
   } catch (error) {
     if (error instanceof AuthError) {
@@ -137,6 +149,8 @@ export const LoginUser = async (
 
       switch (error.type) {
         case 'CredentialsSignin':
+          await createLog('Login failed', `Invalid credentials for: ${email}`)
+
           return {
             error: 'Access denied: invalid credentials',
             fields: rawData,
