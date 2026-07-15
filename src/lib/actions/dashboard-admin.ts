@@ -6,9 +6,10 @@ import { prisma } from '@/lib/prisma'
 import { ManageProductSchema } from '@/lib/zod/manage-product-schema'
 import { Prisma } from '../../../generated/prisma'
 import { revalidatePath } from 'next/cache'
+import { createLog } from '@/lib/logger'
 
 type ProductDTO = z.infer<typeof ManageProductSchema>
-// TODO: ADD chage category option
+
 export const UpdateProduct = async (
   productId: string,
   data: ProductDTO,
@@ -43,6 +44,13 @@ export const UpdateProduct = async (
       return { success: false, error: 'Invalid category' }
     }
 
+    const product = await prisma.product.findFirst({
+      where: { id: productId },
+      select: {
+        name: true,
+      },
+    })
+
     await prisma.product.update({
       where: { id: productId },
       data: {
@@ -61,6 +69,14 @@ export const UpdateProduct = async (
         },
       },
     })
+
+    revalidatePath('/dashboard/inventory')
+
+    await createLog(
+      'Product updated',
+      `Product ${product?.name} was updated by ${session.user.username}`,
+      userId,
+    )
 
     return { success: true }
   } catch (error) {
@@ -89,11 +105,22 @@ export const DeleteProduct = async (
   }
 
   try {
+    const product = await prisma.product.findFirst({
+      where: { id: productId },
+      select: { name: true },
+    })
+
     await prisma.product.delete({
       where: { id: productId },
     })
 
     revalidatePath('/dashboard/inventory')
+
+    await createLog(
+      'Product deleted',
+      `Product ${product?.name} was deleted by ${session.user.username}`,
+      userId,
+    )
 
     return { success: true }
   } catch (error) {
@@ -159,6 +186,12 @@ export const AddProduct = async (
     })
 
     revalidatePath('/dashboard/inventory')
+
+    await createLog(
+      'Product added',
+      `Product ${validatedData.data.name} was added by ${session.user.username}`,
+      userId,
+    )
 
     return { success: true }
   } catch (error) {

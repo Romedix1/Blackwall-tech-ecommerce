@@ -243,7 +243,7 @@ export const ProductForm = (props: ProductFormProps) => {
           {mode === 'edit' ? 'Update data' : 'Add product'}
         </span>
         <span aria-hidden="true">
-          {mode === 'edit' ? '[ Update data ]' : '[ Add product ]'}
+          {mode === 'edit' ? '[ Update_data ]' : '[ Add_product ]'}
         </span>
       </Button>
     </form>
