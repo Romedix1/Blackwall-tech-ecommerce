@@ -4,6 +4,11 @@ import { prisma } from '@/lib/prisma'
 import { adminSession, userSession } from '@tests/mocks'
 import { Session } from 'next-auth'
 import { vi, describe, it, expect } from 'vitest'
+import { createLog } from '@/lib/logger'
+
+vi.mock('@/lib/logger', () => ({
+  createLog: vi.fn(),
+}))
 
 vi.mock('@/auth', () => ({
   auth: vi.fn(),
@@ -14,6 +19,7 @@ vi.mock('@/lib/prisma', () => ({
     product: {
       update: vi.fn(),
       create: vi.fn(),
+      findFirst: vi.fn(),
     },
     category: {
       findFirst: vi.fn(),
@@ -75,6 +81,7 @@ describe('Admin dashboard backend', () => {
 
       expect(result).toEqual({ success: false, error: 'Unauthorized' })
       expect(prisma.product.update).not.toHaveBeenCalled()
+      expect(createLog).not.toHaveBeenCalled()
     })
 
     it('Should return zod validation errors', async () => {
@@ -87,12 +94,14 @@ describe('Admin dashboard backend', () => {
       const result = await UpdateProduct('1', invalidData)
       expect(result.success).toBe(false)
       expect(prisma.product.update).not.toHaveBeenCalled()
+      expect(createLog).not.toHaveBeenCalled()
     })
 
     it('Should update product and return success', async () => {
       const result = await UpdateProduct('1', validProductData)
       expect(result).toEqual({ success: true })
       expect(prisma.product.update).toHaveBeenCalledOnce()
+      expect(createLog).toHaveBeenCalledOnce()
     })
   })
 
@@ -104,6 +113,7 @@ describe('Admin dashboard backend', () => {
 
       expect(result).toEqual({ success: false, error: 'Unauthorized' })
       expect(prisma.product.create).not.toHaveBeenCalled()
+      expect(createLog).not.toHaveBeenCalled()
     })
 
     it('Should return zod validation errors', async () => {
@@ -117,6 +127,7 @@ describe('Admin dashboard backend', () => {
 
       expect(result.success).toBe(false)
       expect(prisma.product.create).not.toHaveBeenCalled()
+      expect(createLog).not.toHaveBeenCalled()
     })
 
     it('Should add product and return success', async () => {
@@ -125,6 +136,7 @@ describe('Admin dashboard backend', () => {
       expect(result).toEqual({ success: true })
 
       expect(prisma.product.create).toHaveBeenCalledOnce()
+      expect(createLog).toHaveBeenCalledOnce()
     })
   })
 })

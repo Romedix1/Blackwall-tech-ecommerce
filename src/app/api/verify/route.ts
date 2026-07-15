@@ -1,3 +1,4 @@
+import { createLog } from '@/lib/logger'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { NextRequest } from 'next/server'
@@ -24,6 +25,9 @@ export async function GET(request: NextRequest) {
     } else {
       const user = await prisma.user.findUnique({
         where: { email: existingToken.identifier },
+        select: {
+          id: true,
+        },
       })
 
       if (!user) {
@@ -38,6 +42,12 @@ export async function GET(request: NextRequest) {
             where: { id: existingToken.id },
           }),
         ])
+
+        createLog(
+          'Email verified',
+          `Email confirmed for user: ${existingToken.identifier}`,
+          user.id,
+        )
 
         redirectTo = '/'
       }

@@ -10,12 +10,14 @@ import { Session, User } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 import { UAParser } from 'ua-parser-js'
 import { updateLastActive } from '@/lib/user/update-last-active'
+import { createLog } from '@/lib/logger'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
   providers: [
     GitHub({
+      allowDangerousEmailAccountLinking: true,
       profile(profile) {
         return {
           id: profile.id.toString(),
@@ -26,10 +28,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
     Google({
+      allowDangerousEmailAccountLinking: true,
       profile(profile) {
         return {
-          id: profile.id.toString(),
-          username: profile.name || profile.login,
+          id: profile.sub,
+          username: profile.name || profile.given_name,
           email: profile.email.toLowerCase(),
           role: 'user',
         }
@@ -198,12 +201,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   events: {
+    async signIn({ user, account }) {
+      if (account && account.provider !== 'credentials') {
+        try {
+          await createLog(
+            'User logged in (OAuth)',
+            `User logged in via ${account.provider}: ${user.email}`,
+            user.id,
+          )
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.error(
+              '[ OAUTH_LOGGER_ERROR ]: Failed to log OAuth sign-in',
+              error,
+            )
+          }
+        }
+      }
+    },
+
     async signOut(message) {
       if ('token' in message && message.token?.connectionId) {
         try {
           await prisma.activeConnection.delete({
             where: { sessionToken: message.token.connectionId as string },
           })
+
+          const userId = message.token.id as string | undefined
+          const userEmail = message.token.email || 'Unknown email'
+
+          await createLog(
+            'User logged out',
+            `User logged out: ${userEmail}`,
+            userId,
+          )
         } catch (error) {
           console.error(
             '[ LOGOUT_ERROR ]: Failed to remove database log',

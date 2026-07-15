@@ -61,7 +61,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
     <section className="flex justify-center">
       <form
         action={formAction}
-        className="mt-16 flex w-full flex-col border p-6 uppercase md:my-40 md:w-150 md:p-10"
+        className="mt-16 flex w-full flex-col border p-6 uppercase md:my-36 md:w-150 md:p-10"
       >
         <h1 className="mb-2 font-bold md:text-2xl">
           <span aria-hidden="true">
