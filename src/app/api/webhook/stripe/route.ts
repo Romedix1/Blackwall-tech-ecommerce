@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { OrderStatus } from '../../../../../generated/prisma'
 import { sendOrderSuccessEmail } from '@/lib/send-payment-success-email'
+import { createLog } from '@/lib/logger'
 
 export async function POST(req: Request) {
   const body = await req.text()
@@ -108,6 +109,12 @@ async function handleOrderUpdate(
       },
     })
 
+    await createLog(
+      'Order paid',
+      `Payment successfully verified for order ${orderId}`,
+      userId,
+    )
+
     const customerEmail = session.customer_details?.email
     const customerName = session.metadata?.fullName
 
@@ -116,7 +123,7 @@ async function handleOrderUpdate(
         await sendOrderSuccessEmail(customerEmail, customerName, orderWithItems)
       } catch (emailError) {
         if (process.env.NODE_ENV === 'development') {
-          console.error('[MAIL_ERROR]:', emailError)
+          console.error('[ MAIL_ERROR ]:', emailError)
         }
       }
     } else {
@@ -126,7 +133,7 @@ async function handleOrderUpdate(
     return orderWithItems
   }
 
-  return await prisma.$transaction(async (trans) => {
+  const failedOrder = await prisma.$transaction(async (trans) => {
     const order = await trans.order.findUnique({
       where: { id: orderId },
       include: { items: true },
@@ -148,4 +155,12 @@ async function handleOrderUpdate(
       data: { status: 'failed', stripeSessionId: session.id },
     })
   })
+
+  await createLog(
+    'Order failed',
+    `Payment failed or expired for order ${orderId}. Inventory has been restored`,
+    userId,
+  )
+
+  return failedOrder
 }

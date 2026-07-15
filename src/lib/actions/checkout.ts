@@ -11,6 +11,7 @@ import { auth } from '@/auth'
 import Stripe from 'stripe'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
+import { createLog } from '@/lib/logger'
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -180,6 +181,12 @@ export async function checkout(
     // Stripe Tax (automatic_tax) is intentionally disabled in this portfolio project.
     // Enabling it requires configuring legal tax registrations and physical origin addresses
     // In a production environment, this would be handled via Stripe Tax API based on customer location.
+
+    await createLog(
+      'Order initiated',
+      `Checkout initiated for order ${newOrder.id} (${newOrder.totalAmount} USD) by ${userId ? userSession?.user.username : 'Guest'}`,
+      userId,
+    )
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card', 'us_bank_account'],
