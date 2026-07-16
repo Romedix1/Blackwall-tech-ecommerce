@@ -43,7 +43,7 @@ export default async function OrderDetailsPage({
     )
   }
 
-  const formattedDate = new Intl.DateTimeFormat('en-EN', {
+  const formattedDate = new Intl.DateTimeFormat('en-US', {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(order.createdAt))

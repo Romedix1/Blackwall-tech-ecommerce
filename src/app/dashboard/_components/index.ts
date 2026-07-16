@@ -10,3 +10,5 @@ export * from './modals/delete-modal'
 
 export * from './admin/render-metrics'
 export * from './admin/metric-block'
+
+export * from './pagination-buttons'

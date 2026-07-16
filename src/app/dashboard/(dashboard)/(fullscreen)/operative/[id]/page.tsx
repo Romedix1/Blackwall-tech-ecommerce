@@ -59,12 +59,12 @@ export default async function OperativeDetailsPage({
     )
   }
 
-  const formattedCreatedAt = new Intl.DateTimeFormat('en-EN', {
+  const formattedCreatedAt = new Intl.DateTimeFormat('en-US', {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(fetchedUser.createdAt))
 
-  const formattedLastActiveAt = new Intl.DateTimeFormat('en-EN', {
+  const formattedLastActiveAt = new Intl.DateTimeFormat('en-US', {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(fetchedUser.lastActiveAt))

@@ -29,6 +29,11 @@ export const DashboardNav = async () => {
       label: '[ Operative_records ]',
       sr: 'Operative records',
     },
+    {
+      href: '/dashboard/logs',
+      label: '[ SYSTEM_LOGS ]',
+      sr: 'System activity logs',
+    },
   ]
 
   const USER_LINKS = [

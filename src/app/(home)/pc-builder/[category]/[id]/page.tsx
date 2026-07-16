@@ -141,7 +141,7 @@ export default async function BuilderCategoryPage({
             return (
               <FilterCapsule
                 key={`${filter.categoryKey}-${option}`}
-                categoryKey={filter.categoryKey}
+                filterKey={filter.categoryKey}
                 option={option}
               />
             )
