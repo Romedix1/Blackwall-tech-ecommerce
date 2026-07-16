@@ -1,6 +1,6 @@
 export * from './builder-nav'
 export * from './builder-summary'
-export * from './filter-capsule'
+export * from '../../../../../../components/shared/filter-capsule'
 export * from './power-bar'
 export * from './search-shell'
 export * from './build-initializer'

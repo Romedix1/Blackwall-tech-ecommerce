@@ -12,7 +12,10 @@ export const BackButton = ({ link }: BackButtonProps) => {
       variant={'secondary'}
       className="text-text-second flex h-fit w-fit items-center px-3 py-2 text-sm"
     >
-      <Link href={link}>Return</Link>
+      <Link href={link}>
+        <span className="sr-only uppercase">Return</span>
+        <span aria-hidden="true">[ Return ]</span>
+      </Link>
     </Button>
   )
 }

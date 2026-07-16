@@ -1,4 +1,4 @@
-import { FilterCapsule } from '@/app/(home)/pc-builder/[category]/[id]/_components/filter-capsule'
+import { FilterCapsule } from '@/components/shared/filter-capsule'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
@@ -12,14 +12,14 @@ vi.mock('next/navigation', () => ({
 
 describe('filter capsule', () => {
   it('Should render the option capsule', () => {
-    render(<FilterCapsule categoryKey="socket" option="LGA1700" />)
+    render(<FilterCapsule filterKey="socket" option="LGA1700" />)
 
     expect(screen.getByText('LGA1700')).toBeInTheDocument()
   })
 
   it('Should update URL when capsule is clicked', async () => {
     const user = userEvent.setup()
-    render(<FilterCapsule categoryKey="socket" option="LGA1700" />)
+    render(<FilterCapsule filterKey="socket" option="LGA1700" />)
 
     const filterCapsule = screen.getByText('LGA1700')
 
