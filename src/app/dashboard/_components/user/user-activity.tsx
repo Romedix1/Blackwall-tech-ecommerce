@@ -22,6 +22,16 @@ export const UserActivity = async () => {
     take: 3,
   })
 
+  // const getLog = (code: string) => {
+  //   const templates: Record<string, string> = {
+  //     UPLINK_ESTABLISHED: 'Login successful',
+  //     PAYMENT_ACCEPTED: 'Transaction authorized',
+  //     SCHEMATIC_SAVED: 'Hardware schematic saved',
+  //   }
+
+  //   return templates[code] || 'Unregistered system event'
+  // }
+
   return (
     <div>
       <h3 className="text-text-second mb-4 font-bold 2xl:text-xl">
