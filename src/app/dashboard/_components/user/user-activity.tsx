@@ -49,7 +49,7 @@ export const UserActivity = async () => {
                 className="text-text-second text-xs font-bold 2xl:text-sm"
               >
                 <span aria-hidden="true">&gt; </span>
-                {new Date(activity.createdAt).toLocaleString('pl-PL', {
+                {new Date(activity.createdAt).toLocaleString('en-US', {
                   dateStyle: 'short',
                   timeStyle: 'short',
                 })}
