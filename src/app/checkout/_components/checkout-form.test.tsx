@@ -18,6 +18,7 @@ vi.mock('@/hooks', () => ({
       updateQuantity: vi.fn(),
       removeItem: vi.fn(),
       setCart: vi.fn(),
+      lastChecked: 0,
       items: mockCartItems,
     }),
   ),
@@ -39,6 +40,15 @@ const mockCartItems: MockState[] = [
     imgSrc: '/optic.jpg',
   },
 ]
+
+const fillRequiredInputs = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.type(await screen.findByLabelText(/Full name/i), 'V')
+  await user.type(await screen.findByLabelText(/Email/i), 'v@nightcity.nc')
+  await user.type(await screen.findByLabelText(/Shipping address/i), 'H10')
+  await user.type(await screen.findByLabelText(/City/i), 'Night City')
+  await user.type(await screen.findByLabelText(/Zip code/i), '00-000')
+  await user.type(await screen.findByLabelText(/Phone number/i), '123456')
+}
 
 describe('Checkout form', () => {
   it('Should load user email', async () => {
@@ -135,6 +145,7 @@ describe('Checkout form', () => {
         updateQuantity: vi.fn(),
         removeItem: vi.fn(),
         setCart: vi.fn(),
+        lastChecked: 0,
         items: [
           {
             slug: 'neuro-processor',
@@ -184,6 +195,7 @@ describe('Checkout form', () => {
         updateQuantity: vi.fn(),
         removeItem: vi.fn(),
         setCart: vi.fn(),
+        lastChecked: 0,
         items: [
           {
             slug: 'neuro-processor',
@@ -227,6 +239,7 @@ describe('Checkout form', () => {
         updateQuantity: vi.fn(),
         removeItem: vi.fn(),
         setCart: vi.fn(),
+        lastChecked: 0,
         items: [
           {
             slug: 'neuro-processor',
@@ -333,6 +346,8 @@ describe('Checkout form', () => {
 
     render(<CheckoutForm userEmail={null} canceled={false} draftData={null} />)
     const user = userEvent.setup()
+
+    await fillRequiredInputs(user)
 
     const submitButton = await screen.findByRole('button', {
       name: /Confirm order/i,

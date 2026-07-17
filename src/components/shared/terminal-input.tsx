@@ -17,11 +17,11 @@ type ReadOnlyInputProps = BaseProps & {
 }
 
 type TerminalInputProps = EditableInputProps | ReadOnlyInputProps
-// TODO: ADD MISSING REQUIRED OPTION
 const TerminalInput = ({
   className,
   type,
   placeholder,
+  required,
   ref,
   ...props
 }: TerminalInputProps) => {
@@ -30,6 +30,7 @@ const TerminalInput = ({
       <Input
         {...props}
         ref={ref}
+        required={required}
         type={type}
         placeholder=" "
         className={cn(

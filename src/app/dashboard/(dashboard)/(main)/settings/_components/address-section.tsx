@@ -30,6 +30,7 @@ export const AddressSection = ({ userAddress }: AddresSection) => {
       <form action={formAction} className="flex flex-col gap-4">
         <TerminalInput
           name="shippingAddress"
+          required={true}
           defaultValue={
             state?.fields?.shippingAddress || userAddress?.shippingAddress || ''
           }
@@ -42,12 +43,14 @@ export const AddressSection = ({ userAddress }: AddresSection) => {
           <TerminalInput
             name="city"
             defaultValue={state?.fields?.city || userAddress?.city || ''}
+            required={true}
             placeholder="City"
             aria-label="City"
           />
           <TerminalInput
             name="zipCode"
             defaultValue={state?.fields?.zipCode || userAddress?.zipCode || ''}
+            required={true}
             placeholder="Zip_code"
             aria-label="Zip code"
           />

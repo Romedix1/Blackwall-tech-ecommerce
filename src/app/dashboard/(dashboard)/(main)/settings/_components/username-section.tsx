@@ -58,6 +58,7 @@ export const UsernameSection = () => {
           <TerminalInput
             name="username"
             value={newUsername}
+            required={true}
             onChange={(e) => setNewUsername(e.target.value)}
             placeholder={`Change_username`}
             aria-label={`Change username`}

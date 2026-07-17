@@ -63,6 +63,7 @@ export const ChangePasswordModal = ({ onClose }: TerminateModalProps) => {
           <div className="text-text-main flex flex-col gap-2">
             <TerminalInput
               type="password"
+              required={true}
               name="currentPassword"
               aria-label="Current password"
               placeholder="Current password"
@@ -70,6 +71,7 @@ export const ChangePasswordModal = ({ onClose }: TerminateModalProps) => {
             />
             <TerminalInput
               type="password"
+              required={true}
               name="newPassword"
               aria-label="New password"
               placeholder="New password"
@@ -78,6 +80,7 @@ export const ChangePasswordModal = ({ onClose }: TerminateModalProps) => {
             <TerminalInput
               type="password"
               name="confirmNewPassword"
+              required={true}
               aria-label="Confirm new password"
               placeholder="Confirm password"
               defaultValue={state?.fields?.confirmNewPassword || ''}
