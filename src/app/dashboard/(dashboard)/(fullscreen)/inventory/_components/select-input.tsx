@@ -128,6 +128,7 @@ export const SelectInput = ({
           <TerminalInput
             placeholder={`New_${section}_${mode}`}
             aria-label={`Add new ${section} ${mode}`}
+            required={true}
             onBlur={(e) => {
               const customValue = e.target.value.trim()
 

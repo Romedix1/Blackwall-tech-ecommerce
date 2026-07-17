@@ -135,7 +135,7 @@ export const CheckoutForm = ({
         </p>
       </div>
 
-      <form action={formAction} className="flex flex-col gap-6">
+      <form action={formAction} className="flex flex-col gap-6" noValidate>
         <input
           className="hidden"
           name="orderToken"
@@ -147,6 +147,7 @@ export const CheckoutForm = ({
           defaultValue={state?.fields?.fullName || draftData?.fullName || ''}
           placeholder="Full_name"
           name="fullName"
+          required={true}
           aria-label="Full name"
           className="pr-4"
         />
@@ -156,6 +157,7 @@ export const CheckoutForm = ({
           }
           placeholder="Shipping_address"
           aria-label="Shipping address"
+          required={true}
           name="shippingAddress"
           className="pr-4"
         />
@@ -166,6 +168,7 @@ export const CheckoutForm = ({
           }
           placeholder="Email"
           aria-label="Email"
+          required={true}
           name="email"
           className="pr-4"
         />
@@ -175,6 +178,7 @@ export const CheckoutForm = ({
             placeholder="City"
             defaultValue={state?.fields.city || draftData?.city || ''}
             name="city"
+            required={true}
             aria-label="City"
             className="pr-4"
           />
@@ -182,6 +186,7 @@ export const CheckoutForm = ({
             defaultValue={state?.fields.zipCode || draftData?.zipCode || ''}
             placeholder="Zip_code"
             name="zipCode"
+            required={true}
             aria-label="Zip code"
             className="pr-4"
           />
@@ -192,6 +197,7 @@ export const CheckoutForm = ({
           defaultValue={state?.fields.phone || draftData?.phone || ''}
           placeholder="Phone_number"
           name="phone"
+          required={true}
           aria-label="Phone number"
           className="pr-4"
         />

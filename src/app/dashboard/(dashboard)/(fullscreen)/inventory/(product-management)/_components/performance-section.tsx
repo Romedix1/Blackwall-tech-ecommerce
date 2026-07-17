@@ -58,6 +58,7 @@ export const PerformanceSection = ({
                     placeholder="Game name"
                     name={`performance-gameName-${index}`}
                     value={perf.gameName}
+                    required={true}
                     onChange={(event) =>
                       handleUpdatePerformance(
                         index,
@@ -87,6 +88,7 @@ export const PerformanceSection = ({
                         type="number"
                         placeholder="fps"
                         value={perf.fps}
+                        required={true}
                         name={`performance-fps-${index}`}
                         onChange={(event) =>
                           handleUpdatePerformance(
@@ -104,6 +106,7 @@ export const PerformanceSection = ({
                         type="text"
                         placeholder="Settings"
                         value={perf.settings}
+                        required={true}
                         name={`performance-settings-${index}`}
                         aria-label={`Enter graphic settings for ${perf.gameName || `game ${index + 1}`}`}
                         onChange={(event) =>

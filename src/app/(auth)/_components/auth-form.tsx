@@ -99,6 +99,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
               defaultValue={state?.fields?.username || ''}
               placeholder="Assign_callsign"
               type="text"
+              required={true}
               name="username"
               autoComplete="username"
               aria-label="Insert username"
@@ -107,6 +108,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
           <TerminalInput
             defaultValue={state?.fields?.email || ''}
             placeholder="Operative_id (Email)"
+            required={true}
             type="email"
             name="email"
             autoComplete="email"
@@ -117,6 +119,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
             placeholder="Access_code: ******"
             type="password"
             name="password"
+            required={true}
             autoComplete={isLogin ? 'current-password' : 'new-password'}
             aria-label="Insert password"
           />
@@ -139,6 +142,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
               placeholder="Verify_encryption"
               type="password"
               name="confirmPassword"
+              required={true}
               autoComplete="new-password"
               aria-label="Confirm password"
             />
