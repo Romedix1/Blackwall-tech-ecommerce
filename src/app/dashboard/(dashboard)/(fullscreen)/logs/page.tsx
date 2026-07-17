@@ -1,8 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '../../../../../../generated/prisma'
 import {
+  LogFilterSidebar,
   LogSearch,
-  LogSidebar,
   ViewLogs,
 } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components'
 import { PaginationButtons } from '@/app/dashboard/_components'
@@ -95,7 +95,7 @@ export default async function DashboardLogsPage({
       </div>
 
       <aside className="order-2 flex h-full flex-col justify-end md:col-span-3 lg:col-span-1 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:h-auto lg:max-h-200 lg:overflow-x-hidden lg:overflow-y-auto">
-        <LogSidebar actions={uniqueActions} />
+        <LogFilterSidebar actions={uniqueActions} />
       </aside>
 
       <div className="order-3 mt-8 md:col-span-12 lg:col-span-3 lg:row-start-2">

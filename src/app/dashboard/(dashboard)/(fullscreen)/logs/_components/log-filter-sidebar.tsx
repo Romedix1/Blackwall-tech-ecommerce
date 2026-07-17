@@ -6,11 +6,11 @@ import { cn } from '@/lib'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-type LogFilterProps = {
+type LogSidebarProps = {
   actions: string[]
 }
 
-export const LogFilter = ({ actions }: LogFilterProps) => {
+export const LogFilterSidebar = ({ actions }: LogSidebarProps) => {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -23,25 +23,10 @@ export const LogFilter = ({ actions }: LogFilterProps) => {
   // TODO: CHECK TEXT-PRIMARY-ACTIVE?
 
   return (
-    <div className="mt-6 md:flex md:gap-6 lg:flex-col">
-      <div className="lg:flex lg:flex-row-reverse">
-        <div className="hidden flex-col gap-3 overflow-x-auto lg:flex">
-          {actions.map((action, index) => {
-            return (
-              <FilterCapsule
-                key={`filter-${index}`}
-                filterKey="action"
-                option={action}
-                hideFilterKey={true}
-              />
-            )
-          })}
-        </div>
-      </div>
-
+    <div className="md:flex md:gap-6 lg:flex-col">
       <Button
         onClick={() => setIsMobileOverlayOpen((prev) => !prev)}
-        className="text-accent mt-6 h-fit w-full px-4 py-3 text-xs uppercase sm:px-6 sm:text-sm md:mt-0 md:w-3/12 lg:hidden"
+        className="text-accent mt-6 h-fit w-full px-4 py-3 text-xs uppercase sm:px-6 sm:text-sm md:mt-0 md:w-full lg:hidden"
         variant="secondary"
       >
         <span aria-hidden="true">[</span>
