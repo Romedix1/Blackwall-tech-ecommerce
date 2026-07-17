@@ -21,6 +21,8 @@ export const ShareModal = ({
 
   const [isPublic, setIsPublic] = useState(initialIsPublic)
 
+  const [isCopied, setIsCopied] = useState(false)
+
   const [isCooldown, setIsCooldown] = useState(false)
   const [timer, setTimer] = useState(0)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -73,6 +75,16 @@ export const ShareModal = ({
       setIsCooldown(false)
       setTimer(0)
     }
+  }
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(shareLink)
+
+    setIsCopied(true)
+
+    setTimeout(() => {
+      setIsCopied(false)
+    }, 2000)
   }
 
   const shareLink = `${process.env.NEXT_PUBLIC_APP_URL}/shared-build/${buildId}`
@@ -158,14 +170,11 @@ export const ShareModal = ({
               value={shareLink}
               aria-label="Publish link"
             />
-            <Button
-              onClick={() => navigator.clipboard.writeText(shareLink)}
-              ref={copyBtnRef}
-              disabled={!isPublic}
-            >
-              {/* TODO: ADD  COPPIED INFORMATION */}
-              <span className="sr-only">Copy link</span>
-              <span aria-hidden="true">[ Copy ]</span>
+            <Button onClick={handleCopy} ref={copyBtnRef} disabled={!isPublic}>
+              <span className="sr-only">
+                {isCopied ? 'Link copied' : 'Copy link'}{' '}
+              </span>
+              <span aria-hidden="true">[ {isCopied ? 'Copied' : 'Copy'} ]</span>
             </Button>
           </div>
         </div>
