@@ -9,6 +9,19 @@ import { LoginSchema } from '@/lib/zod'
 import { AuthError } from 'next-auth'
 import { FormState } from '@/types'
 import { createLog } from '@/lib/logger'
+import { Redis } from '@upstash/redis'
+import { Ratelimit } from '@upstash/ratelimit'
+import { headers } from 'next/headers'
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+})
+
+const loginRateLimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(5, '15 m'),
+})
 
 export const RegisterUser = async (
   prevState: FormState,
@@ -119,7 +132,7 @@ export const RegisterUser = async (
     return { error: 'Protocol error: Registration failed', fields: rawData }
   }
 }
-// TODO: ADD LOGIN COOLDOWN
+
 export const LoginUser = async (
   prevState: FormState,
   formData: FormData,
@@ -129,7 +142,25 @@ export const LoginUser = async (
     string
   >
 
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0] ??
+    headersList.get('x-real-ip') ??
+    '127.0.0.1'
+
+  const { success: rateLimitSuccess } = await loginRateLimit.limit(
+    `login_${ip}`,
+  )
+
   const validatedData = LoginSchema.safeParse(rawData)
+
+  if (!rateLimitSuccess) {
+    return {
+      error:
+        'Uplink rejected: Too many login attempts. Try again in 15 minutes',
+      fields: rawData,
+    }
+  }
 
   if (!validatedData.success) {
     return {
