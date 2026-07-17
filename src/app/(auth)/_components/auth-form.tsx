@@ -26,7 +26,7 @@ const SOCIAL_PROVIDERS = [
     icon: SiGmail,
   },
 ]
-// TODO: ADD LOGIN SUCCESS INFORMATION
+
 export const AuthForm = ({ mode }: AuthFormProps) => {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -195,6 +195,12 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
         </div>
 
         {state?.error && <StatusAlert variant="error" text={state.error} />}
+        {state?.success && (
+          <StatusAlert
+            variant="success"
+            text="Successfully logged in, redirecting..."
+          />
+        )}
 
         <p className="text-text-second mt-6 text-sm sm:text-center md:mt-8">
           <span aria-hidden="true">

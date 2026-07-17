@@ -16,8 +16,8 @@ const CONFIG = {
   },
   success: {
     container: 'bg-accent/20 text-accent',
-    title: 'System_recalibration_complete',
-    titleSr: 'Username changed',
+    title: 'Operation_successful',
+    titleSr: 'Success',
     icon: '[+]',
   },
 }
