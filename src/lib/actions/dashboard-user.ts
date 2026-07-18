@@ -461,3 +461,42 @@ export async function TerminateSession(
     return { error: 'Critical failure: Could not sever uplink' }
   }
 }
+
+export async function DeleteAccount() {
+  const session = await auth()
+
+  const userId = session?.user.id
+
+  if (!userId) {
+    return { error: 'Unauthorized' }
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { username: true },
+    })
+
+    if (!user) {
+      return { error: 'User not found' }
+    }
+
+    await createLog(
+      'User deleted',
+      `User ${user.username} deleted account`,
+      userId,
+    )
+
+    await prisma.user.delete({
+      where: { id: userId },
+    })
+
+    return { success: true, message: 'User account deleted' }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ DELETING_ACCOUNT_ERROR ]: ', error)
+    }
+
+    return { error: 'Critical failure: Could not delete user account' }
+  }
+}
