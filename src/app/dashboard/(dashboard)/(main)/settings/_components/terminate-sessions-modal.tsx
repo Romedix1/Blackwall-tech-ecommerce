@@ -22,7 +22,7 @@ export const TerminateSessionsModal = ({ onClose }: TerminateModalProps) => {
       }
     })
   }
-
+  // TODO: CHECK SESSIONS (DUPLICATION)
   return (
     <InformationModal onClose={onClose}>
       <div className="flex flex-col gap-6">
