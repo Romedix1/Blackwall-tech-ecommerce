@@ -7,6 +7,12 @@ vi.mock('@/lib/actions/auth', () => ({
   RegisterUser: vi.fn(),
 }))
 
+vi.mock('next/navigation', () => ({
+  useSearchParams: vi.fn(() => ({
+    get: vi.fn(),
+  })),
+}))
+
 describe('Register logic', () => {
   it('should submit with valid data and show email confirmation', async () => {
     const user = userEvent.setup()

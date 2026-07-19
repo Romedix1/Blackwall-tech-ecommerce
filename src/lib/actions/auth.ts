@@ -12,6 +12,7 @@ import { createLog } from '@/lib/logger'
 import { Redis } from '@upstash/redis'
 import { Ratelimit } from '@upstash/ratelimit'
 import { headers } from 'next/headers'
+import { generateToken } from '@/lib/actions/generate-token'
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -21,6 +22,11 @@ const redis = new Redis({
 const loginRateLimit = new Ratelimit({
   redis: redis,
   limiter: Ratelimit.slidingWindow(5, '15 m'),
+})
+
+const resendRateLimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(3, '15 m'),
 })
 
 export const RegisterUser = async (
@@ -69,8 +75,6 @@ export const RegisterUser = async (
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    const verificationToken = crypto.randomUUID()
-
     const newUser = await prisma.user.create({
       data: {
         username,
@@ -79,18 +83,10 @@ export const RegisterUser = async (
       },
     })
 
-    const expires = new Date(new Date().getTime() + 3600 * 12000)
-
-    await prisma.verificationToken.create({
-      data: {
-        identifier: email,
-        token: verificationToken,
-        expires: expires,
-      },
-    })
+    const verificationToken = await generateToken(email)
 
     try {
-      await sendVerificationEmail(email, username, verificationToken)
+      await sendVerificationEmail(email, username, verificationToken.token)
     } catch (emailError) {
       await prisma.user.delete({
         where: { id: newUser.id },
@@ -123,11 +119,6 @@ export const RegisterUser = async (
     if (process.env.NODE_ENV === 'development') {
       console.error('[ Registration error ]:', error)
     }
-
-    await createLog(
-      'Register system error',
-      `System failure during registration for: ${email}`,
-    )
 
     return { error: 'Protocol error: Registration failed', fields: rawData }
   }
@@ -222,4 +213,44 @@ export const LoginUser = async (
 
 export const handleLogOut = async () => {
   await signOut({ redirectTo: '/login' })
+}
+
+export const resendVerificationEmail = async (email: string) => {
+  const { success: rateLimitSuccess } = await resendRateLimit.limit(
+    `resend_email_limit:${email}`,
+  )
+
+  if (!rateLimitSuccess) {
+    return {
+      error:
+        'Uplink rejected: Too many resend attempts. Try again in 15 minutes',
+    }
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true, username: true, emailVerified: true },
+    })
+
+    if (!user) {
+      return { error: 'Operative ID not found.' }
+    }
+
+    if (user.emailVerified) {
+      return { error: 'Clearance already granted. Please log in.' }
+    }
+
+    const verificationToken = await generateToken(email)
+
+    await sendVerificationEmail(email, user.username, verificationToken.token)
+
+    return { success: 'New clearance protocol sent to your inbox.' }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ Registration error ]:', error)
+    }
+
+    return { error: 'Protocol error: Resend failed', fields: email }
+  }
 }
