@@ -236,30 +236,30 @@ export async function ResetPassword(
   }
 }
 
-export const isOAuthUser = async (): Promise<boolean> => {
-  const session = await auth()
+// export const isOAuthUser = async (): Promise<boolean> => {
+//   const session = await auth()
 
-  const userId = session?.user.id
+//   const userId = session?.user.id
 
-  if (!userId) {
-    return false
-  }
+//   if (!userId) {
+//     return false
+//   }
 
-  try {
-    const account = await prisma.account.findFirst({
-      where: { userId },
-      select: { id: true },
-    })
+//   try {
+//     const account = await prisma.account.findFirst({
+//       where: { userId },
+//       select: { id: true },
+//     })
 
-    return !!account
-  } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('[ OAUTH_CHECK_FAILED ]: ', error)
-    }
+//     return !!account
+//   } catch (error) {
+//     if (process.env.NODE_ENV === 'development') {
+//       console.error('[ OAUTH_CHECK_FAILED ]: ', error)
+//     }
 
-    return false
-  }
-}
+//     return false
+//   }
+// }
 
 export async function LogoutAllSessions() {
   const session = await auth()
