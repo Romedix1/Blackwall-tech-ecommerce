@@ -4,11 +4,13 @@ import { RegisterSuccess } from '@/app/(auth)/register/_components/register-succ
 import { signIn } from 'next-auth/react'
 import { StatusAlert, TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { LoginUser, RegisterUser } from '@/lib/actions'
+import { LoginUser, RegisterUser, resendVerificationEmail } from '@/lib/actions'
 import Link from 'next/link'
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useEffect, useRef, useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
 import { SiGmail } from 'react-icons/si'
+import { useSearchParams } from 'next/navigation'
+import { ResendEmailModal } from '@/app/(auth)/_components/resend-email-modal'
 
 type AuthFormProps = {
   mode: 'login' | 'register'
@@ -29,6 +31,16 @@ const SOCIAL_PROVIDERS = [
 
 export const AuthForm = ({ mode }: AuthFormProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isEmailNeeded, setIsEmailNeeded] = useState(false)
+  const [isResending, setIsResending] = useState(false)
+  const [resendResult, setResendStatus] = useState<{
+    error?: string
+    success?: string
+  } | null>(null)
+
+  const formRef = useRef<HTMLFormElement>(null)
+
+  const searchParams = useSearchParams()
 
   const isLogin = mode === 'login'
 
@@ -53,13 +65,36 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
     }
   }, [state])
 
-  if (state?.success && state?.fields?.email) {
-    return <RegisterSuccess email={state.fields.email} />
+  const verificationEmail = state?.fields?.email
+
+  if (state?.success && verificationEmail) {
+    return <RegisterSuccess email={verificationEmail} />
+  }
+
+  const errorParam = searchParams.get('error') as string
+
+  const handleResend = async () => {
+    const formData = formRef.current ? new FormData(formRef.current) : null
+    const typedEmail = formData?.get('email') as string | null
+    const email = typedEmail || state?.fields?.email
+
+    if (email) {
+      setIsResending(true)
+      const result = await resendVerificationEmail(email)
+      setResendStatus(result)
+      setIsResending(false)
+    } else {
+      setIsEmailNeeded(true)
+    }
   }
 
   return (
     <section className="flex justify-center">
+      {isEmailNeeded && (
+        <ResendEmailModal onClose={() => setIsEmailNeeded(false)} />
+      )}
       <form
+        ref={formRef}
         action={formAction}
         className="mt-16 flex w-full flex-col border p-6 uppercase md:my-36 md:w-150 md:p-10"
       >
@@ -199,6 +234,43 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
         </div>
 
         {state?.error && <StatusAlert variant="error" text={state.error} />}
+
+        {errorParam && errorParam !== 'token-expired' && (
+          <div className="flex flex-col gap-3">
+            <StatusAlert variant="error" text={errorParam} />
+          </div>
+        )}
+
+        {errorParam === 'token-expired' && (
+          <div className="flex flex-col gap-3">
+            {resendResult?.success ? (
+              <StatusAlert variant="success" text={resendResult.success} />
+            ) : (
+              <StatusAlert
+                variant="error"
+                text={
+                  resendResult?.error ||
+                  'Uplink error: Session token expired. Please re-authenticate.'
+                }
+              />
+            )}
+
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full"
+              onClick={handleResend}
+              disabled={isResending}
+            >
+              <span aria-hidden="true">
+                {isResending
+                  ? '[ Transmitting... ]'
+                  : '[ Request_new_clearance_token ]'}
+              </span>
+            </Button>
+          </div>
+        )}
+
         {state?.success && (
           <StatusAlert
             variant="success"

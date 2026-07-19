@@ -7,6 +7,12 @@ vi.mock('@/lib/actions/auth', () => ({
   LoginUser: vi.fn(),
 }))
 
+vi.mock('next/navigation', () => ({
+  useSearchParams: vi.fn(() => ({
+    get: vi.fn(),
+  })),
+}))
+
 const mockedLoginUser = vi.mocked(LoginUser)
 
 describe('Login logic', () => {

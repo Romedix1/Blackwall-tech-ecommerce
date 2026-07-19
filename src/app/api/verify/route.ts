@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const token = searchParams.get('token')
 
   if (!token) {
-    redirect('/login?error=missing_token')
+    redirect('/login?error=missing-token')
   }
 
   let redirectTo = ''
@@ -19,9 +19,9 @@ export async function GET(request: NextRequest) {
     })
 
     if (!existingToken) {
-      redirectTo = '/login?error=invalid_token'
+      redirectTo = '/login?error=invalid-token'
     } else if (new Date(existingToken.expires) < new Date()) {
-      redirectTo = '/login?error=token_expired'
+      redirectTo = '/login?error=token-expired'
     } else {
       const user = await prisma.user.findUnique({
         where: { email: existingToken.identifier },
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       })
 
       if (!user) {
-        redirectTo = '/login?error=user_not_found'
+        redirectTo = '/login?error=user-not-found'
       } else {
         await prisma.$transaction([
           prisma.user.update({
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     if (process.env.NODE_ENV === 'development') {
       console.error('[ VERIFY_CRITICAL_ERROR ]:', error)
     }
-    redirectTo = '/login?error=protocol_failure'
+    redirectTo = '/login?error=protocol-failure'
   }
 
   redirect(redirectTo)
@@ -64,3 +64,4 @@ export async function GET(request: NextRequest) {
 
 // TODO: ADD ALL ERRORS IN LOGIN PAGE
 // TODO: ADD EXPIRED TOKEN PAGE AND EMAIL RESEND
+// TODO: ADD PASSWORD RESET PAGE
