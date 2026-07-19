@@ -24,6 +24,11 @@ const loginRateLimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, '15 m'),
 })
 
+const registerRateLimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(3, '15 m'),
+})
+
 const resendRateLimit = new Ratelimit({
   redis: redis,
   limiter: Ratelimit.slidingWindow(3, '15 m'),
@@ -37,6 +42,24 @@ export const RegisterUser = async (
     string,
     string
   >
+
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0] ??
+    headersList.get('x-real-ip') ??
+    '127.0.0.1'
+
+  const { success: rateLimitSuccess } = await registerRateLimit.limit(
+    `register_${ip}`,
+  )
+
+  if (!rateLimitSuccess) {
+    return {
+      error:
+        'Uplink rejected: Too many registration attempts. Try again in 15 minutes.',
+      fields: rawData,
+    }
+  }
 
   const validatedData = RegisterSchema.safeParse(rawData)
 
