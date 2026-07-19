@@ -11,7 +11,7 @@ import { FaGithub } from 'react-icons/fa'
 import { SiGmail } from 'react-icons/si'
 import { useSearchParams } from 'next/navigation'
 import { ResendEmailModal } from '@/app/(auth)/_components/resend-email-modal'
-
+// TODO: CHECK SESSION-EXPIRED ERROR ON SIGNOUT
 type AuthFormProps = {
   mode: 'login' | 'register'
 }
