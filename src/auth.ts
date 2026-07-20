@@ -14,7 +14,7 @@ import { createLog } from '@/lib/logger'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: 'jwt' },
+  session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
   providers: [
     GitHub({
       allowDangerousEmailAccountLinking: true,
@@ -236,10 +236,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             userId,
           )
         } catch (error) {
-          console.error(
-            '[ LOGOUT_ERROR ]: Failed to remove database log',
-            error,
-          )
+          if (process.env.NODE_ENV === 'development') {
+            console.error('[ LOGOUT_ERROR ]: Failed to sign out user', error)
+          }
         }
       }
     },
