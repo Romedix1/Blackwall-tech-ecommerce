@@ -73,6 +73,37 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
 
   const errorParam = searchParams.get('error') as string
 
+  const loginErrorMap: { key: string; value: string }[] = [
+    {
+      key: 'token-expired',
+      value: 'Uplink error: Session token expired. Please re-authenticate',
+    },
+    {
+      key: 'missing-token',
+      value: 'Protocol error: Clearance token missing from request',
+    },
+    {
+      key: 'invalid-token',
+      value: 'Uplink rejected: Invalid or corrupted clearance token',
+    },
+    {
+      key: 'user-not-found',
+      value: 'System error: Operative record not found in mainframe',
+    },
+    {
+      key: 'protocol-failure',
+      value: 'System failure: Unable to verify clearance protocol',
+    },
+    {
+      key: 'session-expired',
+      value: 'Uplink severed: Active session expired. Please log in again',
+    },
+  ]
+
+  const matchedLoginError = loginErrorMap.find(
+    (error) => error.key === errorParam,
+  )
+
   const handleResend = async () => {
     const formData = formRef.current ? new FormData(formRef.current) : null
     const typedEmail = formData?.get('email') as string | null
@@ -237,7 +268,10 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
 
         {errorParam && errorParam !== 'token-expired' && (
           <div className="flex flex-col gap-3">
-            <StatusAlert variant="error" text={errorParam} />
+            <StatusAlert
+              variant="error"
+              text={matchedLoginError?.value || errorParam}
+            />
           </div>
         )}
 

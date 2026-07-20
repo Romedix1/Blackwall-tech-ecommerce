@@ -62,6 +62,4 @@ export async function GET(request: NextRequest) {
   redirect(redirectTo)
 }
 
-// TODO: ADD ALL ERRORS IN LOGIN PAGE
-// TODO: ADD EXPIRED TOKEN PAGE AND EMAIL RESEND
 // TODO: ADD PASSWORD RESET PAGE

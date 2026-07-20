@@ -25,18 +25,6 @@ const CONFIG = {
 export const StatusAlert = ({ text, variant }: StatusAlertProps) => {
   const { container, title, titleSr, icon } = CONFIG[variant]
 
-  const loginErrorMap: { key: string; value: string }[] = [
-    {
-      key: 'token-expired',
-      value: 'Uplink error: Session token expired. Please re-authenticate.',
-    },
-  ]
-
-  const matchedLoginError =
-    typeof text === 'string'
-      ? loginErrorMap.find((error) => error.key === text)
-      : undefined
-
   return (
     <div
       role="alert"
@@ -64,7 +52,7 @@ export const StatusAlert = ({ text, variant }: StatusAlertProps) => {
           <p className="my-1">
             <span aria-hidden="true">{icon} </span>
 
-            {matchedLoginError ? matchedLoginError.value : text}
+            {text}
           </p>
         )}
       </div>
