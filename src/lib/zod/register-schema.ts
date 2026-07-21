@@ -1,4 +1,5 @@
 import {
+  emailSchema,
   passwordMatchError,
   PasswordMatchschema,
   UsernameField,
@@ -9,7 +10,7 @@ import * as z from 'zod'
 export const RegisterSchema = z
   .object({
     username: UsernameField,
-    email: z.email('Invalid email address'),
+    email: emailSchema,
     ...PasswordMatchschema,
   })
   .refine(validatePasswords, passwordMatchError)

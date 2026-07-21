@@ -37,3 +37,7 @@ export const addressSchema = z.object({
   city: z.string().trim().min(2, 'City required'),
   zipCode: z.string().trim().min(2, 'Zip code required'),
 })
+
+export const emailSchema = z
+  .email({ message: 'Invalid email address' })
+  .min(1, { message: 'Empty email address' })

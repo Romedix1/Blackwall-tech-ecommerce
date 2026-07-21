@@ -1,11 +1,23 @@
-import { TerminalInput } from '@/components/shared'
+'use client'
+
+import { StatusAlert, TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
+import { RequestPasswordReset } from '@/lib/actions'
 import Link from 'next/link'
+import { useActionState } from 'react'
 
 export default function ForgotPasswordPage() {
+  const [state, formAction, isPending] = useActionState(
+    RequestPasswordReset,
+    null,
+  )
+
   return (
     <section className="flex justify-center">
-      <form className="mt-16 flex w-full flex-col border p-6 uppercase md:my-36 md:w-150 md:p-10">
+      <form
+        action={formAction}
+        className="mt-16 flex w-full flex-col border p-6 uppercase md:my-36 md:w-150 md:p-10"
+      >
         <h1 className="mb-2 font-bold md:text-2xl">
           <span aria-hidden="true">[ Recover_Access_Key ]</span>
           <span className="sr-only">Forgot password</span>
@@ -33,9 +45,17 @@ export default function ForgotPasswordPage() {
         </div>
 
         <Button type="submit">
-          <span aria-hidden="true">[ Transmit_Request ]</span>
-          <span className="sr-only">Send password reset link</span>
+          <span aria-hidden="true">
+            [ {isPending ? 'Transmiting...' : 'Transmit_Request'} ]
+          </span>
+          <span className="sr-only">
+            {isPending ? 'Sending...' : 'Send password reset link'}
+          </span>
         </Button>
+
+        {state?.success && (
+          <StatusAlert variant="success" text={state.message} />
+        )}
 
         <p className="text-text-second mt-6 text-sm sm:text-center md:mt-8">
           <span aria-hidden="true">

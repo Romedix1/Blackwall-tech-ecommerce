@@ -1,9 +1,8 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { RegisterSchema } from '@/lib/zod'
+import { emailSchema, RegisterSchema } from '@/lib/zod'
 import bcrypt from 'bcryptjs'
-import { sendVerificationEmail } from '@/lib/send-confirmation-email'
 import { signIn, signOut } from '@/auth'
 import { LoginSchema } from '@/lib/zod'
 import { AuthError } from 'next-auth'
@@ -12,7 +11,10 @@ import { createLog } from '@/lib/logger'
 import { Redis } from '@upstash/redis'
 import { Ratelimit } from '@upstash/ratelimit'
 import { headers } from 'next/headers'
-import { generateToken } from '@/lib/actions/generate-token'
+import { generateVerificationToken } from '@/lib/actions/generate-verification-token'
+import { generatePasswordResetToken } from '@/lib/actions/generate-password-reset-token'
+import { sendPasswordResetEmail } from '@/lib/mail/send-password-reset-email'
+import { sendVerificationEmail } from '@/lib/mail/send-confirmation-email'
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -106,7 +108,7 @@ export const RegisterUser = async (
       },
     })
 
-    const verificationToken = await generateToken(email)
+    const verificationToken = await generateVerificationToken(email)
 
     try {
       await sendVerificationEmail(email, username, verificationToken.token)
@@ -264,7 +266,7 @@ export const resendVerificationEmail = async (email: string) => {
       return { error: 'Clearance already granted. Please log in.' }
     }
 
-    const verificationToken = await generateToken(email)
+    const verificationToken = await generateVerificationToken(email)
 
     await sendVerificationEmail(email, user.username, verificationToken.token)
 
@@ -275,5 +277,65 @@ export const resendVerificationEmail = async (email: string) => {
     }
 
     return { error: 'Protocol error: Resend failed', fields: email }
+  }
+}
+
+export const RequestPasswordReset = async (
+  prevState: FormState,
+  formData: FormData,
+): Promise<FormState> => {
+  const rawEmail = formData.get('email') as string
+
+  const validatedData = emailSchema.safeParse(rawEmail)
+
+  if (!validatedData.success) {
+    return {
+      error: validatedData.error.issues[0].message,
+      fields: { email: rawEmail || '' },
+    }
+  }
+
+  if (!rawEmail) {
+    return { error: 'Protocol error: Operative ID (Email) is required.' }
+  }
+
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email: validatedData.data },
+      select: { username: true },
+    })
+
+    if (!existingUser) {
+      return {
+        success: true,
+        message:
+          'Request acknowledged. If an operative record exists, a secure link has been transmitted',
+      }
+    }
+
+    const passwordResetToken = await generatePasswordResetToken(
+      validatedData.data,
+    )
+
+    await sendPasswordResetEmail(
+      validatedData.data,
+      existingUser.username,
+      passwordResetToken.token,
+    )
+
+    return {
+      success: true,
+      message:
+        'Request acknowledged. If an operative record exists, a secure link has been transmitted',
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ Reset password error ]:', error)
+    }
+
+    return {
+      error: 'Protocol error: Registration failed',
+      fields: { email: rawEmail },
+    }
   }
 }
