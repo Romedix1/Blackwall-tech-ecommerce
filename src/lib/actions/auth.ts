@@ -1,9 +1,8 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { RegisterSchema } from '@/lib/zod'
+import { emailSchema, RegisterSchema } from '@/lib/zod'
 import bcrypt from 'bcryptjs'
-import { sendVerificationEmail } from '@/lib/send-confirmation-email'
 import { signIn, signOut } from '@/auth'
 import { LoginSchema } from '@/lib/zod'
 import { AuthError } from 'next-auth'
@@ -12,7 +11,11 @@ import { createLog } from '@/lib/logger'
 import { Redis } from '@upstash/redis'
 import { Ratelimit } from '@upstash/ratelimit'
 import { headers } from 'next/headers'
-import { generateToken } from '@/lib/actions/generate-token'
+import { generateVerificationToken } from '@/lib/actions/generate-verification-token'
+import { generatePasswordResetToken } from '@/lib/actions/generate-password-reset-token'
+import { sendPasswordResetEmail } from '@/lib/mail/send-password-reset-email'
+import { sendVerificationEmail } from '@/lib/mail/send-confirmation-email'
+import { ResetPasswordSchema } from '@/lib/zod/reset-password-schema'
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -32,6 +35,16 @@ const registerRateLimit = new Ratelimit({
 const resendRateLimit = new Ratelimit({
   redis: redis,
   limiter: Ratelimit.slidingWindow(3, '15 m'),
+})
+
+const passwordResetRequestRateLimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(3, '15 m'),
+})
+
+const passwordResetRateLimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(5, '15 m'),
 })
 
 export const RegisterUser = async (
@@ -106,7 +119,7 @@ export const RegisterUser = async (
       },
     })
 
-    const verificationToken = await generateToken(email)
+    const verificationToken = await generateVerificationToken(email)
 
     try {
       await sendVerificationEmail(email, username, verificationToken.token)
@@ -264,7 +277,7 @@ export const resendVerificationEmail = async (email: string) => {
       return { error: 'Clearance already granted. Please log in.' }
     }
 
-    const verificationToken = await generateToken(email)
+    const verificationToken = await generateVerificationToken(email)
 
     await sendVerificationEmail(email, user.username, verificationToken.token)
 
@@ -275,5 +288,184 @@ export const resendVerificationEmail = async (email: string) => {
     }
 
     return { error: 'Protocol error: Resend failed', fields: email }
+  }
+}
+
+export const RequestPasswordReset = async (
+  prevState: FormState,
+  formData: FormData,
+): Promise<FormState> => {
+  const rawEmail = formData.get('email') as string
+
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0] ??
+    headersList.get('x-real-ip') ??
+    '127.0.0.1'
+
+  const { success: rateLimitSuccess } =
+    await passwordResetRequestRateLimit.limit(`request_email_${ip}`)
+
+  if (!rateLimitSuccess) {
+    return {
+      error: 'Uplink rejected: Too many recovery requests. Try again later',
+      fields: { email: rawEmail || '' },
+    }
+  }
+
+  const validatedData = emailSchema.safeParse(rawEmail)
+
+  if (!validatedData.success) {
+    return {
+      error: validatedData.error.issues[0].message,
+      fields: { email: rawEmail || '' },
+    }
+  }
+
+  if (!rawEmail) {
+    return { error: 'Protocol error: Operative ID (Email) is required.' }
+  }
+
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email: validatedData.data },
+      select: { username: true },
+    })
+
+    if (!existingUser) {
+      return {
+        success: true,
+        message:
+          'Request acknowledged. If an operative record exists, a secure link has been transmitted',
+      }
+    }
+
+    const passwordResetToken = await generatePasswordResetToken(
+      validatedData.data,
+    )
+
+    await sendPasswordResetEmail(
+      validatedData.data,
+      existingUser.username,
+      passwordResetToken.token,
+    )
+
+    return {
+      success: true,
+      message:
+        'Request acknowledged. If an operative record exists, a secure link has been transmitted',
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ Request password reset error ]:', error)
+    }
+
+    return {
+      error: 'Protocol error: Registration failed',
+      fields: { email: rawEmail },
+    }
+  }
+}
+
+export const ResetPassword = async (
+  prevState: FormState,
+  formData: FormData,
+): Promise<FormState> => {
+  const headersList = await headers()
+  const ip =
+    headersList.get('x-forwarded-for')?.split(',')[0] ??
+    headersList.get('x-real-ip') ??
+    '127.0.0.1'
+
+  const { success: rateLimitSuccess } = await passwordResetRateLimit.limit(
+    `reset_password_${ip}`,
+  )
+
+  const rawData = Object.fromEntries(formData.entries()) as Record<
+    string,
+    string
+  >
+
+  if (!rateLimitSuccess) {
+    return {
+      error:
+        'Uplink rejected: Too many password reset attempts. Try again in 15 minutes',
+      fields: rawData,
+    }
+  }
+
+  const validatedData = ResetPasswordSchema.safeParse(rawData)
+
+  if (!validatedData.success) {
+    const errorArray = validatedData.error.issues.map((issue) => issue.message)
+    return {
+      error: errorArray,
+      fields: rawData,
+    }
+  }
+
+  const { token, password } = validatedData.data
+
+  try {
+    const existingToken = await prisma.passwordResetToken.findUnique({
+      where: { token },
+    })
+
+    if (!existingToken || new Date() > existingToken.expires) {
+      return {
+        error: 'Protocol error: Invalid or expired token',
+        fields: rawData,
+      }
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: existingToken.identifier },
+      select: { password: true },
+    })
+
+    if (!user || !user.password) {
+      return {
+        error: 'Protocol error: Operative record not found',
+        fields: rawData,
+      }
+    }
+
+    const isSamePassword = await bcrypt.compare(password, user.password)
+
+    if (isSamePassword) {
+      return {
+        error:
+          'Security alert: New encryption key must be different from the current one',
+        fields: rawData,
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    await prisma.user.update({
+      where: { email: existingToken.identifier },
+      data: {
+        password: hashedPassword,
+      },
+    })
+
+    await prisma.passwordResetToken.delete({
+      where: { id: existingToken.id },
+    })
+
+    return {
+      success: true,
+      message:
+        'Encryption key updated successfully. You may now initialize login',
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ Reset password error ]:', error)
+    }
+
+    return {
+      error: 'System failure: Unable to synchronize new key at this time',
+      fields: rawData,
+    }
   }
 }

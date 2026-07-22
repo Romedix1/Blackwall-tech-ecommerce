@@ -1,16 +1,13 @@
 import {
-  emailSchema,
   passwordMatchError,
   PasswordMatchschema,
-  UsernameField,
   validatePasswords,
 } from '@/lib/zod/schemas'
 import * as z from 'zod'
 
-export const RegisterSchema = z
+export const ResetPasswordSchema = z
   .object({
-    username: UsernameField,
-    email: emailSchema,
+    token: z.string().min(1, 'Protocol error: Missing clearance token.'),
     ...PasswordMatchschema,
   })
   .refine(validatePasswords, passwordMatchError)

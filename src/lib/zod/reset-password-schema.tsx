@@ -7,7 +7,7 @@ import * as z from 'zod'
 
 export const ResetPasswordSchema = z
   .object({
-    currentPassword: z.string(),
+    token: z.string(),
     ...PasswordMatchschema,
   })
   .refine(validatePasswords, passwordMatchError)
