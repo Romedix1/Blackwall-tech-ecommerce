@@ -49,9 +49,9 @@ export const ProductSort = ({ device }: ProductSortProps) => {
             <DropdownMenu.RadioItem
               key={`${device}-${option.value}`}
               value={option.value}
-              className="text-text-second focus:text-primary-active hover:text-primary-active relative flex cursor-pointer items-center py-2 pr-2 pl-10 uppercase transition-colors outline-none select-none"
+              className="text-text-second focus:text-accent hover:text-accent relative flex cursor-pointer items-center py-2 pr-2 pl-10 uppercase transition-colors outline-none select-none"
             >
-              <DropdownMenu.ItemIndicator className="text-primary-active absolute left-0">
+              <DropdownMenu.ItemIndicator className="text-accent absolute left-0">
                 [X]
               </DropdownMenu.ItemIndicator>
               {option.label}
