@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 export const generatePasswordResetToken = async (email: string) => {
   const newToken = crypto.randomUUID()
 
-  const expires = new Date(new Date().getTime() + 60 * 60)
+  const expires = new Date(new Date().getTime() + 1000 * 60 * 60)
 
   await prisma.passwordResetToken.deleteMany({
     where: { identifier: email },
