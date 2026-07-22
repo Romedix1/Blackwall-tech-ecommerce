@@ -61,5 +61,3 @@ export async function GET(request: NextRequest) {
 
   redirect(redirectTo)
 }
-
-// TODO: ADD PASSWORD RESET PAGE

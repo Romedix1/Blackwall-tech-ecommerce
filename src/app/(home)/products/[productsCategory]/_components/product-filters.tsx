@@ -135,7 +135,7 @@ export const ProductFilters = ({
 
           <button
             onClick={() => handleReset()}
-            className="text-text-second hover:text-primary-active focus:text-primary-active block cursor-pointer text-left text-sm uppercase"
+            className="text-text-second hover:text-accent focus:text-accent block cursor-pointer text-left text-sm uppercase"
           >
             <span aria-hidden="true">[ Reset_all_filters ]</span>
             <span className="sr-only">Reset all filters</span>

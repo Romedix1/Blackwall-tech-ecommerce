@@ -20,8 +20,6 @@ export const LogFilterSidebar = ({ actions }: LogSidebarProps) => {
     router.push(pathname, { scroll: false })
   }
 
-  // TODO: CHECK TEXT-PRIMARY-ACTIVE?
-
   return (
     <div className="md:flex md:gap-6 lg:flex-col">
       <Button
