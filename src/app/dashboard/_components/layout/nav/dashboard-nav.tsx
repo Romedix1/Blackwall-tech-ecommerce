@@ -5,7 +5,7 @@ import { cn } from '@/lib'
 export const DashboardNav = async () => {
   const session = await auth()
   const userRole = session?.user.role
-  // TODO: ADD USER ROUTES FOR ADMIN?
+
   const isAdmin = userRole === 'admin'
   const header = isAdmin
     ? 'root@system:~# OVERRIDE_CONTROLS'
@@ -50,9 +50,13 @@ export const DashboardNav = async () => {
     },
     { href: '/dashboard/settings', label: '[ Settings ]', sr: 'Settings' },
   ]
-  // TODO: ADD ACTIVITY LGOS
 
-  const links = isAdmin ? ADMIN_LINKS : USER_LINKS
+  const links = isAdmin
+    ? [
+        ...ADMIN_LINKS,
+        ...USER_LINKS.filter((link) => link.href !== '/dashboard'),
+      ]
+    : USER_LINKS
 
   return (
     <nav
