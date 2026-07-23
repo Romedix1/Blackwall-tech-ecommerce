@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function createLog(
   action: string,
-  details?: string,
+  details: string,
   userId?: string,
 ) {
   try {

@@ -4,8 +4,8 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { OrderStatus } from '../../../../../generated/prisma'
-import { sendOrderSuccessEmail } from '@/lib/send-payment-success-email'
 import { createLog } from '@/lib/logger'
+import { sendOrderSuccessEmail } from '@/lib/mail/send-payment-success-email'
 
 export async function POST(req: Request) {
   const body = await req.text()
