@@ -14,7 +14,7 @@ import { createLog } from '@/lib/logger'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
+  session: { strategy: 'jwt', maxAge: 7 * 24 * 60 * 60 },
   providers: [
     GitHub({
       allowDangerousEmailAccountLinking: true,
@@ -128,6 +128,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         country = country || 'Unknown'
 
         try {
+          const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+
+          await prisma.activeConnection.deleteMany({
+            where: {
+              userId: user.id!,
+              createdAt: {
+                lt: sevenDaysAgo,
+              },
+            },
+          })
+
           await prisma.activeConnection.create({
             data: {
               userId: user.id!,
