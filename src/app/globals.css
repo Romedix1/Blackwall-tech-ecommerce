@@ -213,10 +213,12 @@
     @apply hover:bg-accent hover:text-background focus:bg-accent focus:text-background transition-none outline-none;
   }
 
-  @layer components {
-    .text-hover {
-      @apply hover:text-primary-hover focus:text-primary-hover cursor-pointer outline-none;
-    }
+  .text-hover {
+    @apply hover:text-primary-hover focus:text-primary-hover cursor-pointer outline-none;
+  }
+
+  .skeleton-loading {
+    @apply bg-accent/70 animate-pulse;
   }
 }
 
