@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import pcImage from '@public/build-pc/pc.png'
+import pcImage from '@public/build-pc/pc.webp'
 import { HardwarePointer } from '@/app/(home)/_components/build-pc/ui'
 import { BackgroundGlow, ImageCorner } from '@/components/ui'
 import { useIsVisible } from '@/hooks'

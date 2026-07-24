@@ -1,10 +1,10 @@
 import { BackgroundGlow } from '@/components/ui'
 import Image from 'next/image'
 import { ReactNode } from 'react'
-import GraphicCard from '@public/hero/graphic-card.png'
-import KeyboardWithMouse from '@public/hero/keyboard-with-mouse.png'
-import Processor from '@public/hero/processor.png'
-import Memory from '@public/hero/memory.png'
+import GraphicCard from '@public/hero/graphic-card.webp'
+import KeyboardWithMouse from '@public/hero/keyboard-with-mouse.webp'
+import Processor from '@public/hero/processor.webp'
+import Memory from '@public/hero/memory.webp'
 import { cn } from '@/lib/utils'
 
 type ProductShadowProps = {
