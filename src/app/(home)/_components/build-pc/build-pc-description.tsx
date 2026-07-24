@@ -3,26 +3,23 @@
 import { BuildLimitModal } from '@/app/(home)/_components/build-pc/build-limit-modal'
 import { Button } from '@/components/ui'
 import { initiateBuildConfig } from '@/lib/actions'
+import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 
-type BuildPcDescriptionProps = {
-  buildsCount: number
-}
-
-export const BuildPcDescription = ({
-  buildsCount,
-}: BuildPcDescriptionProps) => {
+export const BuildPcDescription = () => {
   const [isPending, startTransition] = useTransition()
   const [isLimitReached, setIsLimitReached] = useState(false)
 
+  const router = useRouter()
+
   const handleClick = () => {
     startTransition(async () => {
-      if (buildsCount >= 5) {
+      const result = await initiateBuildConfig()
+      if (result.limitReached) {
         setIsLimitReached(true)
-        return
+      } else if (result?.data) {
+        router.push(`/pc-builder/cpu/${result.data}`)
       }
-
-      await initiateBuildConfig()
     })
   }
 
