@@ -1,5 +1,5 @@
-import { CategoriesCard } from '@/app/(home)/_components/'
-import { CATEGORY_UI_REGISTRY } from '@/app/(home)/_components'
+import { CategoryCard } from '@/app/(home)/_components/categories/category-card'
+import { CATEGORY_UI_REGISTRY } from '@/app/(home)/_components/categories/category-ui-registry'
 import { prisma } from '@/lib/prisma'
 
 export const CategoriesContainer = async () => {
@@ -25,9 +25,8 @@ export const CategoriesContainer = async () => {
           productCount: category._count.Product,
         }
 
-        if (!uiCategory) return null
         return (
-          <CategoriesCard
+          <CategoryCard
             className={uiCategory.className}
             key={`category-card-${index}`}
             slug={category.slug}
