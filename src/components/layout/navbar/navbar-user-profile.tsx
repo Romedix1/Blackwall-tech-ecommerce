@@ -2,8 +2,9 @@ import { auth } from '@/auth'
 import { DesktopMenuButton } from '@/components/layout/navbar/desktop-menu-button'
 import { User2 } from 'lucide-react'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
-export const NavbarUserProfile = async () => {
+const UserProfileData = async () => {
   const session = await auth()
 
   if (!session) {
@@ -20,4 +21,12 @@ export const NavbarUserProfile = async () => {
   }
 
   return <DesktopMenuButton user={session.user.username || 'Anonymous'} />
+}
+
+export const NavbarUserProfile = () => {
+  return (
+    <Suspense fallback={<div className="skeleton-loading h-6 w-36"></div>}>
+      <UserProfileData />
+    </Suspense>
+  )
 }

@@ -10,7 +10,7 @@ const LINKS = [
 ]
 
 export const DesktopMenu = () => {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
 
   if (!session || !session.user) {
     return null

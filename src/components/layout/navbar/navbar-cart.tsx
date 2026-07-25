@@ -5,9 +5,7 @@ import { cn } from '@/lib/utils'
 import { useCart } from '@/hooks'
 
 export const NavbarCart = () => {
-  const { toggle } = useCart()
-
-  const { items } = useCart()
+  const { items, toggle } = useCart()
 
   const total = items.reduce((total, item) => total + item.quantity, 0)
 
