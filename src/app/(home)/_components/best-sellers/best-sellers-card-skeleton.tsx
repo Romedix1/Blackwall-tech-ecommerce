@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils'
 import { BestSellersCardLayout } from './best-sellers-card-layout'
 
 type BestSellersSkeletonProps = {

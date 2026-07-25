@@ -13,7 +13,6 @@ export const PaginationButtonsContainer = async ({
 }: PaginationContainerProps) => {
   const ITEMS_PER_PAGE = 5
   let totalItems = 0
-  await new Promise((resolve) => setTimeout(resolve, 5000))
 
   if (mode === 'inventory') {
     const where: Prisma.ProductWhereInput = searchValue
