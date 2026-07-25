@@ -12,7 +12,7 @@ type DashboardActionBar = {
   mode: 'inventory' | 'directives' | 'operatives'
 }
 
-export const DashoardctionBar = ({ mode }: DashboardActionBar) => {
+export const DashoardActionBar = ({ mode }: DashboardActionBar) => {
   const filterRef = useRef<HTMLInputElement>(null)
 
   const router = useRouter()

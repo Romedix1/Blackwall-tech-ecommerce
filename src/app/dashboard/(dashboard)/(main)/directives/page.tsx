@@ -1,7 +1,7 @@
 import { DashboardHeader } from '@/app/dashboard/_components'
 import {
   DashboardList,
-  DashoardctionBar,
+  DashoardActionBar,
 } from '@/app/dashboard/_components/admin'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
@@ -43,7 +43,7 @@ export default async function DashboardDirectivesPage({
       </DashboardHeader>
 
       <div className="flex flex-col gap-8">
-        <DashoardctionBar mode="directives" />
+        <DashoardActionBar mode="directives" />
 
         <DashboardList
           mode="directives"
