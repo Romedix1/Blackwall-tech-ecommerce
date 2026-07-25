@@ -20,7 +20,7 @@ export const BestSellersContainer = async () => {
       },
     },
   })
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+
   const bestSellers = await Promise.all(
     bestSellersData.map(async (product) => {
       const imageUrl = await getImageUrl(product.category.slug, product.slug)
