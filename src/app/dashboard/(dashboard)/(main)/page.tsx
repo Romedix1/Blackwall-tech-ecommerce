@@ -2,21 +2,25 @@ import { UserActivity } from '@/app/dashboard/_components'
 import { DashboardHeader } from '@/app/dashboard/_components'
 import { RenderMetrics } from '@/app/dashboard/_components'
 import { RenderRecords } from '@/app/dashboard/_components'
-import { OrdersChart } from '@/app/dashboard/_components/admin/orders-chart'
+import { OrdersChart } from '@/app/dashboard/_components/admin'
+import { OrdersChartContainer } from '@/app/dashboard/_components/admin/orders-chart-container'
+import { OrdersChartSkeleton } from '@/app/dashboard/_components/admin/orders-chart-skeleton'
+import { RenderMetricsSkeleton } from '@/app/dashboard/_components/admin/render-metrics-skeleton'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 
 export default async function UserDashboardPage() {
-  const user = await auth()
+  const session = await auth()
 
-  if (!user) {
+  if (!session) {
     redirect('/')
     return null
   }
 
   const userOrders = await prisma.order.findMany({
-    where: { userId: user.user.id },
+    where: { userId: session.user.id },
     select: {
       id: true,
       status: true,
@@ -31,58 +35,14 @@ export default async function UserDashboardPage() {
   //  This is a deterministic simulation using the Order ID as a seed to
   //  ensure UI consistency across sessions without random "jumps" on refresh.
 
-  const thirtyDaysAgo = new Date()
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-
-  let chartData: { label: string; amount: number }[] = []
-
-  if (user.user.role === 'admin') {
-    const allOrders = await prisma.order.findMany({
-      where: { createdAt: { gte: thirtyDaysAgo } },
-      select: {
-        createdAt: true,
-      },
-    })
-
-    const chartMap: Record<string, number> = {}
-
-    for (let i = 30; i >= 0; i--) {
-      const date = new Date()
-      date.setDate(date.getDate() - i)
-
-      const label = date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
-
-      chartMap[label] = 0
-    }
-
-    allOrders.forEach((order) => {
-      const label = order.createdAt.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
-
-      if (chartMap[label] !== undefined) {
-        chartMap[label] += 1
-      }
-    })
-
-    chartData = Object.entries(chartMap).map(([label, amount]) => ({
-      label,
-      amount,
-    }))
-  }
-
   return (
     <>
-      {user.user.role === 'user' ? (
+      {session.user.role === 'user' ? (
         <>
           <DashboardHeader>
             <span aria-hidden="true">{'//'} Welcome_back, </span>
             <span className="sr-only">Welcome back, </span>
-            {user.user.name}
+            {session.user.name}
           </DashboardHeader>
 
           <RenderRecords type="order" records={userOrders} />
@@ -97,10 +57,15 @@ export default async function UserDashboardPage() {
 
           <div className="w-full max-w-full overflow-hidden">
             <div className="relative w-full min-w-0">
-              <RenderMetrics />
+              <Suspense fallback={<RenderMetricsSkeleton />}>
+                <RenderMetrics />
+              </Suspense>
             </div>
           </div>
-          <OrdersChart data={chartData} />
+
+          <Suspense fallback={<OrdersChartSkeleton />}>
+            <OrdersChartContainer />
+          </Suspense>
         </>
       )}
     </>

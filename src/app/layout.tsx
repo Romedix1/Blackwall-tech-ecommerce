@@ -18,7 +18,7 @@ const robotoMono = Roboto_Mono({
   variable: '--font-mono',
 })
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
