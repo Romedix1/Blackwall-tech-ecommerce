@@ -18,7 +18,7 @@ export default async function OperativeDetailsPage({
 
   const session = await auth()
   const user = session?.user
-
+  await new Promise((resolve) => setTimeout(resolve, 5000))
   if (!user || user.role !== 'admin') {
     redirect('/')
     return

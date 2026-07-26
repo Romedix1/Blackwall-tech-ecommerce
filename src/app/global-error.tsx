@@ -22,7 +22,7 @@ export default function GlobalError({
   if (process.env.NODE_ENV === 'development') {
     console.error(' [ BLACKWALL_SYS ]:', error)
   }
-
+  // TODO: FIX RESET
   return (
     <html lang="en">
       <body className={cn(robotoMono.variable, 'antialiased')}>
