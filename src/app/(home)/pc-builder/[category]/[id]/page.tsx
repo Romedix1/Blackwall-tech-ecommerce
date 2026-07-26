@@ -130,7 +130,7 @@ export default async function BuilderCategoryPage({
       }
     }),
   )
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+
   return (
     <div className="flex flex-col gap-4">
       <SearchShell />

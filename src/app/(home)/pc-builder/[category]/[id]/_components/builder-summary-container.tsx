@@ -19,7 +19,7 @@ export const BuilderSummaryContainer = async ({
       public: true,
     },
   })
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+
   return (
     <BuilderSummary
       buildName={build?.name ?? ''}
