@@ -1,5 +1,7 @@
-import { CategoriesContainer } from '@/app/(home)/_components'
+import { CategoriesContainer } from '@/app/(home)/_components/categories/categories-container'
+import { CategoryCardSkeleton } from '@/app/(home)/_components/categories/category-card-skeleton'
 import { Eyebrow } from '@/components/shared'
+import { Suspense } from 'react'
 
 export const CategoriesSection = () => {
   return (
@@ -9,7 +11,9 @@ export const CategoriesSection = () => {
         <span className="sr-only">Categories browser</span>
       </Eyebrow>
 
-      <CategoriesContainer />
+      <Suspense fallback={<CategoryCardSkeleton />}>
+        <CategoriesContainer />
+      </Suspense>
     </section>
   )
 }

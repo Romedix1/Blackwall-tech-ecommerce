@@ -42,7 +42,7 @@ describe('Cart overlay component', () => {
           name: 'RTX 5090 TI',
           price: 1999.0,
           quantity: 2,
-          imgSrc: '/test.png',
+          imgSrc: '/test.webp',
         },
       ],
     }

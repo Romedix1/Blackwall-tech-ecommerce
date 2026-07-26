@@ -1,7 +1,7 @@
 import { DashboardHeader } from '@/app/dashboard/_components'
 import {
   DashboardList,
-  DashoardctionBar,
+  DashoardActionBar,
 } from '@/app/dashboard/_components/admin'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
@@ -43,7 +43,7 @@ export default async function DashboardInventoryPage({
       </DashboardHeader>
 
       <div className="flex flex-col gap-8">
-        <DashoardctionBar mode="inventory" />
+        <DashoardActionBar mode="inventory" />
 
         <DashboardList
           mode="inventory"

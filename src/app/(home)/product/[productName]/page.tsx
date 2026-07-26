@@ -1,5 +1,6 @@
-import { PerformanceBenchmark } from '@/app/(home)/product/[productName]/_components'
 import { SpecificationList } from '@/app/(home)/product/[productName]/_components'
+import { PerformanceBenchmarkContainer } from '@/app/(home)/product/[productName]/_components/performance-benchmark-container'
+import { PerformanceBenchmarkSkeleton } from '@/app/(home)/product/[productName]/_components/performance-benchmark-skeleton'
 import { ProductActions } from '@/app/(home)/product/[productName]/_components/product-actions'
 import { PathNavigator } from '@/components/shared'
 import { ImageNotFound, Separator } from '@/components/ui'
@@ -7,8 +8,9 @@ import { ImageCorner } from '@/components/ui/image-corner'
 import { ProductNotFound } from '@/components/ui/product-not-found'
 import { getImageUrl } from '@/lib'
 import { prisma } from '@/lib/prisma'
-import { BenchmarkType, SpecSection } from '@/types'
+import { SpecSection } from '@/types'
 import Image from 'next/image'
+import { Suspense } from 'react'
 
 type ProductPageProps = {
   params: Promise<{ productName: string }>
@@ -41,6 +43,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   const imageUrl = await getImageUrl(product.category.slug, product.slug)
+
+  const showBenchmarks =
+    product.performance && Array.isArray(product.performance)
 
   return (
     <div className="container mx-auto mt-16">
@@ -111,10 +116,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
         />
       )}
 
-      {product.performance && Array.isArray(product.performance) && (
-        <PerformanceBenchmark
-          performance={product.performance as BenchmarkType[]}
-        />
+      {showBenchmarks && (
+        <Suspense fallback={<PerformanceBenchmarkSkeleton />}>
+          <PerformanceBenchmarkContainer slug={product.slug} />
+        </Suspense>
       )}
     </div>
   )

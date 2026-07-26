@@ -39,9 +39,9 @@ export const BestSellersContainer = async () => {
 
   return (
     <div className="scrollbar-hide relative flex gap-3 overflow-x-scroll sm:gap-4">
-      {bestSellers.map(async (product) => {
-        return <BestSellersCard key={product.slug} product={product} />
-      })}
+      {bestSellers.map((product) => (
+        <BestSellersCard key={product.slug} product={product} />
+      ))}
     </div>
   )
 }

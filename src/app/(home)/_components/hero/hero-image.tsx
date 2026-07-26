@@ -1,12 +1,12 @@
 import { BackgroundGlow } from '@/components/ui'
 import Image from 'next/image'
-import GraphicCard from '@public/hero/graphic-card.png'
+import GraphicCard from '@public/hero/graphic-card.webp'
 
 export const HeroImage = () => {
   return (
     <div className="relative mt-8 w-125">
       <BackgroundGlow className="xl:-translate-y-2/6 2xl:h-52 2xl:w-52" />
-
+      {/* TODO: CHECK STATIC IMG LOAD (PRODCUTION) */}
       <div className="flex w-full justify-center xl:w-137.5">
         <Image
           src={GraphicCard}

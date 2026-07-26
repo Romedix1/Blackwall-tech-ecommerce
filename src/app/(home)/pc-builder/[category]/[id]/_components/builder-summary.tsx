@@ -1,7 +1,7 @@
 'use client'
 
 import { PowerBar } from '@/app/(home)/pc-builder/[category]/[id]/_components/power-bar'
-import { InformationModal, TerminalInput } from '@/components/shared'
+import { TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
 import { useCart, useDebounce } from '@/hooks'
 import { useBuilder } from '@/hooks/use-builder'

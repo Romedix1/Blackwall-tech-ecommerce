@@ -3,7 +3,7 @@ import { CategoriesSection } from '@/app/(home)/_components/categories'
 import { BestSellers } from '@/app/(home)/_components/best-sellers'
 import { BuildPcSection } from '@/app/(home)/_components/build-pc'
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="flex flex-col gap-16 overflow-x-hidden lg:gap-24">
       <Hero />

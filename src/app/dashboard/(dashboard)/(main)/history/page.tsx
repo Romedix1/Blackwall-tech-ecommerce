@@ -1,8 +1,10 @@
 import { DashboardHeader } from '@/app/dashboard/_components'
 import { RenderRecords } from '@/app/dashboard/_components/user/render-records'
+import { RenderRecordsSkeleton } from '@/app/dashboard/_components/user/render-records-skeleton'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 
 export default async function DashboardHistoryPage() {
   const user = await auth()
@@ -34,7 +36,9 @@ export default async function DashboardHistoryPage() {
         </span>
       </DashboardHeader>
 
-      <RenderRecords type="order" records={userOrders} />
+      <Suspense fallback={<RenderRecordsSkeleton type="order" />}>
+        <RenderRecords type="order" records={userOrders} />
+      </Suspense>
     </>
   )
 }

@@ -1,6 +1,8 @@
 import { BestSellersContainer } from '@/app/(home)/_components/best-sellers'
+import { BestSellersCardSkeleton } from '@/app/(home)/_components/best-sellers/best-sellers-card-skeleton'
 import { Eyebrow } from '@/components/shared'
 import { Button } from '@/components/ui'
+import { Suspense } from 'react'
 
 export const BestSellers = () => {
   return (
@@ -10,7 +12,9 @@ export const BestSellers = () => {
         <span className="sr-only">Best sellers</span>
       </Eyebrow>
 
-      <BestSellersContainer />
+      <Suspense fallback={<BestSellersCardSkeleton />}>
+        <BestSellersContainer />
+      </Suspense>
 
       <Button
         variant="secondary"

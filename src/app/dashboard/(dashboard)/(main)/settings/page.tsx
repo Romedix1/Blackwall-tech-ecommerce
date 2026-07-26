@@ -8,6 +8,8 @@ import { ActiveSessions } from '@/app/dashboard/(dashboard)/(main)/settings/_com
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { DeleteAccountSection } from '@/app/dashboard/(dashboard)/(main)/settings/_components/delete-account-section'
+import { Suspense } from 'react'
+import { ActiveSessionsSkeleton } from '@/app/dashboard/(dashboard)/(main)/settings/_components/active-sessions-skeleton'
 
 export default async function SettingsPage() {
   const session = await auth()
@@ -43,7 +45,9 @@ export default async function SettingsPage() {
 
         <AddressSection userAddress={userAddress} />
 
-        <ActiveSessions />
+        <Suspense fallback={<ActiveSessionsSkeleton />}>
+          <ActiveSessions />
+        </Suspense>
 
         <DeleteAccountSection />
       </div>
