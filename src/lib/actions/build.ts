@@ -126,65 +126,92 @@ export async function initiateBuildConfig() {
     redirect(`/pc-builder/cpu/${guestId}`)
   }
 
-  const newBuild = await prisma.build.create({
-    data: {
-      name: generateBuildName(),
-      userId: session.user.id,
-      status: 'idle',
-    },
-    select: { id: true },
-  })
+  let newBuildId
 
-  await createLog(
-    'Created build',
-    `Successfully created build by user: ${session.user.username}`,
-    session.user.id,
-  )
+  try {
+    const buildsCount = await prisma.build.count({
+      where: { userId: session.user.id },
+    })
 
-  redirect(`/pc-builder/cpu/${newBuild.id}`)
+    if (buildsCount >= 5) {
+      return { limitReached: true }
+    }
+
+    const newBuild = await prisma.build.create({
+      data: {
+        name: generateBuildName(),
+        userId: session.user.id,
+        status: 'idle',
+      },
+      select: { id: true },
+    })
+
+    newBuildId = newBuild.id
+
+    await createLog(
+      'Created build',
+      `Successfully created build by user: ${session.user.username}`,
+      session.user.id,
+    )
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ INITIATE_BUILD_CONFIG_ERROR ]:', error)
+    }
+
+    return { error: 'Cannot initiate builder configuration' }
+  }
+
+  return { limitReached: false, data: newBuildId }
 }
 
 export async function toggleBuildVisibility(buildId: string) {
   const COOLDOWN_MS = 5000
 
-  const build = await prisma.build.findUnique({
-    where: { id: buildId },
-    select: {
-      updatedAt: true,
-      name: true,
-      public: true,
-      userId: true,
-      createdBy: {
-        select: {
-          username: true,
+  try {
+    const build = await prisma.build.findUnique({
+      where: { id: buildId },
+      select: {
+        updatedAt: true,
+        name: true,
+        public: true,
+        userId: true,
+        createdBy: {
+          select: {
+            username: true,
+          },
         },
       },
-    },
-  })
+    })
 
-  if (!build) throw new Error('Build not found')
+    if (!build) throw new Error('Build not found')
 
-  const now = new Date().getTime()
-  const lastUpdate = new Date(build.updatedAt).getTime()
+    const now = new Date().getTime()
+    const lastUpdate = new Date(build.updatedAt).getTime()
 
-  if (now - lastUpdate < COOLDOWN_MS) {
-    throw new Error(
-      'RECALIBRATING_SYSTEM: Please wait before next broadcast change',
+    if (now - lastUpdate < COOLDOWN_MS) {
+      throw new Error(
+        'RECALIBRATING_SYSTEM: Please wait before next broadcast change',
+      )
+    }
+
+    const updatedBuild = await prisma.build.update({
+      where: { id: buildId },
+      data: { public: !build.public },
+    })
+
+    await createLog(
+      'Switched build visibility',
+      `Successfully switched build ${build.name} visibility to ${!build.public ? 'public' : 'private'} by user: ${build.createdBy.username}`,
+      build.userId,
     )
+
+    return { success: true, data: updatedBuild }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ TOGGLE_BUILD_VISIBILITY_ERROR ]:', error)
+    }
+    return { error: 'Cannot toggle visibility at this time' }
   }
-
-  const updatedBuild = await prisma.build.update({
-    where: { id: buildId },
-    data: { public: !build.public },
-  })
-
-  await createLog(
-    'Switched build visibility',
-    `Successfully switched build ${build.name} visibility to ${!build.public ? 'public' : 'private'} by user: ${build.createdBy.username}`,
-    build.userId,
-  )
-
-  return updatedBuild
 }
 
 export async function deleteBuild(buildId: string) {
@@ -234,16 +261,24 @@ export async function updateBuildName(
     return { error: 'Unauthorized' }
   }
 
-  const updatedBuild = await prisma.build.update({
-    where: { id: buildId, userId: userId },
-    data: { name },
-  })
+  try {
+    const updatedBuild = await prisma.build.update({
+      where: { id: buildId, userId: userId },
+      data: { name },
+    })
 
-  await createLog(
-    'Build name updated',
-    `Build name was updated to ${name} by user ${session.user.username}`,
-    userId,
-  )
+    await createLog(
+      'Build name updated',
+      `Build name was updated to ${name} by user ${session.user.username}`,
+      userId,
+    )
 
-  return updatedBuild
+    return { success: true, data: updatedBuild }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ UPDATE_BUILD_NAME_ERROR ]:', error)
+    }
+
+    return { error: 'Cannot update build name' }
+  }
 }
