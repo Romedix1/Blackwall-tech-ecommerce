@@ -44,6 +44,22 @@ export default async function CheckoutSuccessPage({
     (paymentIntent?.status === 'processing' ||
       paymentIntent?.status === 'requires_action')
 
+  if (
+    isPaid &&
+    session.metadata?.userId &&
+    session.metadata.userId !== 'Guest'
+  ) {
+    try {
+      await prisma.cart.deleteMany({
+        where: { userId: session.metadata.userId },
+      })
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[ DATABASE_CLEANUP_ERROR ]:', error)
+      }
+    }
+  }
+
   const currentTimestamp = new Date().toISOString()
 
   const renderStatusLogs = () => {

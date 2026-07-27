@@ -1,5 +1,6 @@
 'use client'
 
+import { useCart } from '@/hooks'
 import { cn } from '@/lib'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
@@ -15,9 +16,13 @@ export const LogOutButton = ({
 }: LogOutButtonProps) => {
   const [isLoading, setIsLoading] = useState(false)
 
+  const { setCart } = useCart()
+
   const handleLogout = async () => {
     setIsLoading(true)
     try {
+      setCart([])
+
       await signOut({
         callbackUrl: '/',
         redirect: true,

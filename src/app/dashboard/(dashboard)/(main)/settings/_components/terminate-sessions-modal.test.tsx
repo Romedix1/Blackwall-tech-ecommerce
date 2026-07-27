@@ -11,6 +11,14 @@ vi.mock('@/lib/actions/dashboard-user', () => ({
 
 vi.mock('@/hooks', () => ({
   useDesktopMenu: vi.fn(),
+  useCart: vi.fn(() => ({
+    items: [],
+    setCart: vi.fn(),
+    isSyncing: false,
+    setIsSyncing: vi.fn(),
+    updateQuantity: vi.fn(),
+    removeItem: vi.fn(),
+  })),
 }))
 
 vi.mock('@/components/shared', () => ({

@@ -139,7 +139,7 @@ export async function checkout(
     const newOrder = await prisma.$transaction(async (trans) => {
       const createdOrder = await trans.order.create({
         data: {
-          userId: userId || 'guest',
+          userId: userId || null,
           orderToken: token,
           email: validatedData.data.email,
           fullName: validatedData.data.fullName,

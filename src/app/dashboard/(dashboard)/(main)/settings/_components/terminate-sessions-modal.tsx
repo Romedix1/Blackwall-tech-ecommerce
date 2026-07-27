@@ -2,7 +2,7 @@
 
 import { InformationModal } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { useDesktopMenu } from '@/hooks'
+import { useCart, useDesktopMenu } from '@/hooks'
 import { LogoutAllSessions } from '@/lib/actions/dashboard-user'
 import { useTransition } from 'react'
 
@@ -14,7 +14,11 @@ export const TerminateSessionsModal = ({ onClose }: TerminateModalProps) => {
   const [isPending, startTransition] = useTransition()
   const { close } = useDesktopMenu()
 
+  const { setCart } = useCart()
+
   const handleLogout = () => {
+    setCart([])
+
     startTransition(async () => {
       const result = await LogoutAllSessions()
       if (result?.success) {

@@ -2,6 +2,7 @@
 
 import { InformationModal, StatusAlert } from '@/components/shared'
 import { Button } from '@/components/ui'
+import { useCart } from '@/hooks'
 import { DeleteAccount } from '@/lib/actions/dashboard-user'
 import { signOut, useSession } from 'next-auth/react'
 import { useActionState, useEffect, useRef } from 'react'
@@ -12,6 +13,7 @@ type DeleteAccountModalProps = {
 
 export const DeleteAccountModal = ({ onClose }: DeleteAccountModalProps) => {
   const [state, formAction, isPending] = useActionState(DeleteAccount, null)
+  const { setCart } = useCart()
 
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null)
 
@@ -20,6 +22,7 @@ export const DeleteAccountModal = ({ onClose }: DeleteAccountModalProps) => {
 
   useEffect(() => {
     if (state?.success) {
+      setCart([])
       signOut({ callbackUrl: '/' })
     }
   }, [state])

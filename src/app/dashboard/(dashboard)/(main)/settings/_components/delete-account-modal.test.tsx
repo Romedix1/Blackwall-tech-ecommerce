@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { vi, describe, it, expect } from 'vitest'
 import * as React from 'react'
 import { DeleteAccountModal } from '@/app/dashboard/(dashboard)/(main)/settings/_components/delete-account-modal'
-import { prisma } from '@/lib/prisma'
 
 vi.mock('@/lib/actions/dashboard-user', () => ({
   DeleteAccount: vi.fn(),

@@ -4,51 +4,18 @@ import { AmountButton } from '@/components/shared'
 import { Button, ImageNotFound, Separator } from '@/components/ui'
 import { QuantityError } from '@/components/ui/quantity-error'
 import { useCart } from '@/hooks'
-import { fetchCartFromDb } from '@/lib/actions'
 import { cn } from '@/lib/utils'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-// TODO: ADD IMAGE/PRODUCT LOADING SKELETON
-// TODO: CLEAR CART FOR LOGGED USER
+
 export const CartOverlay = () => {
-  const { isOpen, toggle, updateQuantity, removeItem, setCart } = useCart()
+  const { isOpen, toggle, updateQuantity, removeItem } = useCart()
 
   const { status } = useSession()
   const isAuth = status === 'authenticated'
 
   const items = useCart((state) => state.items)
-
-  const [isHydrating, setIsHydrating] = useState(false)
-
-  useEffect(() => {
-    const hydrateCart = async () => {
-      if (isAuth) {
-        setIsHydrating(true)
-        try {
-          const dbItems = await fetchCartFromDb()
-          if (dbItems && dbItems.length > 0) {
-            const resolvedItems = await Promise.all(
-              dbItems.map(async (item) => ({
-                ...item,
-                imgSrc: await item.imgSrc,
-              })),
-            )
-            setCart(resolvedItems)
-          }
-        } catch (error) {
-          if (process.env.NODE_ENV === 'development') {
-            console.error('[ HYDRATION_ERROR ]:', error)
-          }
-        } finally {
-          setIsHydrating(false)
-        }
-      }
-    }
-
-    hydrateCart()
-  }, [isAuth, setCart])
 
   const total =
     items?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0
@@ -97,14 +64,7 @@ export const CartOverlay = () => {
 
         <div className="flex-1 overflow-y-auto px-6">
           <div className="flex flex-col gap-8">
-            {isHydrating ? (
-              <div className="flex h-full items-center justify-center py-20">
-                <p className="text-accent text-xs font-bold tracking-widest uppercase 2xl:text-sm">
-                  <span aria-hidden="true">{'//'} Fetching_records...</span>
-                  <span className="sr-only">Loading cart data from server</span>
-                </p>
-              </div>
-            ) : items && items.length > 0 ? (
+            {items && items.length > 0 ? (
               items.map((item) => {
                 return (
                   <div
