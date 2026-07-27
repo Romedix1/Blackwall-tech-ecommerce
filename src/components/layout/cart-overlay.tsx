@@ -10,7 +10,6 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-// TODO: ADD IMAGE/PRODUCT LOADING SKELETON
 // TODO: CLEAR CART FOR LOGGED USER
 export const CartOverlay = () => {
   const { isOpen, toggle, updateQuantity, removeItem, setCart } = useCart()
