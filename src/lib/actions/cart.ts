@@ -86,13 +86,22 @@ export async function fetchCartFromDb() {
       return []
     }
 
-    return cart.items.map((item) => ({
-      slug: item.product.slug,
-      name: item.product.name,
-      price: item.product.price,
-      quantity: item.quantity,
-      imgSrc: getImageUrl(item.product.category.slug, item.product.slug),
-    }))
+    return await Promise.all(
+      cart.items.map(async (item) => {
+        const image = await getImageUrl(
+          item.product.category.slug,
+          item.product.slug,
+        )
+
+        return {
+          slug: item.product.slug,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          imgSrc: image || '',
+        }
+      }),
+    )
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error('[ FETCH_CART_ERROR ]:', error)
@@ -109,4 +118,69 @@ export async function fetchProductsStock(slugs: string[]) {
       quantity: true,
     },
   })
+}
+
+export async function mergeCartWithDb(localCart: CartItem[]) {
+  const session = await auth()
+
+  if (!session?.user.id) {
+    return { success: false, error: 'Unauthorized' }
+  }
+
+  const userId = session.user.id
+
+  try {
+    const existingCart = await prisma.cart.findUnique({
+      where: { userId: userId },
+      include: { items: true },
+    })
+
+    const mergedItemsMap = new Map<string, number>()
+
+    if (existingCart) {
+      existingCart.items.forEach((item) => {
+        mergedItemsMap.set(item.productSlug, item.quantity)
+      })
+    }
+
+    localCart.forEach((item) => {
+      const currentQuantity = mergedItemsMap.get(item.slug) || 0
+      mergedItemsMap.set(item.slug, currentQuantity + (item.quantity || 1))
+    })
+
+    const itemsToSave = Array.from(mergedItemsMap.entries()).map(
+      ([slug, quantity]) => ({ slug, quantity }),
+    )
+
+    await prisma.cart.upsert({
+      where: { userId: userId },
+      update: {
+        items: {
+          deleteMany: {},
+          create: itemsToSave.map((item) => ({
+            productSlug: item.slug,
+            quantity: item.quantity,
+          })),
+        },
+      },
+      create: {
+        userId: userId,
+        items: {
+          create: itemsToSave.map((item) => ({
+            productSlug: item.slug,
+            quantity: item.quantity,
+          })),
+        },
+      },
+    })
+
+    const fullyPopulatedCart = await fetchCartFromDb()
+
+    return { success: true, cart: fullyPopulatedCart }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[ CART_MERGING_ERROR ]:', error)
+    }
+    return { success: false, error: 'Failed to merge cart' }
+  }
 }

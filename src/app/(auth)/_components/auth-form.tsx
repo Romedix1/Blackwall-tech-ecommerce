@@ -39,6 +39,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
   } | null>(null)
 
   const formRef = useRef<HTMLFormElement>(null)
+  const hasMerged = useRef(false)
 
   const searchParams = useSearchParams()
 
@@ -60,7 +61,13 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
   }
 
   useEffect(() => {
-    if (state?.success && state?.message === 'User logged in') {
+    if (
+      state?.success &&
+      state?.message === 'User logged in' &&
+      !hasMerged.current
+    ) {
+      hasMerged.current = true
+
       window.location.replace('/')
     }
   }, [state])
