@@ -5,9 +5,9 @@ import {
 } from '@/lib/zod/schemas'
 import * as z from 'zod'
 
-export const ResetPasswordSchema = z
+export const ChangePasswordSchema = z
   .object({
-    token: z.string(),
+    currentPassword: z.string().min(1, 'Current password is required'),
     ...PasswordMatchschema,
   })
   .refine(validatePasswords, passwordMatchError)
