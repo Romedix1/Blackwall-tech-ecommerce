@@ -5,7 +5,7 @@ import { checkUpdateCooldown } from '@/lib/check-update-cooldown'
 import { createLog } from '@/lib/logger'
 import { prisma } from '@/lib/prisma'
 import { addressSchema, UsernameField } from '@/lib/zod'
-import { ResetPasswordSchema } from '@/lib/zod/reset-password-schema'
+import { ChangePasswordSchema } from '@/lib/zod/change-password-schema'
 import { FormState } from '@/types'
 import bcrypt from 'bcryptjs'
 import { revalidatePath } from 'next/cache'
@@ -114,7 +114,7 @@ export async function ResetPassword(
     confirmPassword: rawData.confirmNewPassword,
   }
 
-  const validatedData = ResetPasswordSchema.safeParse(dataToValidate)
+  const validatedData = ChangePasswordSchema.safeParse(dataToValidate)
 
   if (!validatedData.success) {
     const errorArray = validatedData.error.issues.map((issue) => issue.message)
