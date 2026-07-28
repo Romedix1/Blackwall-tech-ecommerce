@@ -35,7 +35,7 @@ export const ChangePasswordModal = ({ onClose }: TerminateModalProps) => {
       })
     }
   }, [onClose, state?.success, update])
-  // TODO: CHECK ERROR MESSAGE
+
   return (
     <InformationModal onClose={onClose}>
       <div className="flex flex-col gap-6">
