@@ -366,7 +366,7 @@ export const RequestPasswordReset = async (
     }
   }
 }
-// TODO: ADD CREATELOG
+
 export const ResetPassword = async (
   prevState: FormState,
   formData: FormData,
@@ -420,7 +420,7 @@ export const ResetPassword = async (
 
     const user = await prisma.user.findUnique({
       where: { email: existingToken.identifier },
-      select: { password: true },
+      select: { password: true, username: true, id: true },
     })
 
     if (!user || !user.password) {
@@ -452,6 +452,12 @@ export const ResetPassword = async (
     await prisma.passwordResetToken.delete({
       where: { id: existingToken.id },
     })
+
+    await createLog(
+      'Password reset',
+      `Password updated successfully by ${user.username}`,
+      user.id,
+    )
 
     return {
       success: true,
