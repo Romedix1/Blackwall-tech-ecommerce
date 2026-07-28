@@ -15,7 +15,7 @@ export default function GlobalError({
   reset,
 }: {
   error: Error & { digest?: string }
-  reset: () => void
+  reset?: () => void
 }) {
   const LOG_CLASS = 'animate-in fade-in duration-[1ms] fill-mode-backwards'
 
@@ -67,7 +67,16 @@ export default function GlobalError({
             className={cn(
               'bg-error-text hover:bg-error-text/70 active:bg-error-text/80 focus:bg-error-text/70 mt-12 font-black text-black hover:text-black focus:text-black lg:w-7/12',
             )}
-            onClick={() => reset()}
+            onClick={() => {
+              if (typeof reset === 'function') {
+                reset()
+              } else {
+                console.warn(
+                  '[ BLACKWALL_SYS ]: Function is not available, forcing restart',
+                )
+                window.location.reload()
+              }
+            }}
           >
             <span aria-hidden="true" className="uppercase">
               [ Initiate_hard_reboot ]
