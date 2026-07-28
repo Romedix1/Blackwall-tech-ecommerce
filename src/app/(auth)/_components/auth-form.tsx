@@ -199,7 +199,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
           {isLogin && (
             <Link
               href="/forgot-password"
-              className="text-text-disabled text-hover self-end text-xs md:text-sm"
+              className="text-text-disabled hover:text-accent self-end text-xs md:text-sm"
             >
               <span className="whitespace-nowrap" aria-hidden="true">
                 [ Recover_access_key ]
