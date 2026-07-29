@@ -1,6 +1,7 @@
 import { CheckoutForm } from '@/app/checkout/_components/checkout-form'
 import { ProductsSummary } from '@/app/checkout/_components/products-summary'
 import { auth } from '@/auth'
+import { prisma } from '@/lib/prisma'
 import { Metadata } from 'next'
 import { cookies } from 'next/headers'
 
@@ -39,15 +40,28 @@ export default async function CheckoutPage({
   }
 
   const session = await auth()
+  const userId = session?.user.id
 
-  const userEmail = session?.user?.email
+  let userData = null
+
+  if (userId) {
+    userData = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        email: true,
+        shippingAddress: true,
+        city: true,
+        zipCode: true,
+      },
+    })
+  }
 
   return (
     <div className="container mx-auto mt-6 justify-between lg:mt-12 lg:flex lg:gap-24">
       <ProductsSummary />
       <CheckoutForm
         canceled={isCanceled}
-        userEmail={userEmail}
+        userData={userData}
         draftData={draftData}
       />
     </div>
