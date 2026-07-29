@@ -92,7 +92,7 @@ describe('Checkout form', () => {
       fields: {},
     })
 
-    render(<CheckoutForm userEmail={null} canceled={false} draftData={null} />)
+    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
 
     const user = userEvent.setup()
 
@@ -111,7 +111,7 @@ describe('Checkout form', () => {
   })
 
   it('Should show cancel error when order is canceled', async () => {
-    render(<CheckoutForm userEmail={null} canceled={true} draftData={null} />)
+    render(<CheckoutForm userData={null} canceled={true} draftData={null} />)
 
     const cancelError = await screen.findByText(/Payment cancelled/)
     expect(cancelError).toBeInTheDocument()
@@ -128,7 +128,7 @@ describe('Checkout form', () => {
     }
 
     render(
-      <CheckoutForm userEmail={null} canceled={true} draftData={mockData} />,
+      <CheckoutForm userData={null} canceled={true} draftData={mockData} />,
     )
 
     expect(await screen.findByLabelText('Full name')).toHaveValue(
@@ -176,7 +176,7 @@ describe('Checkout form', () => {
       }),
     )
 
-    render(<CheckoutForm userEmail={null} canceled={false} draftData={null} />)
+    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
 
     expect(await screen.findByText('$ 451.00')).toBeInTheDocument()
     expect(await screen.findByText('$ 103.73')).toBeInTheDocument()
@@ -227,7 +227,7 @@ describe('Checkout form', () => {
     )
 
     render(
-      <CheckoutForm userEmail={null} canceled={false} draftData={mockData} />,
+      <CheckoutForm userData={null} canceled={false} draftData={mockData} />,
     )
 
     const user = userEvent.setup()
@@ -270,7 +270,7 @@ describe('Checkout form', () => {
       }),
     )
 
-    render(<CheckoutForm userEmail={null} canceled={false} draftData={null} />)
+    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
 
     const user = userEvent.setup()
 
@@ -301,7 +301,7 @@ describe('Checkout form', () => {
   })
 
   it('Should generate and include security token in form payload', async () => {
-    render(<CheckoutForm userEmail={null} canceled={false} draftData={null} />)
+    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
     const user = userEvent.setup()
 
     const submitButton = await screen.findByRole('button', {
@@ -332,7 +332,7 @@ describe('Checkout form', () => {
       fields: {},
     })
 
-    render(<CheckoutForm userEmail={null} canceled={false} draftData={null} />)
+    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
     const user = userEvent.setup()
 
     const submitButton = await screen.findByRole('button', {
@@ -355,7 +355,7 @@ describe('Checkout form', () => {
       fields: {},
     })
 
-    render(<CheckoutForm userEmail={null} canceled={false} draftData={null} />)
+    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
     const user = userEvent.setup()
 
     await fillRequiredInputs(user)
