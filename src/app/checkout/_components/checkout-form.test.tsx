@@ -51,18 +51,29 @@ const fillRequiredInputs = async (user: ReturnType<typeof userEvent.setup>) => {
 }
 
 describe('Checkout form', () => {
-  it('Should load user email', async () => {
+  it('Should load user data', async () => {
+    const mockUserData = {
+      email: 'test@example.com',
+      shippingAddress: 'Address test',
+      city: 'City test',
+      zipCode: '12-345',
+    }
+
     render(
       <CheckoutForm
-        userEmail={'test@example.com'}
+        userData={mockUserData}
         canceled={false}
         draftData={null}
       />,
     )
 
     const emailInput = await screen.findByLabelText('Email')
+    const zipCodeInput = await screen.findByLabelText('Zip code')
+    const addressInput = await screen.findByLabelText('Shipping address')
 
     expect(emailInput).toHaveValue('test@example.com')
+    expect(zipCodeInput).toHaveValue('12-345')
+    expect(addressInput).toHaveValue('Address test')
   })
 
   it('Should show all errors', async () => {

@@ -17,14 +17,21 @@ type draftDataType = {
   phone: string
 }
 
+type userData = {
+  shippingAddress: string | null
+  email: string
+  city: string | null
+  zipCode: string | null
+}
+
 type CheckoutFormProps = {
-  userEmail: string | null | undefined
+  userData: userData | null
   canceled: boolean
   draftData: draftDataType | null
 }
 
 export const CheckoutForm = ({
-  userEmail,
+  userData,
   canceled,
   draftData,
 }: CheckoutFormProps) => {
@@ -153,7 +160,10 @@ export const CheckoutForm = ({
         />
         <TerminalInput
           defaultValue={
-            state?.fields.shippingAddress || draftData?.shippingAddress || ''
+            state?.fields.shippingAddress ||
+            draftData?.shippingAddress ||
+            userData?.shippingAddress ||
+            ''
           }
           placeholder="Shipping_address"
           aria-label="Shipping address"
@@ -164,7 +174,7 @@ export const CheckoutForm = ({
 
         <TerminalInput
           defaultValue={
-            state?.fields?.email || draftData?.email || userEmail || ''
+            state?.fields?.email || draftData?.email || userData?.email || ''
           }
           placeholder="Email"
           aria-label="Email"
@@ -176,14 +186,21 @@ export const CheckoutForm = ({
         <div className="grid w-full grid-cols-[3fr_2fr] gap-3">
           <TerminalInput
             placeholder="City"
-            defaultValue={state?.fields.city || draftData?.city || ''}
+            defaultValue={
+              state?.fields.city || draftData?.city || userData?.city || ''
+            }
             name="city"
             required={true}
             aria-label="City"
             className="pr-4"
           />
           <TerminalInput
-            defaultValue={state?.fields.zipCode || draftData?.zipCode || ''}
+            defaultValue={
+              state?.fields.zipCode ||
+              draftData?.zipCode ||
+              userData?.zipCode ||
+              ''
+            }
             placeholder="Zip_code"
             name="zipCode"
             required={true}
