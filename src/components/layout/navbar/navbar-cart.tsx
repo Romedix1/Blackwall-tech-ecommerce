@@ -5,12 +5,13 @@ import { cn } from '@/lib/utils'
 import { useCart } from '@/hooks'
 
 export const NavbarCart = () => {
-  const { items, toggle } = useCart()
+  const { isOpen, items, toggle } = useCart()
 
   const total = items.reduce((total, item) => total + item.quantity, 0)
 
   return (
     <button
+      aria-label={isOpen ? 'Close cart' : 'Open Cart'}
       onClick={toggle}
       className={cn(
         'terminal-hover group active:bg-primary-active flex cursor-pointer items-center gap-2 lg:px-2 lg:py-1.5',
