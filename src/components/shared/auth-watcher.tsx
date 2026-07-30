@@ -8,18 +8,19 @@ import { mergeCartWithDb, fetchCartFromDb } from '@/lib/actions/cart'
 
 export const AuthWatcher = () => {
   const { status } = useSession()
-  const { items, setCart } = useCart()
+  const { items, setCart, hasHydrated } = useCart()
   const pathname = usePathname()
 
   const wasAuthenticated = useRef(false)
-  const hasHandledSync = useRef(false)
 
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (status === 'authenticated' && hasHydrated) {
       wasAuthenticated.current = true
 
-      if (!hasHandledSync.current) {
-        hasHandledSync.current = true
+      const hasHandledSync = sessionStorage.getItem('cart_synced')
+
+      if (!hasHandledSync) {
+        sessionStorage.setItem('cart_synced', 'true')
 
         const handleCartLogic = async () => {
           try {
@@ -42,7 +43,10 @@ export const AuthWatcher = () => {
               }
             }
           } catch (error) {
-            console.error('[ CART_SYNC_ERROR ]', error)
+            if (process.env.NODE_ENV === 'development') {
+              console.error('[ CART_SYNC_ERROR ]', error)
+            }
+            sessionStorage.removeItem('cart_synced')
           }
         }
 
@@ -50,16 +54,19 @@ export const AuthWatcher = () => {
       }
     }
 
-    if (status === 'unauthenticated' && wasAuthenticated.current) {
-      wasAuthenticated.current = false
-      hasHandledSync.current = false
+    if (status === 'unauthenticated') {
+      sessionStorage.removeItem('cart_synced')
 
-      if (pathname !== '/login') {
-        setCart([])
-        signOut({ callbackUrl: '/login?error=session-expired' })
+      if (wasAuthenticated.current) {
+        wasAuthenticated.current = false
+
+        if (pathname !== '/login') {
+          setCart([])
+          signOut({ callbackUrl: '/login?error=session-expired' })
+        }
       }
     }
-  }, [status, pathname, setCart, items])
+  }, [status, pathname, setCart, items, hasHydrated])
 
   return null
 }
