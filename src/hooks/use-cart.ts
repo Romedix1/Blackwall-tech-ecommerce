@@ -15,6 +15,8 @@ type CartStore = {
   lastChecked: number
   items: CartItem[]
   isOpen: boolean
+  hasHydrated: boolean
+  setHasHydrated: (value: boolean) => void
   toggle: () => Promise<void>
   addItem: (
     slug: string,
@@ -60,6 +62,7 @@ export const useCart = create<CartStore>()(
       items: [] as CartItem[],
       isOpen: false,
       lastChecked: 0,
+      hasHydrated: false,
       toggle: async () => {
         const state = get()
         const nextOpenState = !state.isOpen
@@ -131,7 +134,7 @@ export const useCart = create<CartStore>()(
 
         if (isLoggedIn) debouncedSaveToDb(get().items)
       },
-
+      setHasHydrated: (value) => set({ hasHydrated: value }),
       updateQuantity: async (slug, quantity, isLoggedIn = false) => {
         set((state) => ({
           items: state.items.map((item) =>
@@ -143,7 +146,6 @@ export const useCart = create<CartStore>()(
 
         if (isLoggedIn) debouncedSaveToDb(get().items)
       },
-
       removeItem: async (slug, isLoggedIn = false) => {
         set((state) => ({
           items: state.items.filter((item) => item.slug !== slug),
@@ -155,6 +157,9 @@ export const useCart = create<CartStore>()(
     {
       name: 'cart',
       partialize: (state) => ({ items: state.items }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
     },
   ),
 )
