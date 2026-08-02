@@ -10,13 +10,18 @@ import { prisma } from '@/lib/prisma'
 import { DeleteAccountSection } from '@/app/dashboard/(dashboard)/(main)/settings/_components/delete-account-section'
 import { Suspense } from 'react'
 import { ActiveSessionsSkeleton } from '@/app/dashboard/(dashboard)/(main)/settings/_components/active-sessions-skeleton'
+import { redirect } from 'next/navigation'
 
 export default async function SettingsPage() {
   const session = await auth()
-  const userId = session?.user.id
+  const user = session?.user
+
+  if (!session || !user) {
+    redirect('/')
+  }
 
   const userAddress = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: user.id },
     select: {
       shippingAddress: true,
       zipCode: true,
@@ -24,12 +29,14 @@ export default async function SettingsPage() {
     },
   })
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
+  const fetchedUser = await prisma.user.findUnique({
+    where: { id: user.id },
     select: { password: true },
   })
 
-  const hasPassword = !!user?.password
+  const hasPassword = !!fetchedUser?.password
+
+  const isDemo = user.role === 'demoAdmin'
 
   return (
     <>
@@ -39,17 +46,19 @@ export default async function SettingsPage() {
       </DashboardHeader>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <UsernameSection />
+        <UsernameSection isDemo={isDemo} />
 
-        {hasPassword && <SecuritySection />}
+        {hasPassword && <SecuritySection isDemo={isDemo} />}
 
-        <AddressSection userAddress={userAddress} />
+        <AddressSection isDemo={isDemo} userAddress={userAddress} />
 
-        <Suspense fallback={<ActiveSessionsSkeleton />}>
-          <ActiveSessions />
-        </Suspense>
+        {!isDemo && (
+          <Suspense fallback={<ActiveSessionsSkeleton />}>
+            <ActiveSessions />
+          </Suspense>
+        )}
 
-        <DeleteAccountSection />
+        <DeleteAccountSection isDemo={isDemo} />
       </div>
     </>
   )

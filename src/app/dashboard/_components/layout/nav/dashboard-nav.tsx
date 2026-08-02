@@ -1,12 +1,18 @@
 import { auth } from '@/auth'
 import { LogOutButton, NavigationLinks } from '@/components/shared'
 import { cn } from '@/lib'
+import { redirect } from 'next/navigation'
 
 export const DashboardNav = async () => {
   const session = await auth()
   const userRole = session?.user.role
 
-  const isAdmin = userRole === 'admin'
+  if (!userRole) {
+    redirect('/')
+    return
+  }
+
+  const isAdmin = ['admin', 'demoAdmin'].includes(userRole)
   const header = isAdmin
     ? 'root@system:~# OVERRIDE_CONTROLS'
     : '// TERMINAL_ACCESS'

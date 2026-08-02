@@ -9,7 +9,11 @@ import { TerminateSessionsModal } from '@/app/dashboard/(dashboard)/(main)/setti
 import { Button } from '@/components/ui'
 import { useState } from 'react'
 
-export const SecuritySection = () => {
+type SecuritySectionProps = {
+  isDemo: boolean
+}
+
+export const SecuritySection = ({ isDemo }: SecuritySectionProps) => {
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isTerminatingSessions, setIsTerminatingSessions] = useState(false)
 
@@ -21,12 +25,17 @@ export const SecuritySection = () => {
       </SettingsHeader>
 
       <div className="flex flex-col gap-4">
-        <Button onClick={() => setIsChangingPassword(true)} className="text-sm">
+        <Button
+          disabled={isDemo}
+          onClick={() => setIsChangingPassword(true)}
+          className="text-sm"
+        >
           <span aria-hidden="true">&gt; Rotate_access_keys</span>
           <span className="sr-only">Change password</span>
         </Button>
 
         <Button
+          disabled={isDemo}
           onClick={() => setIsTerminatingSessions(true)}
           variant="delete"
           className="px-4 text-sm"

@@ -11,7 +11,11 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 
-export const UsernameSection = () => {
+type UsernameSectionProps = {
+  isDemo: boolean
+}
+
+export const UsernameSection = ({ isDemo }: UsernameSectionProps) => {
   const { update } = useSession()
 
   const router = useRouter()
@@ -64,7 +68,7 @@ export const UsernameSection = () => {
             aria-label={`Change username`}
           />
 
-          <Button disabled={isPending}>
+          <Button disabled={isDemo || isPending}>
             <span aria-hidden="true">
               {isPending ? '[ SYNCHRONIZING... ]' : '[ Change_Identity ]'}
             </span>

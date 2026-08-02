@@ -18,6 +18,7 @@ import { AddProduct, UpdateProduct } from '@/lib/actions/dashboard-admin'
 import { useRouter } from 'next/navigation'
 import { ManageProductSchema } from '@/lib/zod/manage-product-schema'
 import { SelectInput } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/_components/select-input'
+import { useSession } from 'next-auth/react'
 
 type BaseProductType = {
   categories: string[]
@@ -41,6 +42,10 @@ type AddProductType = BaseProductType & {
 type ProductFormProps = EditProductType | AddProductType
 
 export const ProductForm = (props: ProductFormProps) => {
+  const { data: session } = useSession()
+
+  const isDemoAdmin = session?.user.role === 'demoAdmin'
+
   const { mode } = props
 
   const initialData = mode === 'edit' ? props.initialData : null
@@ -234,7 +239,7 @@ export const ProductForm = (props: ProductFormProps) => {
       {errorMessage && <StatusAlert text={errorMessage} variant="error" />}
 
       <Button
-        disabled={isPending}
+        disabled={isDemoAdmin || isPending}
         type="submit"
         variant="primary"
         className="mt-8"

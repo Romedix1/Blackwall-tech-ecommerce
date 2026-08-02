@@ -3,10 +3,16 @@
 import { BuildLimitModal } from '@/app/(home)/_components/build-pc/build-limit-modal'
 import { Button } from '@/components/ui'
 import { initiateBuildConfig } from '@/lib/actions'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 
 export const BuildPcDescription = () => {
+  const { data: session } = useSession()
+
+  const isDemo = session?.user?.role === 'demoAdmin'
+  const isLoadingSession = status === 'loading'
+
   const [isPending, startTransition] = useTransition()
   const [isLimitReached, setIsLimitReached] = useState(false)
 
@@ -52,16 +58,26 @@ export const BuildPcDescription = () => {
 
       <Button
         onClick={handleClick}
-        disabled={isPending}
+        disabled={isDemo || isPending}
         className="mt-6 flex items-center justify-center lg:w-full 2xl:h-20 2xl:text-xl"
       >
         <span aria-hidden="true">
-          {isPending
-            ? '[ Initializing_Protocol... ]'
-            : '[ Start_configuration ]'}
+          {isLoadingSession
+            ? '[ Authenticating... ]'
+            : isPending
+              ? '[ Initializing_Protocol... ]'
+              : isDemo
+                ? '[ Demo_Locked ]'
+                : '[ Start_configuration ]'}
         </span>
         <span className="sr-only">
-          {isPending ? 'Initializing' : 'Start configuration'}
+          {isLoadingSession
+            ? 'Authenticating user'
+            : isPending
+              ? 'Initializing'
+              : isDemo
+                ? 'Locked for demo accounts'
+                : 'Start configuration'}
         </span>
       </Button>
     </div>

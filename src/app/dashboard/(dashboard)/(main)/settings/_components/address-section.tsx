@@ -14,10 +14,11 @@ type address = {
 }
 
 type AddresSection = {
+  isDemo: boolean
   userAddress: address | null
 }
 
-export const AddressSection = ({ userAddress }: AddresSection) => {
+export const AddressSection = ({ isDemo, userAddress }: AddresSection) => {
   const [state, formAction, isPending] = useActionState(ChangeAddress, null)
 
   return (
@@ -56,7 +57,7 @@ export const AddressSection = ({ userAddress }: AddresSection) => {
           />
         </div>
 
-        <Button className="text-sm">
+        <Button disabled={isDemo || isPending} className="text-sm">
           <span aria-hidden="true">
             {isPending ? '[ Synchronizing... ]' : '[ Update_data ]'}
           </span>

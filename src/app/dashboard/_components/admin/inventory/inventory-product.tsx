@@ -4,7 +4,9 @@ import { InventoryProductType } from '@/app/dashboard/_components/admin/types'
 import { DeleteModal } from '@/app/dashboard/_components/modals/delete-modal'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { useState } from 'react'
 
 type InventoryProductProps = {
@@ -12,6 +14,14 @@ type InventoryProductProps = {
 }
 
 export const InventoryProduct = ({ product }: InventoryProductProps) => {
+  const { data: session, status } = useSession()
+
+  if (status === 'unauthenticated') {
+    redirect('/')
+  }
+
+  const isDemoAdmin = session?.user?.role === 'demoAdmin'
+
   const [isDeleting, setIsDeleting] = useState(false)
 
   return (
@@ -57,7 +67,11 @@ export const InventoryProduct = ({ product }: InventoryProductProps) => {
               </Link>
             </Button>
 
-            <Button variant="delete" onClick={() => setIsDeleting(true)}>
+            <Button
+              disabled={isDemoAdmin}
+              variant="delete"
+              onClick={() => setIsDeleting(true)}
+            >
               <span className="sr-only">Delete product</span>
               <span aria-hidden="true">[ PURGE ]</span>
             </Button>

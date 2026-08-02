@@ -8,8 +8,9 @@ export default async function AddProductPage() {
   const session = await auth()
   const user = session?.user
 
-  if (!user || user.role !== 'admin') {
+  if (!user || !['admin', 'demoAdmin'].includes(user.role)) {
     redirect('/')
+    return
   }
 
   const categories = await prisma.category.findMany({

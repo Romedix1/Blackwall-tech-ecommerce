@@ -32,7 +32,7 @@ export const RenderMetrics = async () => {
   const totalRevenueValue = revenueData._sum.totalAmount || 0
 
   const METRIC_DATA = [
-    { header: 'Total revenue', value: `$${totalRevenueValue}` },
+    { header: 'Total revenue', value: `$${totalRevenueValue.toFixed(2)}` },
     { header: 'Public exposure', value: `${publicBuildPercentage}%` },
     { header: 'Critical stock', value: criticalStockCount },
     { header: 'Active operatives', value: activeUsersCount },
