@@ -19,13 +19,13 @@ export default async function DashboardDirectivesPage({
   searchParams,
 }: DashboardDirectivesProps) {
   const session = await auth()
+  const user = session?.user
 
   const resolvedParams = await searchParams
 
-  const userRole = session?.user.role
-
-  if (!userRole || userRole !== 'admin') {
+  if (!user || !['admin', 'demoAdmin'].includes(user.role)) {
     redirect('/')
+    return
   }
 
   const currentPage = Number(resolvedParams?.page) || 1

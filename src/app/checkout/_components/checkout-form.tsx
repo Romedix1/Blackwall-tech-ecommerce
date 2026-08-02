@@ -28,12 +28,14 @@ type CheckoutFormProps = {
   userData: userData | null
   canceled: boolean
   draftData: draftDataType | null
+  isDemo: boolean
 }
 
 export const CheckoutForm = ({
   userData,
   canceled,
   draftData,
+  isDemo,
 }: CheckoutFormProps) => {
   const [isMounted, setIsMounted] = useState(false)
 
@@ -221,7 +223,7 @@ export const CheckoutForm = ({
 
         <Button
           type="submit"
-          disabled={!canSubmit}
+          disabled={isDemo || !canSubmit}
           className={cn(
             isPending
               ? 'cursor-wait!'
@@ -239,13 +241,19 @@ export const CheckoutForm = ({
             [{' '}
             {isPending
               ? 'Confirming'
-              : isEmpty || hasStockError
-                ? 'Cart_empty'
-                : 'Confirm_order'}{' '}
+              : isDemo
+                ? 'Demo_Locked'
+                : isEmpty || hasStockError
+                  ? 'Cart_empty'
+                  : 'Confirm_order'}{' '}
             ]
           </span>
           <span className="sr-only">
-            {isPending ? 'Confirming' : 'Confirm order'}
+            {isPending
+              ? 'Confirming'
+              : isDemo
+                ? 'Locked for demo accounts'
+                : 'Confirm order'}
           </span>
         </Button>
 

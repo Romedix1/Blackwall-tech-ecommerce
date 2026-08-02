@@ -17,7 +17,7 @@ export async function changeUsername(newUsername: string) {
   const session = await auth()
   const userId = session?.user.id
 
-  if (!userId) {
+  if (!userId || session.user.role === 'demoAdmin') {
     return { message: 'Unauthorized', success: false }
   }
 
@@ -128,7 +128,7 @@ export async function ResetPassword(
     const session = await auth()
     const userId = session?.user.id
 
-    if (!userId) {
+    if (!userId || session.user.role === 'demoAdmin') {
       return {
         error: 'Unauthorized',
         fields: {
@@ -266,7 +266,7 @@ export async function LogoutAllSessions() {
 
   const userId = session?.user.id
 
-  if (!userId) {
+  if (!userId || session.user.role === 'demoAdmin') {
     return { error: 'Unauthorized' }
   }
 
@@ -322,7 +322,7 @@ export async function ChangeAddress(
     string
   >
 
-  if (!userId) {
+  if (!userId || session.user.role === 'demoAdmin') {
     return { error: 'Unauthorized', fields: rawData }
   }
 
@@ -393,7 +393,7 @@ export async function fetchAddress() {
 
   const userId = session?.user.id
 
-  if (!userId) {
+  if (!userId || session.user.role === 'demoAdmin') {
     return { error: 'Unauthorized' }
   }
 
@@ -423,7 +423,7 @@ export async function TerminateSession(
   const session = await auth()
   const userId = session?.user?.id
 
-  if (!connectionId) {
+  if (!connectionId || !userId || session.user.role === 'demoAdmin') {
     return { error: 'Unauthorized' }
   }
 
@@ -467,7 +467,7 @@ export async function DeleteAccount() {
 
   const userId = session?.user.id
 
-  if (!userId) {
+  if (!userId || session.user.role === 'demoAdmin') {
     return { error: 'Unauthorized' }
   }
 

@@ -4,7 +4,11 @@ import { DeleteAccountModal } from '@/app/dashboard/(dashboard)/(main)/settings/
 import { Button } from '@/components/ui'
 import { useState } from 'react'
 
-export const DeleteAccountSection = () => {
+type DeleteAccountSectionProps = {
+  isDemo: boolean
+}
+
+export const DeleteAccountSection = ({ isDemo }: DeleteAccountSectionProps) => {
   const [isDeleting, setIsDeleting] = useState(false)
 
   return (
@@ -20,6 +24,7 @@ export const DeleteAccountSection = () => {
           </p>
         </div>
         <Button
+          disabled={isDemo}
           onClick={() => setIsDeleting(true)}
           className="text-sm"
           variant="delete"

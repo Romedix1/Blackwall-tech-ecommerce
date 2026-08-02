@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { DashboardInformationBlock } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/dashboard-information-block'
 import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/back-button'
 import { OrderStatusColorMap } from '@/app/dashboard/(dashboard)/(fullscreen)/_constants/order-status-color'
+import { mockedDetailedUsersList } from '@/app/dashboard/_components/admin/records-mocks'
 
 type OrderDetailsPageProps = {
   params: Promise<{ id: string }>
@@ -19,34 +20,42 @@ export default async function OperativeDetailsPage({
   const session = await auth()
   const user = session?.user
 
-  if (!user || user.role !== 'admin') {
+  if (!user || !['admin', 'demoAdmin'].includes(user.role)) {
     redirect('/')
     return
   }
 
-  const fetchedUser = await prisma.user.findFirst({
-    where: { id: userId },
-    select: {
-      id: true,
-      username: true,
-      email: true,
-      role: true,
-      city: true,
-      shippingAddress: true,
-      zipCode: true,
-      createdAt: true,
-      lastActiveAt: true,
-      orders: {
-        select: {
-          id: true,
-          orderToken: true,
-          fullName: true,
-          totalAmount: true,
-          status: true,
+  const isDemo = user.role === 'demoAdmin'
+
+  let fetchedUser = null
+
+  if (isDemo) {
+    fetchedUser = mockedDetailedUsersList.find((user) => user.id === userId)
+  } else {
+    fetchedUser = await prisma.user.findFirst({
+      where: { id: userId },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+        city: true,
+        shippingAddress: true,
+        zipCode: true,
+        createdAt: true,
+        lastActiveAt: true,
+        orders: {
+          select: {
+            id: true,
+            orderToken: true,
+            fullName: true,
+            totalAmount: true,
+            status: true,
+          },
         },
       },
-    },
-  })
+    })
+  }
 
   if (!fetchedUser) {
     return (

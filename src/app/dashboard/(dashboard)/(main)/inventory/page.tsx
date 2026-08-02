@@ -24,7 +24,7 @@ export default async function DashboardInventoryPage({
 
   const userRole = session?.user.role
 
-  if (!userRole || userRole !== 'admin') {
+  if (!userRole || !['admin', 'demoAdmin'].includes(userRole)) {
     redirect('/')
   }
 

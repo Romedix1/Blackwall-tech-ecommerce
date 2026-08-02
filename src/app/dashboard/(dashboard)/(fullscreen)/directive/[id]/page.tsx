@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/back-button'
 import { DashboardInformationBlock } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/dashboard-information-block'
 import { OrderStatusColorMap } from '@/app/dashboard/(dashboard)/(fullscreen)/_constants/order-status-color'
+import { mockedDetailedOrdersList } from '@/app/dashboard/_components/admin/records-mocks'
 
 type OrderDetailsPageProps = {
   params: Promise<{ id: string }>
@@ -19,18 +20,45 @@ export default async function OrderDetailsPage({
   const session = await auth()
   const user = session?.user
 
-  if (!user || user.role !== 'admin') {
+  if (!user || !['admin', 'demoAdmin'].includes(user.role)) {
     redirect('/')
     return
   }
 
-  const order = await prisma.order.findFirst({
-    where: { id: orderId },
-    include: {
-      items: true,
-      user: true,
-    },
-  })
+  const isDemo = user.role === 'demoAdmin'
+
+  let order = null
+
+  if (isDemo) {
+    order = mockedDetailedOrdersList.find((order) => order.id === orderId)
+  } else {
+    order = await prisma.order.findFirst({
+      where: { id: orderId },
+      select: {
+        id: true,
+        createdAt: true,
+        status: true,
+        fullName: true,
+        email: true,
+        phoneNumber: true,
+        userId: true,
+        address: true,
+        city: true,
+        zipCode: true,
+        orderToken: true,
+        stripeSessionId: true,
+        totalAmount: true,
+        items: {
+          select: {
+            id: true,
+            name: true,
+            quantity: true,
+            price: true,
+          },
+        },
+      },
+    })
+  }
 
   if (!order) {
     return (

@@ -29,6 +29,9 @@ export default async function UserDashboardPage() {
     orderBy: { createdAt: 'desc' },
   })
 
+  const isUser = session.user.role === 'user'
+  const isAdminOrDemo = ['admin', 'demoAdmin'].includes(session.user.role)
+
   //  @note PORTFOLIO_SIMULATION
   //  In production, ETA is fetched via a Logistics API (e.g., DHL/InPost).
   //  This is a deterministic simulation using the Order ID as a seed to
@@ -36,7 +39,7 @@ export default async function UserDashboardPage() {
 
   return (
     <>
-      {session.user.role === 'user' ? (
+      {isUser && (
         <>
           <DashboardHeader>
             <span aria-hidden="true">{'//'} Welcome_back, </span>
@@ -47,11 +50,13 @@ export default async function UserDashboardPage() {
           <RenderRecords type="order" records={userOrders} />
           <UserActivity />
         </>
-      ) : (
+      )}
+
+      {isAdminOrDemo && (
         <>
           <DashboardHeader>
             <span className="sr-only">core metrics: system overview</span>
-            <span aria-hidden="true">{'//'} Core_metrics: sytem_overview</span>
+            <span aria-hidden="true">{'//'} Core_metrics: system_overview</span>
           </DashboardHeader>
 
           <div className="w-full max-w-full overflow-hidden">

@@ -1,18 +1,17 @@
 import { prisma } from '@/lib/prisma'
-import { Prisma } from '../../../../../../generated/prisma'
 import {
   LogFilterSidebar,
   LogSearch,
-  ViewLogs,
 } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components'
-import { PaginationButtons } from '@/app/dashboard/_components'
-import { PaginationButtonsContainer } from '@/app/dashboard/_components/pagination-buttons-container'
 import { Suspense } from 'react'
 import { PaginationButtonsSkeleton } from '@/app/dashboard/_components/pagination-buttons-skeleton'
 import { LogsPaginationContainer } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components/logs-pagination-container'
 import { LogsListContainer } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components/log-list-container'
 import { LogsListSkeleton } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components/logs-list-skeleton'
 import { LogFilterSidebarSkeleton } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components/log-filter-sidebar-skeleton'
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
+import { mockedLogsList } from '@/app/dashboard/_components/admin/records-mocks'
 
 type DashboardLogsProps = {
   searchParams: Promise<{
@@ -25,6 +24,16 @@ type DashboardLogsProps = {
 export default async function DashboardLogsPage({
   searchParams,
 }: DashboardLogsProps) {
+  const session = await auth()
+  const user = session?.user
+
+  if (!user || !['admin', 'demoAdmin'].includes(user.role)) {
+    redirect('/')
+    return
+  }
+
+  const isDemo = user?.role === 'demoAdmin'
+
   const resolvedParams = await searchParams
 
   const currentPage = Number(resolvedParams?.page) || 1
@@ -37,9 +46,16 @@ export default async function DashboardLogsPage({
       : [actionParams]
     : undefined
 
-  const logFilters = await prisma.systemLog.findMany({
-    select: { action: true },
-  })
+  let logFilters = null
+
+  if (isDemo) {
+    logFilters = mockedLogsList
+  } else {
+    logFilters = await prisma.systemLog.findMany({
+      select: { action: true },
+    })
+  }
+
   const uniqueActions = [
     ...new Set<string>(logFilters.map((log) => log.action)),
   ]

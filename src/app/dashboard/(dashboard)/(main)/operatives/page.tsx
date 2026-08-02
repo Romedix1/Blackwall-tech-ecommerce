@@ -22,9 +22,9 @@ export default async function DashboardOperativesPage({
 
   const resolvedParams = await searchParams
 
-  const userRole = session?.user.role
+  const user = session?.user
 
-  if (!userRole || userRole !== 'admin') {
+  if (!user || !['admin', 'demoAdmin'].includes(user.role)) {
     redirect('/')
   }
 

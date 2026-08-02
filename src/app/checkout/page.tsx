@@ -42,6 +42,8 @@ export default async function CheckoutPage({
   const session = await auth()
   const userId = session?.user.id
 
+  const isDemo = session?.user.role === 'demoAdmin'
+
   let userData = null
 
   if (userId) {
@@ -63,6 +65,7 @@ export default async function CheckoutPage({
         canceled={isCanceled}
         userData={userData}
         draftData={draftData}
+        isDemo={isDemo}
       />
     </div>
   )

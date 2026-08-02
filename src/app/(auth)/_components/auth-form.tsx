@@ -60,6 +60,28 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
     }
   }
 
+  const handleDemoAdminLogIn = async () => {
+    setIsLoading(true)
+
+    try {
+      const response = await signIn('credentials', {
+        email: 'demo@blackwall.com',
+        password: 'demoPassword1!',
+        redirect: false,
+      })
+
+      if (response && !response.error) {
+        window.location.href = '/'
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Demo admin log in error', error)
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (
       state?.success &&
@@ -221,8 +243,9 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
             />
           )}
         </div>
+
         <Button
-          disabled={isPending}
+          disabled={isPending || isLoading}
           type="submit"
           aria-label={isLogin ? 'login' : 'register'}
         >
@@ -245,6 +268,26 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
                 : 'Create account'}
           </span>
         </Button>
+
+        {isLogin && (
+          <Button
+            className="mt-6"
+            onClick={handleDemoAdminLogIn}
+            type="button"
+            variant="secondary"
+            disabled={isLoading || isPending}
+          >
+            <span aria-hidden="true">
+              <span className="whitespace-nowrap">
+                [ {isLoading ? 'Synchronizing...' : 'Log_in_as_demo_admin'} ]
+              </span>
+            </span>
+
+            <span className="sr-only">
+              {isLoading ? 'Synchronizing' : 'Log in as demo admin'}
+            </span>
+          </Button>
+        )}
 
         <div className="mt-6 flex w-full gap-2">
           {SOCIAL_PROVIDERS.map((provider) => {

@@ -1,16 +1,23 @@
 import { OrdersChart } from '@/app/dashboard/_components/admin/orders-chart'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { redirect } from 'next/navigation'
 
 export const OrdersChartContainer = async () => {
   const session = await auth()
+
+  if (!session) {
+    redirect('/')
+  }
 
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
   let chartData: { label: string; amount: number }[] = []
 
-  if (session?.user.role === 'admin') {
+  const isAdminOrDemo = ['admin', 'demoAdmin'].includes(session.user.role)
+
+  if (isAdminOrDemo) {
     const allOrders = await prisma.order.findMany({
       where: { createdAt: { gte: thirtyDaysAgo } },
       select: {

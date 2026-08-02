@@ -33,6 +33,15 @@ export async function checkout(
     string
   >
 
+  const session = await auth()
+
+  if (session && session.user.role === 'demoAdmin') {
+    return {
+      error: ['Uplink rejected: Option blocked for demo account'],
+      fields: rawData,
+    }
+  }
+
   const headersList = await headers()
   const ip =
     headersList.get('x-forwarded-for')?.split(',')[0] ??
@@ -43,7 +52,7 @@ export async function checkout(
 
   if (!success) {
     return {
-      error: ['Uplink rejected: Rate limit exceeded. Try again in 60 seconds.'],
+      error: ['Uplink rejected: Rate limit exceeded. Try again in 60 seconds'],
       fields: rawData,
     }
   }
