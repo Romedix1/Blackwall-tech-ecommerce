@@ -22,6 +22,8 @@ export const InventoryProduct = ({ product }: InventoryProductProps) => {
 
   const isDemoAdmin = session?.user?.role === 'demoAdmin'
 
+  const isLoading = status === 'loading'
+
   const [isDeleting, setIsDeleting] = useState(false)
 
   return (
@@ -68,7 +70,7 @@ export const InventoryProduct = ({ product }: InventoryProductProps) => {
             </Button>
 
             <Button
-              disabled={isDemoAdmin}
+              disabled={isDemoAdmin || isLoading}
               variant="delete"
               onClick={() => setIsDeleting(true)}
             >

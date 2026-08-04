@@ -42,9 +42,11 @@ type AddProductType = BaseProductType & {
 type ProductFormProps = EditProductType | AddProductType
 
 export const ProductForm = (props: ProductFormProps) => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   const isDemoAdmin = session?.user.role === 'demoAdmin'
+
+  const isLoading = status === 'loading'
 
   const { mode } = props
 
@@ -239,7 +241,7 @@ export const ProductForm = (props: ProductFormProps) => {
       {errorMessage && <StatusAlert text={errorMessage} variant="error" />}
 
       <Button
-        disabled={isDemoAdmin || isPending}
+        disabled={isDemoAdmin || isPending || isLoading}
         type="submit"
         variant="primary"
         className="mt-8"
