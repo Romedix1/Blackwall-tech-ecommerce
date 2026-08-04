@@ -4,10 +4,8 @@ import { getImageUrl } from '@/lib'
 import { prisma } from '@/lib/prisma'
 
 export const HeroActionsContainer = async () => {
-  const currrentProductId = 'b53030ca-0378-49e9-b5d7-37a0884cdbce'
-
-  const currentProduct = await prisma.product.findUnique({
-    where: { id: currrentProductId },
+  const currentProduct = await prisma.product.findFirst({
+    where: { category: { slug: 'gpu' } },
     select: {
       slug: true,
       name: true,
