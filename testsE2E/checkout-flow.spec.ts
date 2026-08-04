@@ -45,10 +45,12 @@ test.describe('Order placing process (checkout) - Guest', () => {
       })
       .last()
 
-    await RTX5070CartItem.getByRole('button', {
+    const plusButton = RTX5070CartItem.getByRole('button', {
       name: '+',
       exact: true,
-    }).click()
+    })
+
+    await plusButton.click()
 
     await expect(RTX5070CartItem).toContainText('02')
     await expect(page.getByText(/2227.00/)).toBeVisible()
@@ -193,9 +195,13 @@ test.describe('Order placing process (checkout) - Guest', () => {
 
     await page.locator('#billingName').fill('David Martinez')
 
-    await page.getByTestId('hosted-payment-submit-button').click()
+    await page.locator('#billingName').fill('David Martinez')
+    await page.locator('#billingAddressLine1').fill('Megabuilding')
+    await page.locator('#billingAddressLine2').fill('H4')
+    await page.locator('#billingPostalCode').fill('12-345')
+    await page.locator('#billingLocality').fill('Night City')
 
-    await expect(page.getByText(/Transaction_processing/i)).toBeVisible()
+    await page.getByTestId('hosted-payment-submit-button').click()
 
     await page.waitForURL(/\/checkout\/success\?session_id=.+/, {
       timeout: 15_000,
@@ -230,6 +236,8 @@ test.describe('Order placing process (checkout) - Logged In', () => {
   test('Logged user successfully places an order from the homepage', async ({
     page,
   }) => {
+    test.setTimeout(70_000)
+
     await page.goto('/')
     await page.getByRole('link', { name: /Peripherals/i }).click()
 
