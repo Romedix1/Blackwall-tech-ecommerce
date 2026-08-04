@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 
 export const BuildPcDescription = () => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   const isDemo = session?.user?.role === 'demoAdmin'
   const isLoadingSession = status === 'loading'
