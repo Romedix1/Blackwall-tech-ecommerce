@@ -17,6 +17,12 @@ UPDATE USING (
     current_setting ('app.current_user_role', true) = 'admin'
 );
 
+CREATE POLICY "Allow_update_products_for_authorized" ON "Product" FOR
+UPDATE USING (
+    current_setting ('app.current_user_role', true) = 'admin'
+    OR current_setting ('app.current_user_role', true) = 'user'
+);
+
 CREATE POLICY "Block_delete_non_admins_products" ON "Product" FOR DELETE USING (
     current_setting ('app.current_user_role', true) = 'admin'
 );
