@@ -18,7 +18,8 @@ export const UpdateProduct = async (
 
   const userId = session?.user.id
 
-  const isAdmin = session?.user.role === 'admin'
+  const userRole = session?.user.role
+  const isAdmin = userRole === 'admin'
 
   if (!userId || !isAdmin) {
     return { success: false, error: 'Unauthorized' }
@@ -51,24 +52,27 @@ export const UpdateProduct = async (
       },
     })
 
-    await prisma.product.update({
-      where: { id: productId },
-      data: {
-        name: validatedData.data.name,
-        slug: validatedData.data.slug,
-        price: validatedData.data.price,
-        quantity: validatedData.data.quantity,
-        badge: validatedData.data.badge || null,
-        technical: validatedData.data.technical,
-        performance: validatedData.data.performance ?? Prisma.DbNull,
-        specification: validatedData.data.specification,
-        category: {
-          connect: {
-            id: category.id,
+    await prisma.$transaction([
+      prisma.$executeRawUnsafe(
+        `SET LOCAL app.current_user_role = '${userRole}'`,
+      ),
+      prisma.product.update({
+        where: { id: productId },
+        data: {
+          name: validatedData.data.name,
+          slug: validatedData.data.slug,
+          price: validatedData.data.price,
+          quantity: validatedData.data.quantity,
+          badge: validatedData.data.badge || null,
+          technical: validatedData.data.technical,
+          performance: validatedData.data.performance ?? Prisma.DbNull,
+          specification: validatedData.data.specification,
+          category: {
+            connect: { id: category.id },
           },
         },
-      },
-    })
+      }),
+    ])
 
     revalidatePath('/dashboard/inventory')
 
@@ -94,7 +98,8 @@ export const DeleteProduct = async (
 
   const userId = session?.user.id
 
-  const isAdmin = session?.user.role === 'admin'
+  const userRole = session?.user.role
+  const isAdmin = userRole === 'admin'
 
   if (!userId || !isAdmin) {
     return { success: false, error: 'Unauthorized' }
@@ -110,9 +115,14 @@ export const DeleteProduct = async (
       select: { name: true },
     })
 
-    await prisma.product.delete({
-      where: { id: productId },
-    })
+    await prisma.$transaction([
+      prisma.$executeRawUnsafe(
+        `SET LOCAL app.current_user_role = '${userRole}'`,
+      ),
+      prisma.product.delete({
+        where: { id: productId },
+      }),
+    ])
 
     revalidatePath('/dashboard/inventory')
 
@@ -141,7 +151,8 @@ export const AddProduct = async (
 
   const userId = session?.user.id
 
-  const isAdmin = session?.user.role === 'admin'
+  const userRole = session?.user.role
+  const isAdmin = userRole === 'admin'
 
   if (!userId || !isAdmin) {
     return { success: false, error: 'Unauthorized' }
@@ -167,23 +178,26 @@ export const AddProduct = async (
       return { success: false, error: 'Invalid category' }
     }
 
-    await prisma.product.create({
-      data: {
-        name: validatedData.data.name,
-        slug: validatedData.data.slug,
-        price: validatedData.data.price,
-        quantity: validatedData.data.quantity,
-        badge: validatedData.data.badge || null,
-        technical: validatedData.data.technical,
-        performance: validatedData.data.performance ?? Prisma.DbNull,
-        specification: validatedData.data.specification,
-        category: {
-          connect: {
-            id: category.id,
+    await prisma.$transaction([
+      prisma.$executeRawUnsafe(
+        `SET LOCAL app.current_user_role = '${userRole}'`,
+      ),
+      prisma.product.create({
+        data: {
+          name: validatedData.data.name,
+          slug: validatedData.data.slug,
+          price: validatedData.data.price,
+          quantity: validatedData.data.quantity,
+          badge: validatedData.data.badge || null,
+          technical: validatedData.data.technical,
+          performance: validatedData.data.performance ?? Prisma.DbNull,
+          specification: validatedData.data.specification,
+          category: {
+            connect: { id: category.id },
           },
         },
-      },
-    })
+      }),
+    ])
 
     revalidatePath('/dashboard/inventory')
 
