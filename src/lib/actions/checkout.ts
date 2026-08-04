@@ -42,6 +42,8 @@ export async function checkout(
     }
   }
 
+  const userRole = session?.user.role || 'user'
+
   const headersList = await headers()
   const ip =
     headersList.get('x-forwarded-for')?.split(',')[0] ??
@@ -146,6 +148,10 @@ export async function checkout(
     }, 0)
 
     const newOrder = await prisma.$transaction(async (trans) => {
+      await trans.$executeRawUnsafe(
+        `SET LOCAL app.current_user_role = '${userRole}'`,
+      )
+
       const createdOrder = await trans.order.create({
         data: {
           userId: userId || null,

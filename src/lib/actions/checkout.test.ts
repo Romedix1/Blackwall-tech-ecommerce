@@ -4,6 +4,8 @@ import { stripe } from '@/lib/stripe'
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
+    $transaction: vi.fn((queries) => Promise.all(queries)),
+    $executeRawUnsafe: vi.fn().mockResolvedValue(true),
     product: {
       findMany: vi.fn(),
       update: vi.fn(),
@@ -12,7 +14,6 @@ vi.mock('@/lib/prisma', () => ({
       create: vi.fn(),
       findUnique: vi.fn().mockResolvedValue(null),
     },
-    $transaction: vi.fn((callback) => callback(prisma)),
   },
 }))
 
