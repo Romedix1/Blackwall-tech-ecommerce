@@ -16,6 +16,8 @@ vi.mock('@/auth', () => ({
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
+    $transaction: vi.fn((queries) => Promise.all(queries)),
+    $executeRawUnsafe: vi.fn().mockResolvedValue(true),
     product: {
       update: vi.fn(),
       create: vi.fn(),
