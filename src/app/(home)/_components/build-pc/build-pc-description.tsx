@@ -11,7 +11,7 @@ export const BuildPcDescription = () => {
   const { data: session, status } = useSession()
 
   const isDemo = session?.user?.role === 'demoAdmin'
-  const isLoadingSession = status === 'loading'
+  const isLoading = status === 'loading'
 
   const [isPending, startTransition] = useTransition()
   const [isLimitReached, setIsLimitReached] = useState(false)
@@ -58,11 +58,11 @@ export const BuildPcDescription = () => {
 
       <Button
         onClick={handleClick}
-        disabled={isDemo || isPending}
+        disabled={isDemo || isPending || isLoading}
         className="mt-6 flex items-center justify-center lg:w-full 2xl:h-20 2xl:text-xl"
       >
         <span aria-hidden="true">
-          {isLoadingSession
+          {isLoading
             ? '[ Authenticating... ]'
             : isPending
               ? '[ Initializing_Protocol... ]'
@@ -71,7 +71,7 @@ export const BuildPcDescription = () => {
                 : '[ Start_configuration ]'}
         </span>
         <span className="sr-only">
-          {isLoadingSession
+          {isLoading
             ? 'Authenticating user'
             : isPending
               ? 'Initializing'

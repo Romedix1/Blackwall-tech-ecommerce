@@ -3,9 +3,16 @@ import { CATEGORY_UI_REGISTRY } from '@/app/(home)/_components/categories/catego
 import { prisma } from '@/lib/prisma'
 
 export const CategoriesContainer = async () => {
+  const PRODUCT_ORDER = [
+    'Graphics cards',
+    'Peripherals',
+    'Processors',
+    'Memory',
+  ]
+
   const categories = await prisma.category.findMany({
     where: {
-      name: { in: ['Graphics cards', 'Peripherals', 'Processors', 'Memory'] },
+      name: { in: PRODUCT_ORDER },
     },
     include: {
       _count: {
@@ -14,9 +21,13 @@ export const CategoriesContainer = async () => {
     },
   })
 
+  const orderedCategories = categories.sort((a, b) => {
+    return PRODUCT_ORDER.indexOf(a.name) - PRODUCT_ORDER.indexOf(b.name)
+  })
+
   return (
     <div className="flex flex-col gap-4 sm:gap-8 md:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-      {categories.map((category, index) => {
+      {orderedCategories.map((category, index) => {
         const uiCategory = CATEGORY_UI_REGISTRY[category.slug]
 
         const categoryObject = {
