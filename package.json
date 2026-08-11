@@ -23,7 +23,7 @@
     "lucide-react": "^0.575.0",
     "next": "^16.1.6",
     "next-auth": "^5.0.0-beta.30",
-    "nodemailer": "^8.0.1",
+    "nodemailer": "^9.0.1",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -78,5 +78,12 @@
       "eslint --fix",
       "prettier --write"
     ]
+  },
+  "allowScripts": {
+    "esbuild@0.27.3": true,
+    "msw@2.12.10": true,
+    "unrs-resolver@1.11.1": true,
+    "prisma@7.9.1": true,
+    "@prisma/engines@7.9.1": true
   }
 }
