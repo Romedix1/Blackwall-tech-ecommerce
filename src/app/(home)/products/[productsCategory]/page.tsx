@@ -136,7 +136,7 @@ export default async function ProductsPage({
             </span>
 
             <span className="sr-only">
-              {productsData.length} division {2}{' '}
+              {productsCategory} division {productsData.length}{' '}
               {productsData.length === 1 ? 'record' : 'records'} found
             </span>
           </h1>

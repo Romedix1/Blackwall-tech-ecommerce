@@ -5,9 +5,15 @@ import { InputHTMLAttributes, KeyboardEvent, MouseEvent, useRef } from 'react'
 interface RadioInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
   onToggle: () => void
+  'data-testid'?: string
 }
 
-export const RadioInput = ({ label, onToggle, ...props }: RadioInputProps) => {
+export const RadioInput = ({
+  label,
+  onToggle,
+  'data-testid': dataTestId,
+  ...props
+}: RadioInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -29,6 +35,7 @@ export const RadioInput = ({ label, onToggle, ...props }: RadioInputProps) => {
     <label
       className="group flex cursor-pointer items-center gap-x-1 uppercase"
       onClick={handleClick}
+      data-testid={dataTestId || `radio-${label.toLowerCase()}`}
     >
       <input
         type="radio"
