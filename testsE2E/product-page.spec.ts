@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Searching product', () => {
+  test.use({ storageState: 'playwright/.auth/user.json' })
+
   test('Should correctly display found items', async ({ page }) => {
     await page.goto('/')
 

@@ -121,7 +121,7 @@ export async function fetchBuildFromDb(buildId: string) {
 export async function initiateBuildConfig() {
   const session = await auth()
 
-  const isDemo = session?.user.role
+  const isDemo = session?.user.role === 'demoAdmin'
 
   if (isDemo) {
     redirect(`/`)

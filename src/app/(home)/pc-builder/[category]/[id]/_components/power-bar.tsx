@@ -11,7 +11,7 @@ export const PowerBar = ({ tdp, maxTdp, max }: PowerBarProps) => {
   const peakWidth = Math.min(Math.max((maxTdp / safeMax) * 100, 0), 100)
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2" data-testid="power-status-bar">
       <p>
         <span aria-hidden="true" className="mr-2">
           &gt;
