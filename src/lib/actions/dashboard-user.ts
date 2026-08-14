@@ -178,7 +178,7 @@ export async function ResetPassword(
     }
 
     const passwordIsCorrect = await bcrypt.compare(
-      validatedData.data.password,
+      validatedData.data.currentPassword,
       dbUser.password,
     )
 

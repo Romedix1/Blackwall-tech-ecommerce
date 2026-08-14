@@ -157,6 +157,7 @@ export const ProductFilters = ({
                     key={value}
                     name={`${device}-${filter.key}`}
                     label={value}
+                    data-testid={`radio-${value}`}
                     checked={isChecked(filter.key, value)}
                     onToggle={() => handleToggle(filter.key, value)}
                   />

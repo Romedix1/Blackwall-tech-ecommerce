@@ -34,7 +34,7 @@ export const ProductBlock = ({ product }: ProductBlockProps) => {
   const [quantity, setQuantity] = useState(isSelected?.quantity || 1)
 
   return (
-    <div
+    <article
       key={product.slug}
       className="bg-surface flex flex-col gap-6 border px-6 py-4 sm:gap-12"
     >
@@ -125,6 +125,6 @@ export const ProductBlock = ({ product }: ProductBlockProps) => {
           )}
         </Button>
       </div>
-    </div>
+    </article>
   )
 }

@@ -55,7 +55,7 @@ export const UsernameSection = ({ isDemo }: UsernameSectionProps) => {
       <form action={handleSubmit}>
         <SettingsHeader>
           <span aria-hidden="true">[ Identity ]</span>
-          <span className="sr-only">User nick</span>
+          <span className="sr-only">User nickname</span>
         </SettingsHeader>
 
         <div className="flex flex-col gap-4">
@@ -66,6 +66,7 @@ export const UsernameSection = ({ isDemo }: UsernameSectionProps) => {
             onChange={(e) => setNewUsername(e.target.value)}
             placeholder={`Change_username`}
             aria-label={`Change username`}
+            autoComplete="username"
           />
 
           <Button disabled={isDemo || isPending}>

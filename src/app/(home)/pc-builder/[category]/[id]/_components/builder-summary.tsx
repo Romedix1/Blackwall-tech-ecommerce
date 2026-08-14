@@ -135,6 +135,7 @@ export const BuilderSummary = ({
       />
 
       <p
+        data-testid="system-status"
         className={cn(
           'text-sm font-bold break-all lg:text-base',
           getStatusTextColor(systemStatus.status),
@@ -146,7 +147,7 @@ export const BuilderSummary = ({
         <span className="sr-only">{systemStatus.message}</span>
       </p>
 
-      <p>
+      <p data-testid="price-information">
         <span aria-hidden="true" className="mr-2">
           &gt;
         </span>
