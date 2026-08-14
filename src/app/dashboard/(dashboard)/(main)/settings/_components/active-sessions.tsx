@@ -36,7 +36,7 @@ export const ActiveSessions = async () => {
   const otherSessions = activeSessionsData.filter(
     (session) => session.sessionToken !== currentConnectionId,
   )
-
+  // TODO: LIMIT HEIGHT
   return (
     <SettingsSection>
       <SettingsHeader>
