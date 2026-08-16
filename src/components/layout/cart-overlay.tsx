@@ -80,10 +80,10 @@ export const CartOverlay = () => {
                         {item.imgSrc ? (
                           <Image
                             src={item.imgSrc}
-                            width={144}
-                            height={144}
                             alt={item.name}
+                            fill
                             className="object-contain"
+                            sizes="(max-width: 1536px) 96px, 144px"
                           />
                         ) : (
                           <ImageNotFound />

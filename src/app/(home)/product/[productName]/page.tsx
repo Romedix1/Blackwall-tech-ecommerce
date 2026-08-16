@@ -60,14 +60,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </h1>
         </div>
 
-        <div className="bg-surface relative row-span-2 row-start-1 flex items-center justify-center">
+        <div className="bg-surface relative row-span-2 row-start-1 flex aspect-4/3 w-full items-center justify-center lg:aspect-auto">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={product.name}
               className="scale-80 object-contain xl:scale-90"
-              width={400}
-              height={400}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              fill
+              priority
+              loading="eager"
             />
           ) : (
             <ImageNotFound />

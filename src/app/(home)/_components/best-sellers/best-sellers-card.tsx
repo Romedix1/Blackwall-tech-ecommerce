@@ -37,7 +37,7 @@ export const BestSellersCard = ({ product }: BestSellersCardType) => {
   const displaySpecs = flatSpecs.slice(0, 3)
 
   return (
-    <article className="flex-1 overflow-hidden">
+    <article className="w-full min-w-70 flex-1 overflow-hidden">
       <Link
         href={`/product/${product.slug}`}
         aria-label={`View details for ${product.name}`}
@@ -54,7 +54,6 @@ export const BestSellersCard = ({ product }: BestSellersCardType) => {
                   width={1600}
                   height={1200}
                   sizes="(max-width: 1024px) 100vw, 1200px"
-                  priority
                   quality={80}
                 />
               ) : (

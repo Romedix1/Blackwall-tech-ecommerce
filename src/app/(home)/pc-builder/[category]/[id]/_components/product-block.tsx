@@ -47,6 +47,7 @@ export const ProductBlock = ({ product }: ProductBlockProps) => {
                 alt={product.name}
                 fill
                 priority={false}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-contain"
               />
             ) : (
