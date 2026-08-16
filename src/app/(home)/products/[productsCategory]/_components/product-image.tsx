@@ -25,13 +25,14 @@ export const ProductImage = ({ src, alt }: ProductImageProps) => {
       <Image
         src={src}
         alt={alt}
-        width={300}
-        height={300}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        fill
         onLoad={() => setIsLoading(false)}
         className={`relative z-20 object-contain transition-opacity duration-500 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}
         priority={false}
+        loading="eager"
       />
     </div>
   )

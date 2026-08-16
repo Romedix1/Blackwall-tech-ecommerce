@@ -1,5 +1,5 @@
+import { CategoriesContainer } from '@/app/(home)/_components/categories'
 import { PathNavigator } from '@/components/shared/path-navigator'
-import { CategoriesContainer } from '@/app/(home)/_components/'
 
 export default function CategoriesPage() {
   return (
