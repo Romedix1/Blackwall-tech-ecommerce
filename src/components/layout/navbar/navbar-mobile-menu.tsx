@@ -23,7 +23,7 @@ export const MobileMenu = () => {
       aria-modal="true"
       id="mobile-menu"
       data-testid="mobile-menu"
-      className="bg-background w fixed top-15 left-0 h-screen w-screen lg:hidden"
+      className="bg-background w fixed top-13 left-0 h-screen w-screen lg:hidden"
     >
       <div className="flex w-full flex-col px-2 py-4">
         <SearchInput

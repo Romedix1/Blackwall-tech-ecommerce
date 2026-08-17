@@ -2,7 +2,7 @@ import { LogOutButton, NavLink } from '@/components/shared'
 import { Separator } from '@/components/ui'
 
 const LINKS = [
-  { text: 'My orders', href: '/dashboard/orders' },
+  { text: 'My orders', href: '/dashboard/history' },
   { text: 'Dashboard', href: '/dashboard' },
 ]
 
