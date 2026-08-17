@@ -7,7 +7,10 @@ import { Suspense } from 'react'
 
 export const BestSellers = () => {
   return (
-    <section className="container mx-auto flex flex-col gap-4 overflow-hidden sm:px-4">
+    <section
+      className="container mx-auto flex scroll-mt-28 flex-col gap-4 overflow-hidden sm:px-4"
+      id="best-sellers"
+    >
       <Eyebrow>
         <span aria-hidden="true">{`//`} Best_sellers</span>
         <span className="sr-only">Best sellers</span>
