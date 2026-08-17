@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui'
 import { useSession } from 'next-auth/react'
 
 const LINKS = [
-  { text: 'My orders', href: '/dashboard/orders' },
+  { text: 'My orders', href: '/dashboard/history' },
   { text: 'Dashboard', href: '/dashboard' },
 ]
 

@@ -1,3 +1,6 @@
+'use client'
+
+import { useMobileMenu } from '@/hooks'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -7,8 +10,11 @@ type NavLinkType = {
 }
 
 export const NavLink = ({ text, href }: NavLinkType) => {
+  const { toggle } = useMobileMenu()
+
   return (
     <Link
+      onClick={toggle}
       href={href}
       className={cn(
         'terminal-hover group active:bg-primary-active block px-2 py-1.5 uppercase outline-none',
