@@ -30,7 +30,7 @@ export const BuildPcDescription = () => {
   }
 
   return (
-    <div className="mt-8 font-medium uppercase lg:w-5/12">
+    <div className="mt-8 scroll-mt-122 font-medium uppercase lg:w-5/12">
       <p className="text-accent mb-1 text-xs sm:text-sm lg:mb-2 xl:mb-6 2xl:text-base">
         <span aria-hidden="true">{'// '}Custom_configuration_tool</span>
         <span className="sr-only">Custom configuration tool</span>

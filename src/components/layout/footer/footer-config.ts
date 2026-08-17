@@ -14,18 +14,17 @@ export const FOOTER_DATA: FooterSection[] = [
     title: 'System nav',
     links: [
       { text: 'Homepage', href: '/' },
-      { text: 'Custom PC Builder', href: '/' },
-      { text: 'All Products', href: '/' },
-      { text: 'Best Sellers', href: '/' },
+      { text: 'All Products', href: '/products' },
+      { text: 'Best Sellers', href: '/#best-sellers' },
     ],
   },
   {
     title: 'Hardware',
     links: [
-      { text: 'Processors (CPU)', href: '/' },
-      { text: 'Graphics (GPU)', href: '/' },
-      { text: 'Motherboards', href: '/' },
-      { text: 'Memory (RAM)', href: '/' },
+      { text: 'Processors (CPU)', href: '/products/cpu' },
+      { text: 'Graphics (GPU)', href: '/products/gpu' },
+      { text: 'Motherboards', href: '/products/motherboards' },
+      { text: 'Memory (RAM)', href: '/products/memory' },
     ],
   },
   {
