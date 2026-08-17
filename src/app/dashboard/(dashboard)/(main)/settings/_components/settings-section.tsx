@@ -6,7 +6,7 @@ type SettingsSectionProps = {
 
 export const SettingsSection = ({ children }: SettingsSectionProps) => {
   return (
-    <section className="bg-surface relative border p-4 lg:p-6">
+    <section className="bg-surface relative max-h-70 overflow-y-scroll border p-4 lg:p-6">
       {children}
     </section>
   )
