@@ -3,6 +3,7 @@ import {
   PageHeader,
   SectionBlock,
   SectionHeader,
+  SectionParagraph,
 } from '@/app/(home)/(policies)/_components'
 
 export default function TermsOfServicePage() {
@@ -40,12 +41,12 @@ export default function TermsOfServicePage() {
             <span className="sr-only">01 User agreement</span>
             <span aria-hidden="true">{'//'} 01 USER_AGREEMENT</span>
           </SectionHeader>
-          <p className="text-sm leading-relaxed">
+          <SectionParagraph>
             By accessing our systems, purchasing hardware, or utilizing our
             services, you agree to be bound by these Terms of Service. If you do
             not agree with any part of these terms, you are prohibited from
             using or accessing this site and our proprietary technologies
-          </p>
+          </SectionParagraph>
         </SectionBlock>
 
         <SectionBlock>
@@ -53,13 +54,13 @@ export default function TermsOfServicePage() {
             <span className="sr-only">02 Network access</span>
             <span aria-hidden="true">{'//'} 02 NETWORK_ACCESS</span>
           </SectionHeader>
-          <p className="text-sm leading-relaxed">
+          <SectionParagraph>
             We grant you a limited, non-exclusive, non-transferable license to
             access and make personal use of our platform. This license does not
             include any resale or commercial use of our services, collection and
             use of any product listings, or any unauthorized data mining and
             extraction tools
-          </p>
+          </SectionParagraph>
         </SectionBlock>
 
         <SectionBlock>
@@ -67,13 +68,13 @@ export default function TermsOfServicePage() {
             <span className="sr-only">03 System liabilities</span>
             <span aria-hidden="true">{'//'} 03 SYSTEM_LIABILITIES</span>
           </SectionHeader>
-          <p className="text-sm leading-relaxed">
+          <SectionParagraph>
             All hardware and software components are provided {'"as is"'}{' '}
             without any warranties, expressed or implied. In no event shall
             Blackwall Tech or its suppliers be liable for any damages, data
             loss, or system interruptions arising out of the use or inability to
             use our materials
-          </p>
+          </SectionParagraph>
         </SectionBlock>
       </div>
     </>
