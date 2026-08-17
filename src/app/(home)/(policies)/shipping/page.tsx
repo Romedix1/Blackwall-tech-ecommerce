@@ -1,17 +1,22 @@
-import { SectionBlock } from '@/app/(home)/shipping/_components/section-block'
-import { SectionHeader } from '@/app/(home)/shipping/_components/section-header'
+import {
+  PageEyebrow,
+  PageHeader,
+  SectionBlock,
+  SectionHeader,
+} from '@/app/(home)/(policies)/_components'
 
 export default function ShippingAndDeliveryPage() {
   return (
-    <div className="container mx-auto mt-16 max-w-6xl px-4 lg:mb-24">
+    <>
       <div className="mb-8 flex flex-col gap-2">
-        <h1 className="text-accent text-2xl font-bold uppercase lg:text-4xl">
-          [ Shipping & Delivery ]
-        </h1>
-        <p className="text-text-second text-sm lg:text-base">
+        <PageHeader>
+          <span className="sr-only">Shipping and delivery</span>
+          <span aria-hidden="true">[ Shipping & Delivery ]</span>
+        </PageHeader>
+        <PageEyebrow>
           Review our shipping policies, delivery times, and costs to ensure a
           smooth uplink and package retrieval.
-        </p>
+        </PageEyebrow>
       </div>
 
       <div className="flex flex-col gap-8">
@@ -60,7 +65,7 @@ export default function ShippingAndDeliveryPage() {
 
         <SectionBlock>
           <SectionHeader>
-            <span className="sr-only">03 Rates and estimates</span>
+            <span className="sr-only">03 International shipping</span>
             <span aria-hidden="true">{'//'} 03 INTERNATIONAL_SHIPPING</span>
           </SectionHeader>
           <p className="text-sm leading-relaxed">
@@ -71,6 +76,6 @@ export default function ShippingAndDeliveryPage() {
           </p>
         </SectionBlock>
       </div>
-    </div>
+    </>
   )
 }

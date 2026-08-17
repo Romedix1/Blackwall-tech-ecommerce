@@ -32,7 +32,7 @@ export const FOOTER_DATA: FooterSection[] = [
     title: 'Protocols',
     links: [
       { text: 'Shipping & Delivery', href: '/shipping' },
-      { text: 'Returns Policy', href: '/' },
+      { text: 'Returns Policy', href: '/returns' },
       { text: 'Terms of Service', href: '/' },
       { text: 'Privacy Protocol', href: '/' },
     ],
