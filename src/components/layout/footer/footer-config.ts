@@ -33,7 +33,7 @@ export const FOOTER_DATA: FooterSection[] = [
     links: [
       { text: 'Shipping & Delivery', href: '/shipping' },
       { text: 'Returns Policy', href: '/returns' },
-      { text: 'Terms of Service', href: '/' },
+      { text: 'Terms of Service', href: '/terms-of-service' },
       { text: 'Privacy Protocol', href: '/' },
     ],
   },
