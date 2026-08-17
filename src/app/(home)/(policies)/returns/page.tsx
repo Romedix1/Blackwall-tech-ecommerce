@@ -3,6 +3,7 @@ import {
   PageHeader,
   SectionBlock,
   SectionHeader,
+  SectionParagraph,
 } from '@/app/(home)/(policies)/_components'
 
 export default function ReturnsPolicyPage() {
@@ -25,11 +26,11 @@ export default function ReturnsPolicyPage() {
             <span className="sr-only">01 Return window</span>
             <span aria-hidden="true">{'//'} 01 RETURN_WINDOW</span>
           </SectionHeader>
-          <p className="text-sm leading-relaxed">
+          <SectionParagraph>
             We accept returns within 30 days of the original delivery date. The
             hardware must be in its original packaging, unused, and completely
             free of any physical damage or unauthorized modifications
-          </p>
+          </SectionParagraph>
         </SectionBlock>
 
         <SectionBlock>
@@ -51,13 +52,13 @@ export default function ReturnsPolicyPage() {
             <span className="sr-only">03 refund processing</span>
             <span aria-hidden="true">{'//'} 03. REFUND_PROCESSING</span>
           </SectionHeader>
-          <p className="text-sm leading-relaxed">
+          <SectionParagraph>
             Once your return is received and inspected by our technicians, we
             will notify you of the approval or rejection of your refund.
             Approved refunds will be processed, and a credit will automatically
             be applied to your original method of payment within 5-7 business
             days
-          </p>
+          </SectionParagraph>
         </SectionBlock>
       </div>
     </>

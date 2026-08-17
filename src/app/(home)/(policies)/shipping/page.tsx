@@ -3,6 +3,7 @@ import {
   PageHeader,
   SectionBlock,
   SectionHeader,
+  SectionParagraph,
 } from '@/app/(home)/(policies)/_components'
 
 export default function ShippingAndDeliveryPage() {
@@ -25,12 +26,12 @@ export default function ShippingAndDeliveryPage() {
             <span className="sr-only">01 Processing time</span>
             <span aria-hidden="true">{'//'} 01 PROCESSING_TIME</span>
           </SectionHeader>
-          <p className="text-sm leading-relaxed">
+          <SectionParagraph>
             All orders are processed within 1 to 2 business days (excluding
             weekends and holidays) after receiving your order confirmation
             email. You will receive another notification when your order has
             shipped and the tracking beacon is active
-          </p>
+          </SectionParagraph>
         </SectionBlock>
 
         <SectionBlock>
@@ -68,12 +69,12 @@ export default function ShippingAndDeliveryPage() {
             <span className="sr-only">03 International shipping</span>
             <span aria-hidden="true">{'//'} 03 INTERNATIONAL_SHIPPING</span>
           </SectionHeader>
-          <p className="text-sm leading-relaxed">
+          <SectionParagraph>
             We currently offer international shipping to select sectors
             globally. Shipping charges for your specific coordinates will be
             calculated and displayed securely at checkout. Duties and taxes may
             apply upon arrival.
-          </p>
+          </SectionParagraph>
         </SectionBlock>
       </div>
     </>
