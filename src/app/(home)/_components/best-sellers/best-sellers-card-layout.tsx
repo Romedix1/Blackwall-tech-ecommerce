@@ -23,7 +23,7 @@ export const BestSellersCardLayout = ({
   return (
     <div
       className={cn(
-        'flex h-full w-67.5 min-w-0 shrink-0 flex-col p-6 sm:w-75 xl:w-auto xl:flex-1',
+        'flex h-full w-full min-w-0 flex-col p-6 xl:w-auto xl:flex-1',
         className,
       )}
     >
