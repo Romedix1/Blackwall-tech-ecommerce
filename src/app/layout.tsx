@@ -7,6 +7,7 @@ import { Footer } from '@/components/layout/footer'
 import { CartOverlay } from '@/components/layout'
 import { SessionProvider } from 'next-auth/react'
 import { AuthWatcher } from '@/components/shared/auth-watcher'
+import { CookieModal } from '@/components/shared/cookie-modal'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -32,6 +33,7 @@ export default function RootLayout({
           <CartOverlay />
           <main className="px-4 xl:px-20">{children}</main>
           <Footer />
+          <CookieModal />
         </SessionProvider>
       </body>
     </html>
