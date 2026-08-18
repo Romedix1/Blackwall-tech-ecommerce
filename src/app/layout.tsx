@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Blackwall Tech | PC Store & Hardware',
     description: 'Discover top-tier hardware and build your ultimate pc.',
-    url: 'https://blackwall.tech', // UPDATE (VERCEL)
+    url: 'https://blackwall-tech-ecommerce.vercel.app/',
     siteName: 'Blackwall Tech',
     locale: 'en_US',
     type: 'website',
