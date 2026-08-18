@@ -7,11 +7,16 @@ import { FilterCapsule } from '@/components/shared'
 import { getImageUrl } from '@/lib'
 import { prisma } from '@/lib/prisma'
 import { SpecSection } from '@/types'
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 type BuilderCategoryPageProps = {
   params: Promise<{ category: string; id: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export const metadata: Metadata = {
+  title: 'PC Builder',
 }
 
 export default async function BuilderCategoryPage({

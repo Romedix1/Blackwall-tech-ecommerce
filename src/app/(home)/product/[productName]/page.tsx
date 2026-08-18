@@ -14,11 +14,33 @@ import {
 import { getImageUrl } from '@/lib'
 import { prisma } from '@/lib/prisma'
 import { SpecSection } from '@/types'
+import { Metadata } from 'next'
 import Image from 'next/image'
 import { Suspense } from 'react'
 
 type ProductPageProps = {
   params: Promise<{ productName: string }>
+}
+
+type MetadataProps = {
+  params: Promise<{ productName: string }>
+}
+
+export async function generateMetadata({
+  params,
+}: MetadataProps): Promise<Metadata> {
+  const { productName } = await params
+
+  const product = await prisma.product.findUnique({
+    where: { slug: productName },
+    select: { name: true },
+  })
+
+  const productN = product ? product.name : productName
+
+  return {
+    title: `${productN}`,
+  }
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {

@@ -1,11 +1,16 @@
 import { NewPasswordForm } from '@/app/(auth)/new-password/_components'
 import { Button } from '@/components/ui'
 import { prisma } from '@/lib/prisma'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 type ForgotPasswordPageProps = {
   searchParams: Promise<{ token: string }>
+}
+
+export const metadata: Metadata = {
+  title: 'Reset password',
 }
 
 export default async function NewPasswordPage({
