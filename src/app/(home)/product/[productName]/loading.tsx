@@ -1,6 +1,8 @@
+import {
+  ProductActionsSkeleton,
+  SpecificationListSkeleton,
+} from '@/app/(home)/product/[productName]/_components'
 import { Separator } from '@/components/ui'
-import { SpecificationListSkeleton } from '@/app/(home)/product/[productName]/_components/specification-list-skeleton'
-import { ProductActionsSkeleton } from '@/app/(home)/product/[productName]/_components/product-actions-skeleton'
 
 export default function ProductLoading() {
   return (

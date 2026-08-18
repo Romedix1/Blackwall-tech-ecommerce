@@ -1,4 +1,4 @@
-import { BuildNotPublic } from '@/app/shared-build/[id]/_components/BuildNotPublic'
+import { BuildNotPublic } from '@/app/shared-build/[id]/_components'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { getImageUrl } from '@/lib'

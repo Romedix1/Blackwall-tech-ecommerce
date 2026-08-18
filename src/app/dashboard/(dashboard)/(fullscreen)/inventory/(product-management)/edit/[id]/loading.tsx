@@ -1,4 +1,4 @@
-import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/back-button'
+import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components'
 import { cn } from '@/lib/utils'
 
 const INPUT_SKELETON = 'skeleton-loading h-12 w-full '

@@ -1,9 +1,9 @@
 import {
   BuilderNav,
+  BuilderSummaryContainer,
+  BuilderSummarySkeleton,
   BuildInitializer,
 } from '@/app/(home)/pc-builder/[category]/[id]/_components'
-import { BuilderSummaryContainer } from '@/app/(home)/pc-builder/[category]/[id]/_components/builder-summary-container'
-import { BuilderSummarySkeleton } from '@/app/(home)/pc-builder/[category]/[id]/_components/builder-summary-skeleton'
 import { fetchBuildFromDb } from '@/lib/actions'
 import { Suspense } from 'react'
 

@@ -1,6 +1,5 @@
 'use client'
 
-import { RegisterSuccess } from '@/app/(auth)/register/_components/register-success'
 import { signIn } from 'next-auth/react'
 import { StatusAlert, TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
@@ -10,6 +9,7 @@ import { useActionState, useEffect, useRef, useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
 import { SiGmail } from 'react-icons/si'
 import { useSearchParams } from 'next/navigation'
+import { RegisterSuccess } from '@/app/(auth)/register/_components'
 import { ResendEmailModal } from '@/app/(auth)/_components/resend-email-modal'
 
 type AuthFormProps = {

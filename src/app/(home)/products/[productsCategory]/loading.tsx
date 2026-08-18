@@ -1,5 +1,4 @@
-import { FiltersSkeleton } from '@/components/ui/filter-skeleton'
-import { ProductSkeleton } from '@/components/ui/product-skeleton'
+import { FiltersSkeleton, ProductSkeleton } from '@/components/ui'
 
 export default function Loading() {
   const skeletons = Array.from({ length: 6 })

@@ -1,11 +1,16 @@
-import { SpecificationList } from '@/app/(home)/product/[productName]/_components'
-import { PerformanceBenchmarkContainer } from '@/app/(home)/product/[productName]/_components/performance-benchmark-container'
-import { PerformanceBenchmarkSkeleton } from '@/app/(home)/product/[productName]/_components/performance-benchmark-skeleton'
-import { ProductActions } from '@/app/(home)/product/[productName]/_components/product-actions'
+import {
+  PerformanceBenchmarkContainer,
+  PerformanceBenchmarkSkeleton,
+  ProductActions,
+  SpecificationList,
+} from '@/app/(home)/product/[productName]/_components'
 import { PathNavigator } from '@/components/shared'
-import { ImageNotFound, Separator } from '@/components/ui'
-import { ImageCorner } from '@/components/ui/image-corner'
-import { ProductNotFound } from '@/components/ui/product-not-found'
+import {
+  ImageCorner,
+  ImageNotFound,
+  ProductNotFound,
+  Separator,
+} from '@/components/ui'
 import { getImageUrl } from '@/lib'
 import { prisma } from '@/lib/prisma'
 import { SpecSection } from '@/types'

@@ -1,8 +1,8 @@
 import {
   ProductFilters,
   ProductSort,
+  ProductItem,
 } from '@/app/(home)/products/[productsCategory]/_components'
-import { ProductItem } from '@/app/(home)/products/[productsCategory]/_components'
 import { PathNavigator } from '@/components/shared'
 import { Separator } from '@/components/ui'
 import { prisma } from '@/lib/prisma'

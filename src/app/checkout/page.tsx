@@ -1,5 +1,4 @@
-import { CheckoutForm } from '@/app/checkout/_components/checkout-form'
-import { ProductsSummary } from '@/app/checkout/_components/products-summary'
+import { CheckoutForm, ProductsSummary } from '@/app/checkout/_components'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { Metadata } from 'next'

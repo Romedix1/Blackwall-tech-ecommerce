@@ -1,5 +1,5 @@
-import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/back-button'
-import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components/product-form'
+import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components'
+import { ProductForm } from '@/app/dashboard/(dashboard)/(fullscreen)/inventory/(product-management)/_components'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'

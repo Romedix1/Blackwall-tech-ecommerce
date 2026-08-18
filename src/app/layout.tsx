@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { Navbar } from '@/components/layout/navbar'
 import { Roboto_Mono } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { Footer } from '@/components/layout/footer'
 import { CartOverlay } from '@/components/layout'
 import { SessionProvider } from 'next-auth/react'
-import { AuthWatcher } from '@/components/shared/auth-watcher'
-import { CookieModal } from '@/components/shared/cookie-modal'
+import { Navbar } from '@/components/layout/navbar'
+import { AuthWatcher, CookieModal } from '@/components/shared'
+import { Footer } from '@/components/layout/footer'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
