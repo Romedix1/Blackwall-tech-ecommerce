@@ -1,5 +1,10 @@
-import { AuthForm } from '@/app/(auth)/_components'
+import { AuthForm, AuthFormSkeleton } from '@/app/(auth)/_components'
+import { Suspense } from 'react'
 
 export default function LoginPage() {
-  return <AuthForm mode="login" />
+  return (
+    <Suspense fallback={<AuthFormSkeleton />}>
+      <AuthForm mode="login" />
+    </Suspense>
+  )
 }

@@ -59,7 +59,7 @@ describe('Username section', () => {
   })
 
   it('Should update input value on change', () => {
-    render(<UsernameSection />)
+    render(<UsernameSection isDemo={false} />)
     const input = screen.getByTestId('username-input')
 
     fireEvent.change(input, { target: { value: 'New_Identity' } })
@@ -75,7 +75,7 @@ describe('Username section', () => {
 
     vi.mocked(changeUsername).mockResolvedValue(successResult as any)
 
-    render(<UsernameSection />)
+    render(<UsernameSection isDemo={false} />)
 
     const input = screen.getByTestId('username-input')
     fireEvent.change(input, { target: { value: 'V' } })
@@ -101,7 +101,7 @@ describe('Username section', () => {
       message: 'Username_taken',
     } as any)
 
-    render(<UsernameSection />)
+    render(<UsernameSection isDemo={false} />)
 
     const input = screen.getByTestId('username-input')
     fireEvent.change(input, { target: { value: 'taken_nick' } })
@@ -124,7 +124,7 @@ describe('Username section', () => {
     })
     vi.mocked(changeUsername).mockReturnValue(promise as any)
 
-    render(<UsernameSection />)
+    render(<UsernameSection isDemo={false} />)
 
     const input = screen.getByTestId('username-input')
     fireEvent.change(input, { target: { value: 'New_Node' } })

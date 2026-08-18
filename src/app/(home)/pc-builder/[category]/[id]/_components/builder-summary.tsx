@@ -1,17 +1,16 @@
 'use client'
 
-import { PowerBar } from '@/app/(home)/pc-builder/[category]/[id]/_components/power-bar'
 import { TerminalInput } from '@/components/shared'
 import { Button } from '@/components/ui'
-import { useCart, useDebounce } from '@/hooks'
-import { useBuilder } from '@/hooks/use-builder'
+import { useBuilder, useCart, useDebounce } from '@/hooks'
 import { cn, getBuildStatus, getPowerStats, getStatusTextColor } from '@/lib'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import { ShareModal } from '@/app/dashboard/_components'
-import { WarningModal } from '@/app/(home)/pc-builder/[category]/[id]/_components/warning-modal'
 import { updateBuildName } from '@/lib/actions'
 import { useParams, useRouter } from 'next/navigation'
+import { WarningModal } from '@/app/(home)/pc-builder/[category]/[id]/_components/warning-modal'
+import { ShareModal } from '@/app/dashboard/_components/modals'
+import { PowerBar } from '@/app/(home)/pc-builder/[category]/[id]/_components/power-bar'
 
 type BuilderSummaryProps = {
   buildName: string

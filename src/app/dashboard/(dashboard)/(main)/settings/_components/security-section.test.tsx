@@ -21,14 +21,14 @@ vi.mock('./terminate-sessions-modal', () => ({
 
 describe('Security section', () => {
   it('Should not show any modals by default', () => {
-    render(<SecuritySection />)
+    render(<SecuritySection isDemo={false} />)
 
     expect(screen.queryByTestId('password-modal')).not.toBeInTheDocument()
     expect(screen.queryByTestId('sessions-modal')).not.toBeInTheDocument()
   })
 
   it('Should open and close ChangePasswordModal', () => {
-    render(<SecuritySection />)
+    render(<SecuritySection isDemo={false} />)
 
     const openBtn = screen.getByRole('button', { name: /change password/i })
     fireEvent.click(openBtn)
@@ -40,7 +40,7 @@ describe('Security section', () => {
   })
 
   it('Should open and close TerminateSessionsModal', () => {
-    render(<SecuritySection />)
+    render(<SecuritySection isDemo={false} />)
 
     const openBtn = screen.getByRole('button', {
       name: /terminate all sessions/i,

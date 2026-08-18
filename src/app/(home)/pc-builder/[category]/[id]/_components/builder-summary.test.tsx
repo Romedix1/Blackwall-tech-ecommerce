@@ -1,6 +1,5 @@
-import { BuilderSummary } from '@/app/(home)/pc-builder/[category]/[id]/_components/builder-summary'
-import { useCart } from '@/hooks'
-import { useBuilder } from '@/hooks/use-builder'
+import { BuilderSummary } from '@/app/(home)/pc-builder/[category]/[id]/_components'
+import { useCart, useBuilder } from '@/hooks'
 import { updateBuildName } from '@/lib/actions'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -10,6 +9,7 @@ import { vi } from 'vitest'
 
 vi.mock('@/hooks', () => ({
   useCart: vi.fn(),
+  useBuilder: vi.fn(),
   useDebounce: vi.fn((value) => value),
 }))
 
@@ -24,10 +24,6 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/lib/actions', () => ({
   updateBuildName: vi.fn(),
-}))
-
-vi.mock('@/hooks/use-builder', () => ({
-  useBuilder: vi.fn(),
 }))
 
 const validationCases = [

@@ -14,7 +14,7 @@ export const FOOTER_DATA: FooterSection[] = [
     title: 'System nav',
     links: [
       { text: 'Homepage', href: '/' },
-      { text: 'All Products', href: '/products' },
+      { text: 'All Products', href: '/categories' },
       { text: 'Best Sellers', href: '/#best-sellers' },
     ],
   },

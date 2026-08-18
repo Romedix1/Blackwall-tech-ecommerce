@@ -1,11 +1,10 @@
 'use client'
 
-import { DeleteModal } from '@/app/dashboard/_components/modals/delete-modal'
-import { ShareModal } from '@/app/dashboard/_components/modals/share-modal'
+import { DeleteModal, ShareModal } from '@/app/dashboard/_components/modals'
 import { Button } from '@/components/ui'
 import { cn, getStatusTextColor } from '@/lib'
 import { getStatusData } from '@/lib/dashboard'
-import { BaseRecordType, BuildRecordType } from '@/types/record'
+import { BaseRecordType, BuildRecordType } from '@/types'
 import Link from 'next/link'
 import { useState } from 'react'
 
