@@ -24,13 +24,13 @@ describe('System logger', () => {
   })
 
   it('Should handle undefined parameters', async () => {
-    await createLog('User logged out')
+    await createLog('User logged out', 'User logged out detailed', undefined)
 
     expect(prisma.systemLog.create).toHaveBeenCalledTimes(1)
     expect(prisma.systemLog.create).toHaveBeenCalledWith({
       data: {
         action: 'User logged out',
-        details: undefined,
+        details: 'User logged out detailed',
         userId: undefined,
       },
     })
@@ -45,7 +45,7 @@ describe('System logger', () => {
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    await createLog('Deleted build')
+    await createLog('Deleted build', 'Build deleted', undefined)
 
     expect(consoleSpy).toHaveBeenCalled()
 

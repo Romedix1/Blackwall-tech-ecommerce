@@ -42,7 +42,7 @@ describe('Address section', () => {
   const mockFormAction = vi.fn()
 
   it('Should render initial address data from props', () => {
-    render(<AddressSection userAddress={mockAddress} />)
+    render(<AddressSection isDemo={false} userAddress={mockAddress} />)
 
     expect(screen.getByTestId('input-shippingAddress')).toHaveValue(
       mockAddress.shippingAddress,
@@ -58,7 +58,7 @@ describe('Address section', () => {
       true,
     ])
 
-    render(<AddressSection userAddress={mockAddress} />)
+    render(<AddressSection isDemo={false} userAddress={mockAddress} />)
 
     expect(screen.getByText(/Updating logistics/i)).toBeInTheDocument()
     expect(screen.getByText(/\[ Synchronizing... \]/i)).toBeInTheDocument()
@@ -76,7 +76,7 @@ describe('Address section', () => {
       false,
     ])
 
-    render(<AddressSection userAddress={mockAddress} />)
+    render(<AddressSection isDemo={false} userAddress={mockAddress} />)
 
     const alert = screen.getByTestId('status-alert')
     expect(alert).toHaveTextContent('Uplink_synchronized')
@@ -95,7 +95,7 @@ describe('Address section', () => {
       false,
     ])
 
-    render(<AddressSection userAddress={mockAddress} />)
+    render(<AddressSection isDemo={false} userAddress={mockAddress} />)
 
     const alert = screen.getByTestId('status-alert')
     expect(alert).toHaveTextContent('Connection_timeout')
@@ -118,7 +118,7 @@ describe('Address section', () => {
       false,
     ])
 
-    render(<AddressSection userAddress={mockAddress} />)
+    render(<AddressSection isDemo={false} userAddress={mockAddress} />)
 
     expect(screen.getByTestId('input-shippingAddress')).toHaveValue(
       'New Address',

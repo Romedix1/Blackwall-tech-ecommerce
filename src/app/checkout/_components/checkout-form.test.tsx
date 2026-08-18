@@ -18,6 +18,8 @@ vi.mock('@/hooks', () => ({
       updateQuantity: vi.fn(),
       removeItem: vi.fn(),
       setCart: vi.fn(),
+      hasHydrated: true,
+      setHasHydrated: vi.fn(),
       lastChecked: 0,
       items: mockCartItems,
     }),
@@ -64,6 +66,7 @@ describe('Checkout form', () => {
         userData={mockUserData}
         canceled={false}
         draftData={null}
+        isDemo={false}
       />,
     )
 
@@ -92,7 +95,14 @@ describe('Checkout form', () => {
       fields: {},
     })
 
-    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
+    render(
+      <CheckoutForm
+        userData={null}
+        canceled={false}
+        draftData={null}
+        isDemo={false}
+      />,
+    )
 
     const user = userEvent.setup()
 
@@ -111,7 +121,14 @@ describe('Checkout form', () => {
   })
 
   it('Should show cancel error when order is canceled', async () => {
-    render(<CheckoutForm userData={null} canceled={true} draftData={null} />)
+    render(
+      <CheckoutForm
+        userData={null}
+        canceled={true}
+        draftData={null}
+        isDemo={false}
+      />,
+    )
 
     const cancelError = await screen.findByText(/Payment cancelled/)
     expect(cancelError).toBeInTheDocument()
@@ -128,7 +145,12 @@ describe('Checkout form', () => {
     }
 
     render(
-      <CheckoutForm userData={null} canceled={true} draftData={mockData} />,
+      <CheckoutForm
+        userData={null}
+        canceled={true}
+        draftData={mockData}
+        isDemo={false}
+      />,
     )
 
     expect(await screen.findByLabelText('Full name')).toHaveValue(
@@ -156,6 +178,8 @@ describe('Checkout form', () => {
         updateQuantity: vi.fn(),
         removeItem: vi.fn(),
         setCart: vi.fn(),
+        hasHydrated: true,
+        setHasHydrated: vi.fn(),
         lastChecked: 0,
         items: [
           {
@@ -176,7 +200,14 @@ describe('Checkout form', () => {
       }),
     )
 
-    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
+    render(
+      <CheckoutForm
+        userData={null}
+        canceled={false}
+        draftData={null}
+        isDemo={false}
+      />,
+    )
 
     expect(await screen.findByText('$ 451.00')).toBeInTheDocument()
     expect(await screen.findByText('$ 103.73')).toBeInTheDocument()
@@ -206,6 +237,8 @@ describe('Checkout form', () => {
         updateQuantity: vi.fn(),
         removeItem: vi.fn(),
         setCart: vi.fn(),
+        hasHydrated: true,
+        setHasHydrated: vi.fn(),
         lastChecked: 0,
         items: [
           {
@@ -227,7 +260,12 @@ describe('Checkout form', () => {
     )
 
     render(
-      <CheckoutForm userData={null} canceled={false} draftData={mockData} />,
+      <CheckoutForm
+        userData={null}
+        canceled={false}
+        draftData={mockData}
+        isDemo={false}
+      />,
     )
 
     const user = userEvent.setup()
@@ -250,6 +288,8 @@ describe('Checkout form', () => {
         updateQuantity: vi.fn(),
         removeItem: vi.fn(),
         setCart: vi.fn(),
+        hasHydrated: true,
+        setHasHydrated: vi.fn(),
         lastChecked: 0,
         items: [
           {
@@ -270,7 +310,14 @@ describe('Checkout form', () => {
       }),
     )
 
-    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
+    render(
+      <CheckoutForm
+        userData={null}
+        canceled={false}
+        draftData={null}
+        isDemo={false}
+      />,
+    )
 
     const user = userEvent.setup()
 
@@ -301,7 +348,14 @@ describe('Checkout form', () => {
   })
 
   it('Should generate and include security token in form payload', async () => {
-    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
+    render(
+      <CheckoutForm
+        userData={null}
+        canceled={false}
+        draftData={null}
+        isDemo={false}
+      />,
+    )
     const user = userEvent.setup()
 
     const submitButton = await screen.findByRole('button', {
@@ -332,7 +386,14 @@ describe('Checkout form', () => {
       fields: {},
     })
 
-    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
+    render(
+      <CheckoutForm
+        userData={null}
+        canceled={false}
+        draftData={null}
+        isDemo={false}
+      />,
+    )
     const user = userEvent.setup()
 
     const submitButton = await screen.findByRole('button', {
@@ -355,7 +416,14 @@ describe('Checkout form', () => {
       fields: {},
     })
 
-    render(<CheckoutForm userData={null} canceled={false} draftData={null} />)
+    render(
+      <CheckoutForm
+        userData={null}
+        canceled={false}
+        draftData={null}
+        isDemo={false}
+      />,
+    )
     const user = userEvent.setup()
 
     await fillRequiredInputs(user)
