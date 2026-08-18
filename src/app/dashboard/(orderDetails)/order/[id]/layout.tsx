@@ -1,6 +1,11 @@
 import { auth } from '@/auth'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+}
 
 export default async function OrderDetailsLayout({
   children,

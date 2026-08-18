@@ -5,6 +5,11 @@ import {
   SectionHeader,
   SectionParagraph,
 } from '@/app/(home)/(policies)/_components'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Returns policy',
+}
 
 export default function ReturnsPolicyPage() {
   return (

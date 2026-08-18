@@ -5,6 +5,11 @@ import {
   SectionHeader,
   SectionParagraph,
 } from '@/app/(home)/(policies)/_components'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Privacy policy',
+}
 
 export default function PrivacyPolicyPage() {
   return (

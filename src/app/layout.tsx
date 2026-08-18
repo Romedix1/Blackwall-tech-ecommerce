@@ -14,20 +14,19 @@ export const metadata: Metadata = {
     template: '%s | Blackwall Tech',
   },
   description:
-    'Wysokiej klasy podzespoły komputerowe, systemy chłodzenia i sprzęt dla entuzjastów technologii.',
+    'High-end PC components, cooling systems, and elite hardware for technology enthusiasts.',
   keywords: [
-    'sklep komputerowy',
-    'podzespoły pc',
-    'procesory',
-    'karty graficzne',
-    'gaming',
+    'pc store',
+    'pc components',
+    'processors',
+    'graphics cards',
+    'gaming hardware',
     'blackwall tech',
   ],
   authors: [{ name: 'Michał Dobosz' }],
   openGraph: {
     title: 'Blackwall Tech | PC Store & Hardware',
-    description:
-      'Odkryj najwyższej jakości sprzęt i zbuduj swój wymarzony system.',
+    description: 'Discover top-tier hardware and build your ultimate pc.',
     url: 'https://blackwall.tech', // UPDATE (VERCEL)
     siteName: 'Blackwall Tech',
     locale: 'en_US',

@@ -1,5 +1,10 @@
 import { CategoriesContainer } from '@/app/(home)/_components/categories'
 import { PathNavigator } from '@/components/shared'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Products',
+}
 
 export default function CategoriesPage() {
   return (

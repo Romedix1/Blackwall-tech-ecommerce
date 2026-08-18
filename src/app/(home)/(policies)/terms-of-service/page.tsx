@@ -5,6 +5,11 @@ import {
   SectionHeader,
   SectionParagraph,
 } from '@/app/(home)/(policies)/_components'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Terms of service',
+}
 
 export default function TermsOfServicePage() {
   return (

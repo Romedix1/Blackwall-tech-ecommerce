@@ -9,6 +9,7 @@ import { prisma } from '@/lib/prisma'
 import { mapUrlParamsToPrismaFilters } from '@/lib'
 import { Prisma } from '../../../../../generated/prisma'
 import { SpecSection } from '@/types/specification'
+import { Metadata } from 'next'
 
 type SearchParamsType = Promise<{
   [key: string]: string | string[] | undefined
@@ -21,11 +22,32 @@ type PageProps = {
 
 type ProductSpecification = SpecSection[]
 
+type MetadataProps = {
+  params: Promise<{ productsCategory: string }>
+}
+
 const sortMapping: Record<string, Prisma.ProductOrderByWithRelationInput> = {
   newest: { createdAt: 'desc' },
   price_asc: { price: 'asc' },
   price_desc: { price: 'desc' },
   name_asc: { name: 'asc' },
+}
+
+export async function generateMetadata({
+  params,
+}: MetadataProps): Promise<Metadata> {
+  const { productsCategory } = await params
+
+  const category = await prisma.category.findUnique({
+    where: { slug: productsCategory },
+    select: { name: true },
+  })
+
+  const categoryName = category ? category.name : productsCategory
+
+  return {
+    title: `${categoryName}`,
+  }
 }
 
 export default async function ProductsPage({
