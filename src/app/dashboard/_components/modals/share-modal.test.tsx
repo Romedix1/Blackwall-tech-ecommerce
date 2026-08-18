@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ShareModal } from '@/app/dashboard/_components'
+import { ShareModal } from '@/app/dashboard/_components/modals/share-modal'
 import { toggleBuildVisibility } from '@/lib/actions'
 import { act, render, screen, fireEvent } from '@testing-library/react'
 import { useRouter } from 'next/navigation'

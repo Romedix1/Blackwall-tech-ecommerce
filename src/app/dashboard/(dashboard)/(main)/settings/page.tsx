@@ -1,16 +1,16 @@
-import { DashboardHeader } from '@/app/dashboard/_components'
 import {
   SecuritySection,
   UsernameSection,
   AddressSection,
+  ActiveSessionsSkeleton,
+  ActiveSessions,
+  DeleteAccountSection,
 } from '@/app/dashboard/(dashboard)/(main)/settings/_components'
-import { ActiveSessions } from '@/app/dashboard/(dashboard)/(main)/settings/_components/active-sessions'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { DeleteAccountSection } from '@/app/dashboard/(dashboard)/(main)/settings/_components/delete-account-section'
 import { Suspense } from 'react'
-import { ActiveSessionsSkeleton } from '@/app/dashboard/(dashboard)/(main)/settings/_components/active-sessions-skeleton'
 import { redirect } from 'next/navigation'
+import { DashboardHeader } from '@/app/dashboard/_components/layout/header'
 
 export default async function SettingsPage() {
   const session = await auth()

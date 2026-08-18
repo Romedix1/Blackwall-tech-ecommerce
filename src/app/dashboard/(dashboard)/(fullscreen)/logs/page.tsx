@@ -1,17 +1,17 @@
 import { prisma } from '@/lib/prisma'
 import {
   LogFilterSidebar,
+  LogFilterSidebarSkeleton,
   LogSearch,
+  LogsListContainer,
+  LogsListSkeleton,
+  LogsPaginationContainer,
 } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components'
 import { Suspense } from 'react'
-import { PaginationButtonsSkeleton } from '@/app/dashboard/_components/pagination-buttons-skeleton'
-import { LogsPaginationContainer } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components/logs-pagination-container'
-import { LogsListContainer } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components/log-list-container'
-import { LogsListSkeleton } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components/logs-list-skeleton'
-import { LogFilterSidebarSkeleton } from '@/app/dashboard/(dashboard)/(fullscreen)/logs/_components/log-filter-sidebar-skeleton'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
-import { mockedLogsList } from '@/app/dashboard/_components/admin/records-mocks'
+import { PaginationButtonsSkeleton } from '@/app/dashboard/_components'
+import { mockedLogsList } from '@/app/dashboard/_components/admin'
 
 type DashboardLogsProps = {
   searchParams: Promise<{

@@ -1,7 +1,9 @@
-import { FilterCapsule } from '@/app/(home)/pc-builder/[category]/[id]/_components'
-import { ProductBlock } from '@/app/(home)/pc-builder/[category]/[id]/_components/product-block'
-import { SearchShell } from '@/app/(home)/pc-builder/[category]/[id]/_components/search-shell'
+import {
+  ProductBlock,
+  SearchShell,
+} from '@/app/(home)/pc-builder/[category]/[id]/_components'
 import { auth } from '@/auth'
+import { FilterCapsule } from '@/components/shared'
 import { getImageUrl } from '@/lib'
 import { prisma } from '@/lib/prisma'
 import { SpecSection } from '@/types'

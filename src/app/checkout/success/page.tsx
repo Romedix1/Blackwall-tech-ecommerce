@@ -6,8 +6,7 @@ import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { cn } from '@/lib'
 import Stripe from 'stripe'
-import { StatusWatcher } from '@/app/checkout/success/_components/status-watcher'
-import { CartCleaner } from '@/app/checkout/success/_components/cart-cleaner'
+import { CartCleaner, StatusWatcher } from '@/app/checkout/success/_components'
 
 type CheckoutSuccessPageProps = {
   searchParams: Promise<{ session_id: string }>

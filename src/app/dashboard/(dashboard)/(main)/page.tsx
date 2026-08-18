@@ -1,10 +1,11 @@
-import { UserActivity } from '@/app/dashboard/_components'
-import { DashboardHeader } from '@/app/dashboard/_components'
-import { RenderMetrics } from '@/app/dashboard/_components'
-import { RenderRecords } from '@/app/dashboard/_components'
-import { OrdersChartContainer } from '@/app/dashboard/_components/admin/orders-chart-container'
-import { OrdersChartSkeleton } from '@/app/dashboard/_components/admin/orders-chart-skeleton'
-import { RenderMetricsSkeleton } from '@/app/dashboard/_components/admin/render-metrics-skeleton'
+import {
+  OrdersChartContainer,
+  OrdersChartSkeleton,
+  RenderMetrics,
+  RenderMetricsSkeleton,
+} from '@/app/dashboard/_components/admin'
+import { DashboardHeader } from '@/app/dashboard/_components/layout/header'
+import { RenderRecords, UserActivity } from '@/app/dashboard/_components/user'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'

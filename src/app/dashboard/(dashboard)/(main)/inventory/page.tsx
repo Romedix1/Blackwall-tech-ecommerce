@@ -1,8 +1,8 @@
-import { DashboardHeader } from '@/app/dashboard/_components'
 import {
   DashboardList,
   DashoardActionBar,
 } from '@/app/dashboard/_components/admin'
+import { DashboardHeader } from '@/app/dashboard/_components/layout/header'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 

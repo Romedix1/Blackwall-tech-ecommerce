@@ -2,10 +2,12 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { DashboardInformationBlock } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/dashboard-information-block'
-import { BackButton } from '@/app/dashboard/(dashboard)/(fullscreen)/_components/back-button'
-import { OrderStatusColorMap } from '@/app/dashboard/(dashboard)/(fullscreen)/_constants/order-status-color'
-import { mockedDetailedUsersList } from '@/app/dashboard/_components/admin/records-mocks'
+import {
+  BackButton,
+  DashboardInformationBlock,
+} from '@/app/dashboard/(dashboard)/(fullscreen)/_components'
+import { mockedDetailedUsersList } from '@/app/dashboard/_components/admin'
+import { OrderStatusColorMap } from '@/app/dashboard/(dashboard)/(fullscreen)/_constants'
 
 type OrderDetailsPageProps = {
   params: Promise<{ id: string }>

@@ -1,6 +1,8 @@
-import { DashboardHeader } from '@/app/dashboard/_components'
-import { RenderRecords } from '@/app/dashboard/_components/user/render-records'
-import { RenderRecordsSkeleton } from '@/app/dashboard/_components/user/render-records-skeleton'
+import { DashboardHeader } from '@/app/dashboard/_components/layout/header'
+import {
+  RenderRecords,
+  RenderRecordsSkeleton,
+} from '@/app/dashboard/_components/user'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'

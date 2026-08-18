@@ -19,14 +19,16 @@ vi.mock('next/navigation', () => ({
   redirect: vi.fn(),
 }))
 
-vi.mock('@/app/dashboard/_components', () => ({
+vi.mock('@/app/dashboard/_components/layout', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   DashboardHeader: ({ children }: any) => (
     <div data-testid="dashboard-header">{children}</div>
   ),
+}))
+
+vi.mock('@/app/dashboard/_components/user', () => ({
   UserActivity: () => <div>User Activity</div>,
   RecordBlock: () => <div>Record</div>,
-  RenderMetrics: () => <div>Metrics</div>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   RenderRecords: (props: any) => (
     <div data-testid="render-records">
@@ -35,6 +37,10 @@ vi.mock('@/app/dashboard/_components', () => ({
         : 'Orders_List'}
     </div>
   ),
+}))
+
+vi.mock('@/app/dashboard/_components/admin', () => ({
+  RenderMetrics: () => <div>Metrics</div>,
 }))
 
 const mockedAuth = vi.mocked(auth as unknown as () => Promise<Session | null>)

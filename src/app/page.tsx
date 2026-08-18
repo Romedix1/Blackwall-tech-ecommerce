@@ -1,7 +1,7 @@
-import { Hero } from '@/app/(home)/_components/hero'
-import { CategoriesSection } from '@/app/(home)/_components/categories'
 import { BestSellers } from '@/app/(home)/_components/best-sellers'
 import { BuildPcSection } from '@/app/(home)/_components/build-pc'
+import { CategoriesSection } from '@/app/(home)/_components/categories'
+import { Hero } from '@/app/(home)/_components/hero'
 
 export default function HomePage() {
   return (
