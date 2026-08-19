@@ -6,10 +6,7 @@ import { cookies } from 'next/headers'
 
 export const metadata: Metadata = {
   title: 'Checkout',
-  robots: {
-    index: false,
-    follow: false,
-  },
+  description: 'Finish your order and go to payment',
 }
 
 type CheckoutPageProps = {
