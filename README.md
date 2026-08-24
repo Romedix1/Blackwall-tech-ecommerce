@@ -16,7 +16,7 @@
   A cutting-edge, cyberpunk-themed e-commerce platform and custom PC-rig configurator engineered for high-performance hardware enthusiasts.
 </p>
 
-### [**Live Site**](https://cv-creator-kappa.vercel.app/)
+### [**Live Site**](https://blackwall-tech-ecommerce.vercel.app/)
 
 [Explore Features](#features) • [Tech Stack](#tech-stack) • [How to Run](#quick-start--how-to-run) • [Configure .env](#how-to-write-env) • [Architecture](#project-structure) • [Testing](#testing)
 
