@@ -98,7 +98,7 @@ blackwall-tech-ecommerce/
 │   ├── app/
 │   │   ├── (auth)/           # Authentication routes (login, register, forgot-password, reset)
 │   │   ├── (home)/           # Public storefront (catalog, categories, product details, pc-builder, policies)
-│   │   ├── api/              # API Route Handlers (auth, orders, stripe webhook, e2e-reset, verify)
+│   │   ├── api/              # API Route Handlers (auth, orders, stripe webhook, e2e-reset, verify, keep-alive)
 │   │   ├── checkout/         # Checkout experience and post-purchase confirmation
 │   │   ├── dashboard/        # User and Admin Command Center
 │   │   ├── shared-build/     # Publicly accessible shared PC build pages
@@ -122,6 +122,7 @@ blackwall-tech-ecommerce/
 ├── testsE2E/                 # Playwright end-to-end test scenarios
 ├── playwright.config.ts      # Playwright E2E configuration
 ├── vitest.config.ts          # Vitest configuration
+├── vercel.json               # Vercel deployment and cron jobs configuration
 └── package.json              # Project dependencies and npm scripts
 ```
 
@@ -244,9 +245,15 @@ UPSTASH_REDIS_REST_URL="https://[YOUR-ENDPOINT].upstash.io"
 UPSTASH_REDIS_REST_TOKEN="your_upstash_rest_token"
 
 # ==============================================================================
+# VERCEL CRON & KEEP-ALIVE
+# ==============================================================================
+CRON_SECRET="your_secure_cron_secret"
+
+# ==============================================================================
 # OPTIONAL / TESTING
 # ==============================================================================
 # SUPABASE_PROJECT_REF="your-supabase-ref"
+# Required for Playwright dashboard tests (testsE2E/user-dashboard.spec.ts)
 # TEST_USER_ID="test-user-id"
 ```
 
@@ -307,6 +314,17 @@ Used for distributed rate limiting on auth and sensitive routes:
 3. In the database **Details** tab, scroll to the **REST API** section.
 4. Select **.env** and copy the `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`.
 
+#### 8. Vercel Cron Secret (`CRON_SECRET`)
+Secures the `/api/keep-alive` endpoint invoked by Vercel Cron (`vercel.json`) every Saturday at 12:00 UTC to maintain database and Redis activity:
+1. Generate a random secret string (e.g. `openssl rand -hex 16`).
+2. Add it to `.env` as `CRON_SECRET="your_secret"`.
+3. If deployed on Vercel, also add `CRON_SECRET` under **Project Settings > Environment Variables**.
+
+#### 9. Test User ID (`TEST_USER_ID`)
+Required for Playwright E2E tests targeting user dashboard operations (`testsE2E/user-dashboard.spec.ts`):
+- Represents the database `id` of the test user (`test.user@blackwall.com`).
+- Query the `id` from your `User` table (or launch Prisma Studio via `npx prisma studio`) and save it to `.env`.
+
 ---
 
 ## Available Scripts
@@ -334,11 +352,14 @@ npm test
 
 ### End-to-End Tests (Playwright)
 E2E tests simulate complete user journeys including:
-- User registration and authentication flow
-- Custom PC assembly and compatibility verification
-- Product catalog browsing and search
-- Cart management and Stripe checkout pipeline
-- User dashboard settings, address management, and session controls
+- User authentication and session storage state (`auth.setup.ts`)
+- Custom PC assembly and compatibility verification (`build-pc.spec.ts`)
+- Product catalog browsing and search filtering (`product-page.spec.ts`)
+- Cart management and guest / logged-in Stripe checkout pipeline (`checkout-flow.spec.ts`)
+- User dashboard settings, address management, and password updates (`user-dashboard.spec.ts`)
+
+> [!NOTE]
+> Make sure the local development server is running (`npm run dev`) before starting Playwright tests. Dashboard tests also require `TEST_USER_ID` set in `.env`.
 
 Run the full E2E suite:
 ```bash
